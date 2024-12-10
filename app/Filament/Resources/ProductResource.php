@@ -348,7 +348,7 @@ class ProductResource extends Resource implements HasShieldPermissions
             ->multiple()
             ->maxFiles(5)
             ->reorderable()
-            ->acceptedFileTypes(['image/jpeg'])
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->hiddenLabel();
     }
 
