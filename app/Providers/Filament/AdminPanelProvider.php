@@ -12,7 +12,10 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
+use Illuminate\Contracts\View\View;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -53,8 +56,6 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label(__('navigation.group.settings')),
             ])
-            ->unsavedChangesAlerts()
-            ->databaseNotifications()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -69,8 +70,17 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->profile(page: EditProfile::class, isSimple: false)
-            ->sidebarCollapsibleOnDesktop()
+            ->colors([
+                'danger' => Color::Rose,
+                'gray' => Color::Slate,
+                'info' => Color::Blue,
+                'primary' => Color::Indigo,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+            ])
+            ->databaseNotifications()
+            ->favicon(asset('favicon.ico'))
+            ->font('Poppins')
             ->plugins([
                 FilamentBackgroundsPlugin::make()
                     ->remember(900),
@@ -78,6 +88,13 @@ class AdminPanelProvider extends PanelProvider
                 FilamentSpatieLaravelHealthPlugin::make()
                     ->usingPage(HealthCheckResults::class),
             ])
-            ->spa();
+            ->profile(page: EditProfile::class, isSimple: false)
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): View => view('components.footer.index'),
+            )
+            ->sidebarCollapsibleOnDesktop()
+            ->spa()
+            ->unsavedChangesAlerts();
     }
 }

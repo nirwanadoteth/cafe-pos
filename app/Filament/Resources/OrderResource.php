@@ -59,7 +59,7 @@ class OrderResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 2;
 
-    /** @return array<string> */
+    /** @return string[] */
     public static function getPermissionPrefixes(): array
     {
         return [

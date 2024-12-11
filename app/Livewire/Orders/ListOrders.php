@@ -45,14 +45,14 @@ class ListOrders extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('min')
                     ->summarize([
                         Summarizer::make()
-                            ->using(fn (Builder $query): string => $query->min('total_price'))
+                            ->using(fn (Builder $query) => $query->min('total_price'))
                             ->money('IDR', 100),
                     ]),
 
                 Tables\Columns\TextColumn::make('max')
                     ->summarize([
                         Summarizer::make()
-                            ->using(fn (Builder $query): string => $query->max('total_price'))
+                            ->using(fn (Builder $query) => $query->max('total_price'))
                             ->money('IDR', 100),
                     ]),
 

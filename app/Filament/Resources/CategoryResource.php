@@ -39,7 +39,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 0;
 
-    /** @return array<string> */
+    /** @return string[] */
     public static function getPermissionPrefixes(): array
     {
         return [

@@ -84,9 +84,8 @@ class Product extends Model implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->registerMediaConversions(function (Media $media) {
                 $this
-                    ->addMediaConversion('thumb')
-                    ->width(40)
-                    ->height(40);
+                    ->addMediaConversion('webp')
+                    ->format('webp');
             });
     }
 }

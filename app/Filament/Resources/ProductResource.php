@@ -53,7 +53,7 @@ class ProductResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 1;
 
-    /** @return array<string> */
+    /** @return string[] */
     public static function getPermissionPrefixes(): array
     {
         return [
@@ -93,12 +93,12 @@ class ProductResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make('product-image')
-                    ->defaultImageUrl(url('https://placehold.co/40x40.jpeg?text=No+Image'))
+                    ->defaultImageUrl(url('https://placehold.co/40x40.webp?text=No+Image'))
                     ->square()
                     ->grow(false)
                     ->label(__('resources/product.image'))
                     ->collection('product-images')
-                    ->conversion('thumb')
+                    ->conversion('webp')
                     ->limit(1)
                     ->limitedRemainingText(),
 
@@ -178,6 +178,7 @@ class ProductResource extends Resource implements HasShieldPermissions
                             ->schema([
                                 SpatieMediaLibraryImageEntry::make('media')
                                     ->collection('product-images')
+                                    ->conversion('webp')
                                     ->hiddenLabel()
                                     ->placeholder(__('resources/product.no_images')),
                             ]),
@@ -345,9 +346,11 @@ class ProductResource extends Resource implements HasShieldPermissions
         return SpatieMediaLibraryFileUpload::make('media')
             ->moveFiles()
             ->collection('product-images')
+            ->conversion('webp')
             ->multiple()
             ->maxFiles(5)
             ->reorderable()
+            ->appendFiles()
             ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->hiddenLabel();
     }

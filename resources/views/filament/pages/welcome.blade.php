@@ -1,16 +1,19 @@
 @php
-    $version = \Composer\InstalledVersions::getVersion("swisnl/filament-backgrounds");
+    use Composer\InstalledVersions;
+
+    $version = InstalledVersions::getVersion("swisnl/filament-backgrounds");
+    $backgroundImage = asset('images/swisnl/filament-backgrounds/curated-by-swis/26.jpg');
+    $styleVersion = asset("css/swisnl/filament-backgrounds/filament-backgrounds-styles.css?v=$version");
 @endphp
-@once
-    @push('styles')
-        <link href='{{ asset("css/swisnl/filament-backgrounds/filament-backgrounds-styles.css?v=$version") }}' rel='stylesheet' data-navigate-track>
-        <style>
-            :root {
-                --filament-backgrounds-image: url('{{ asset('images/swisnl/filament-backgrounds/curated-by-swis/26.jpg') }}');
-            }
-        </style>
-    @endpush
-@endonce
+
+@push('styles')
+    <link href="{{ $styleVersion }}" rel="stylesheet" data-navigate-track>
+    <style>
+        :root {
+            --filament-backgrounds-image: url('{{ $backgroundImage }}');
+        }
+    </style>
+@endpush
 <x-filament-panels::page.simple>
-    {{ $this->table }}
+    @livewire('home')
 </x-filament-panels::page.simple>

@@ -33,7 +33,7 @@ class UserResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 3;
 
-    /** @return array<string> */
+    /** @return string[] */
     public static function getPermissionPrefixes(): array
     {
         return [

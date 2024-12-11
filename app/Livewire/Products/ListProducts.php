@@ -45,7 +45,7 @@ class ListProducts extends Component implements HasForms, HasTable
                         Tables\Columns\Summarizers\Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.least'))
                             ->using(
-                                fn (Builder $query): string => $query
+                                fn (Builder $query) => $query
                                     ->orderBy('items_sum_qty', 'asc')
                                     ->value('name') ?? '-'
                             ),
@@ -62,7 +62,7 @@ class ListProducts extends Component implements HasForms, HasTable
                         Tables\Columns\Summarizers\Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.most'))
                             ->using(
-                                fn (Builder $query): string => $query
+                                fn (Builder $query) => $query
                                     ->orderBy('items_sum_qty', 'desc')
                                     ->value('name') ?? '-'
                             ),
