@@ -87,28 +87,7 @@ class OrderResource extends Resource implements HasShieldPermissions
 
                         Section::make(__('resources/order.items'))
                             ->headerActions([
-                                Action::make('reset')
-                                    ->label(__('resources/order.actions.reset'))
-                                    ->modalHeading(__('resources/order.messages.reset_confirmation'))
-                                    ->modalDescription(__('resources/order.messages.reset_description'))
-                                    ->requiresConfirmation()
-                                    ->color('danger')
-                                    ->action(fn (Forms\Set $set) => $set(
-                                        'items',
-                                        Product::query()
-                                            ->with('category')
-                                            ->whereIsVisible(true)
-                                            ->whereHas('category', fn ($query) => $query->whereIsVisible(true))
-                                            ->get()
-                                            ->map(fn (Product $product) => [
-                                                'product_id' => $product->id,
-                                                'product_name' => $product->name,
-                                                'qty' => 0,
-                                                'unit_price' => $product->price,
-                                            ])
-                                            ->toArray()
-                                    ))
-                                    ->disabled(fn (?Order $record) => $record?->status !== OrderStatus::New),
+                                static::getResetItemsAction(),
                             ])
                             ->schema([
                                 static::getItemsRepeater(),
@@ -153,6 +132,7 @@ class OrderResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
+            ->query(static::getEloquentQuery()->with('customer'))
             ->columns([
                 static::getNumberColumn(),
                 static::getCustomerNameColumn(),
@@ -173,21 +153,7 @@ class OrderResource extends Resource implements HasShieldPermissions
             ->actions([
                 ActionGroup::make([
                     EditAction::make(),
-                    TablesAction::make('pdf')
-                        ->label(__('resources/order.actions.pdf'))
-                        ->color('success')
-                        ->icon('heroicon-o-arrow-down-tray')
-                        ->action(function (Order $record) {
-                            $record = $record->load('customer', 'items.product', 'payment');
-                            $filename = 'INVOICE-' . $record->number . '-' . $record->created_at?->format('d-m-Y') . '.pdf';
-
-                            return response()->streamDownload(function () use ($record) {
-                                echo Pdf::loadHtml(
-                                    Blade::render('invoice', ['order' => $record])
-                                )->stream();
-                            }, $filename);
-                        })
-                        ->hidden(fn (Order $record): bool => $record->status !== OrderStatus::Completed),
+                    static::getPdfAction(),
                 ]),
             ])
             ->bulkActions([
@@ -347,6 +313,25 @@ class OrderResource extends Resource implements HasShieldPermissions
             });
     }
 
+    public static function getPdfAction(): TablesAction
+    {
+        return TablesAction::make('pdf')
+            ->label(__('resources/order.actions.pdf'))
+            ->color('success')
+            ->icon('heroicon-o-arrow-down-tray')
+            ->action(function (Order $record) {
+                $record = $record->load('customer', 'items.product', 'payment');
+                $filename = 'INVOICE-' . $record->number . '-' . $record->created_at?->format('d-m-Y') . '.pdf';
+
+                return response()->streamDownload(function () use ($record) {
+                    echo Pdf::loadHtml(
+                        Blade::render('invoice', ['order' => $record])
+                    )->stream();
+                }, $filename);
+            })
+            ->hidden(fn (Order $record): bool => $record->status !== OrderStatus::Completed);
+    }
+
     /** @return Component[] */
     public static function getDetailsFormSchema(): array
     {
@@ -390,6 +375,32 @@ class OrderResource extends Resource implements HasShieldPermissions
                 ->label(__('resources/order.notes'))
                 ->columnSpanFull(),
         ];
+    }
+
+    public static function getResetItemsAction(): Action
+    {
+        return Action::make('reset')
+            ->label(__('resources/order.actions.reset'))
+            ->modalHeading(__('resources/order.messages.reset_confirmation'))
+            ->modalDescription(__('resources/order.messages.reset_description'))
+            ->requiresConfirmation()
+            ->color('danger')
+            ->action(fn (Forms\Set $set) => $set(
+                'items',
+                Product::query()
+                    ->with('category')
+                    ->whereIsVisible(true)
+                    ->whereHas('category', fn ($query) => $query->whereIsVisible(true))
+                    ->get()
+                    ->map(fn (Product $product) => [
+                        'product_id' => $product->id,
+                        'product_name' => $product->name,
+                        'qty' => 0,
+                        'unit_price' => $product->price,
+                    ])
+                    ->toArray()
+            ))
+            ->disabled(fn (?Order $record) => $record?->status !== OrderStatus::New);
     }
 
     public static function getItemsRepeater(): TableRepeater
@@ -450,6 +461,7 @@ class OrderResource extends Resource implements HasShieldPermissions
             ->reorderable(false)
             ->hiddenLabel()
             ->colStyles(static::getItemsRepeaterColStyles())
+            ->collapsible()
             ->required();
     }
 

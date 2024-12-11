@@ -32,32 +32,40 @@ class ListOrders extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Order::query()->where('status', '=', OrderStatus::Completed))
+            ->query(
+                Order::query()
+                    ->with('items')
+                    ->where('status', '=', OrderStatus::Completed)
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Order Date')
                     ->date(),
-                Tables\Columns\TextColumn::make('items_sum_qty')
-                    ->label('')
+
+                Tables\Columns\TextColumn::make('min')
                     ->summarize([
                         Summarizer::make()
-                            ->label(__('clusters/pages/report.sales.table.summary.min'))
                             ->using(fn (Builder $query): string => $query->min('total_price'))
                             ->money('IDR', 100),
+                    ]),
+
+                Tables\Columns\TextColumn::make('max')
+                    ->summarize([
                         Summarizer::make()
-                            ->label(__('clusters/pages/report.sales.table.summary.sum'))
+                            ->using(fn (Builder $query): string => $query->max('total_price'))
+                            ->money('IDR', 100),
+                    ]),
+
+                Tables\Columns\TextColumn::make('sum')
+                    ->summarize([
+                        Summarizer::make()
                             ->using(fn (Builder $query) => $query->sum('total_price'))
                             ->money('IDR', 100),
                     ]),
-                Tables\Columns\TextColumn::make('total_price')
-                    ->label('')
+
+                Tables\Columns\TextColumn::make('avg')
                     ->summarize([
                         Summarizer::make()
-                            ->label(__('clusters/pages/report.sales.table.summary.max'))
-                            ->using(fn (Builder $query): string => $query->max('total_price'))
-                            ->money('IDR', 100),
-                        Summarizer::make()
-                            ->label(__('clusters/pages/report.sales.table.summary.avg'))
                             ->using(fn (Builder $query) => $query->avg('total_price'))
                             ->money('IDR', 100),
                     ]),
