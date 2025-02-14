@@ -50,9 +50,10 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
      DB_USERNAME=your_username
      DB_PASSWORD=your_password
      ```
-   - Import the database from ```cafe_pos.sql```
-
-   Note: Skip the migration and seeder commands as we're using the provided database dump.
+   - Import the database from
+     ```bash
+     cafe_pos.sql
+     ```
 
 5. **Install Frontend Dependencies**
    ```bash
@@ -62,6 +63,13 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 6. **Start the Development Server**
    ```bash
    composer run dev
+   ```
+
+7. **Permissions (If Required)**
+   If you encounter any storage or cache-related errors, set the correct permissions:
+   ```bash
+   chmod -R 775 storage bootstrap/cache
+   sudo chown -R $USER:www-data storage bootstrap/cache
    ```
 
 ## Default Login Credentials
