@@ -11,6 +11,14 @@
 
 A modern point-of-sale system built with Laravel for cafe and restaurant management.
 
+## Documentation
+
+- 📄 [Installation Guide](#setup-instructions)
+- 📄 [User Manual](Buku%20Petunjuk%20Penggunaan%20Aplikasi%20POS%20Cafe.pdf)
+- 📄 [Technical Report](Laporan%20Tugas%20Besar%20Pemrograman%20Basis%20Data.pdf)
+- 🎥 [Demo Video](demo.pdf)
+- 💾 [Database File](cafe_pos.sql)
+
 ## Requirements
 
 - PHP 8.2+
@@ -65,12 +73,14 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
    composer run dev
    ```
 
-7. **Permissions (If Required)**
-   If you encounter any storage or cache-related errors, set the correct permissions:
-   ```bash
-   chmod -R 775 storage bootstrap/cache
-   sudo chown -R $USER:www-data storage bootstrap/cache
-   ```
+## Troubleshooting
+
+### Permission Issues
+If you encounter storage or cache-related errors:
+```bash
+chmod -R 775 storage bootstrap/cache
+sudo chown -R $USER:www-data storage bootstrap/cache
+```
 
 ## Default Login Credentials
 
