@@ -9,7 +9,7 @@ A logically ordered, actionable checklist to improve the Cafe POS Laravel + Fila
 5. [x] Replace plaintext default credentials in README with instructions for seeding admin user securely; remove sensitive defaults from docs.
 6. [x] Add Makefile or Composer scripts for common workflows (lint, stan, test, build, ci) to standardize local dev commands.
 7. [x] Ensure storage, logs, and cache directories are correctly ignored/linked; verify storage:link in setup instructions.
-8. [ ] Add Docker/Sail documentation and compose file updates for local dev parity (DB, Redis, mailhog, meilisearch optional).
+8. [x] Add Docker/Sail documentation and compose file updates for local dev parity (DB, Redis, mailhog, meilisearch optional).
 9. [ ] Audit composer dependencies; remove unused packages; pin versions where appropriate; run composer audit and document findings.
 10. [ ] Enable and document automatic security advisories check in CI (roave/security-advisories already present; add audit step).
 11. [ ] Add npm audit/retire.js check to CI pipeline and document remediation workflow for vulnerable JS deps.

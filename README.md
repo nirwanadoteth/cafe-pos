@@ -104,6 +104,16 @@ composer run build     # Frontend build (Vite)
 composer run ci        # Run lint, stan, tests, and frontend build
 ```
 
+## Docker (Local Infrastructure)
+
+For a quick local setup of MySQL, Redis, and Mailhog (and optional Meilisearch), this repo includes a docker-compose.yml. Run the Laravel app on your host (Windows) and point .env to the container ports.
+
+- Start services: `docker compose up -d`
+- Optional Meilisearch: `docker compose --profile optional up -d`
+- Mailhog UI: http://localhost:8025
+
+See docs/docker.md for full instructions and Windows PowerShell commands. If you prefer a fully containerized approach, you can use Laravel Sail (already required as a dev dependency).
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
