@@ -16,7 +16,7 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 - 📄 [Installation Guide](#setup-instructions)
 - 📄 [User Manual](Buku%20Petunjuk%20Penggunaan%20Aplikasi%20POS%20Cafe.pdf)
 - 📄 [Technical Report](Laporan%20Tugas%20Besar%20Pemrograman%20Basis%20Data.pdf)
-- 🎥 [Demo Video](demo.pdf)
+- 🎥 [Demo Video](demo.mp4)
 - 💾 [Database File](cafe_pos.sql)
 
 ## Requirements
@@ -82,19 +82,27 @@ chmod -R 775 storage bootstrap/cache
 sudo chown -R $USER:www-data storage bootstrap/cache
 ```
 
-## Default Login Credentials
+## Admin User Setup (Secure)
 
-- **Admin**
-  - Email: admin@cafe.pos
-  - Password: admin1234
+For security, default plaintext credentials are not provided. Create an admin user with a strong password using the seeder:
 
-- **Cashier**
-  - Email: kasir@cafe.pos
-  - Password: kasir1234
+```bash
+php artisan db:seed --class=AdminUserSeeder
+```
 
-- **Inventory**
-  - Email: inventaris@cafe.pos
-  - Password: inventaris1234
+You will be prompted for the admin email, name, and a secure password (12+ characters). The user will be assigned the `super_admin` role.
+
+## Developer Scripts
+
+Use Composer scripts to standardize local workflows:
+
+```bash
+composer run lint      # PHP code style (Pint)
+composer run stan      # Static analysis (PHPStan)
+composer run test      # Test suite (PHPUnit)
+composer run build     # Frontend build (Vite)
+composer run ci        # Run lint, stan, tests, and frontend build
+```
 
 ## License
 
