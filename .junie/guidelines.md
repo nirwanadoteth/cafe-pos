@@ -1,4 +1,4 @@
-# Project Development Guidelines (Cafe POS, Laravel 12 + Filament 3)
+# Project Development Guidelines (Cafe POS, Laravel 12 + Filament 4)
 
 Audience: advanced Laravel developers working on this repository. Focus on project-specific setup, testing, and tooling decisions. Avoid committing secrets.
 
@@ -30,7 +30,7 @@ Initial setup (Windows PowerShell shown)
      - Starts: PHP server, queue listener, Pail logs, and Vite concurrently
 
 Notes
-- Filament 3 is installed along with several Filament plugins (Shield, Media Library plugin, date-range filter, etc.). Review their config before upgrades.
+- Filament 4 is installed along with several Filament plugins (Shield, Media Library plugin, date-range filter, etc.). Review their config before upgrades.
 - Composer scripts include post events that publish assets and trigger filament:upgrade; this is intentional for local consistency.
 
 ## 2) Testing
