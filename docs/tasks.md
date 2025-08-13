@@ -11,17 +11,17 @@ A logically ordered, actionable checklist to improve the Cafe POS Laravel + Fila
 7. [x] Ensure storage, logs, and cache directories are correctly ignored/linked; verify storage:link in setup instructions.
 8. [x] Add Docker/Sail documentation and compose file updates for local dev parity (DB, Redis, mailhog, meilisearch optional).
 9. [ ] Audit composer dependencies; remove unused packages; pin versions where appropriate; run composer audit and document findings.
-10. [ ] Enable and document automatic security advisories check in CI (roave/security-advisories already present; add audit step).
-11. [ ] Add npm audit/retire.js check to CI pipeline and document remediation workflow for vulnerable JS deps.
-12. [ ] Configure PHP-CS-Fixer or keep Pint; enforce style via CI with composer cs and npm run prettier steps.
-13. [ ] Expand PHPStan/Larastan coverage: include app, database, routes, config and set level to max feasible; add baseline if needed.
+10. [x] Enable and document automatic security advisories check in CI (roave/security-advisories already present; add audit step).
+11. [x] Add npm audit/retire.js check to CI pipeline and document remediation workflow for vulnerable JS deps.
+12. [x] Configure PHP-CS-Fixer or keep Pint; enforce style via CI with composer cs and npm run prettier steps.
+13. [ ] Expand PHPStan/Larastan coverage: include app, database, routes, config, and set level to max feasible; add baseline if needed.
 14. [ ] Resolve current PHPStan level 8 issues or create suppressions with rationale; target level 9 if possible.
 15. [ ] Add Psalm or stick to PHPStan—decide and document static analysis policy; avoid tool duplication.
-16. [ ] Introduce Rector config for safe automated refactors (optional) and run a dry-run; document ruleset.
+16. [ ] Introduce Rector config for safe automated refactoring (optional) and run a dry-run; document ruleset.
 17. [ ] Establish coding conventions for Filament resources/components (naming, folder layout, actions) in CONTRIBUTING.md.
 18. [ ] Create CONTRIBUTING.md with branching strategy, commit style (Conventional Commits), code review checklist.
 19. [ ] Add ISSUE_TEMPLATE and PULL_REQUEST_TEMPLATE under .github/ for consistent triage and review.
-20. [ ] Configure GitHub Actions (or other CI) workflow: install PHP/Node, cache deps, run lint, stan, tests, build.
+20. [x] Configure GitHub Actions (or other CI) workflow: install PHP/Node, cache deps, run lint, stan, tests, build.
 21. [ ] Add code coverage reporting (Xdebug or PCOV) and upload to Codecov; set minimal coverage thresholds.
 22. [ ] Create feature and unit test suites for core domain models (Order, OrderItem, Product, Payment, Category, Customer).
 23. [ ] Add model factory definitions and seeders aligned with tests; ensure deterministic seeds for CI.
@@ -82,7 +82,7 @@ A logically ordered, actionable checklist to improve the Cafe POS Laravel + Fila
 78. [ ] Introduce DTOs for transporting data between layers (e.g., CreateOrderData, PaymentData) validated upon construction.
 79. [ ] Add API rate and input limits for import/export endpoints; stream large exports and chunk imports.
 80. [ ] Verify that all user inputs are escaped/encoded in Blade/Filament; audit markdown editors and HTML fields for XSS.
-81. [ ] Add CSRF token rotation on login and session fixation protections; test via automated security tests.
+81. [ ] Add CSRF token rotation on login and session fixation protections; test it via automated security tests.
 82. [ ] Implement centralized money calculations (tax, discount, subtotal, total) with unit tests for edge cases.
 83. [ ] Ensure all background jobs and listeners are idempotent; add deduplication keys where needed.
 84. [ ] Add notifications (email/in-app) for key events (low stock, failed payments, large refunds) with throttling.

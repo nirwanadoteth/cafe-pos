@@ -99,7 +99,7 @@ Frontend
 
 Security & operations
 - No plaintext credentials in code or docs. Use .env, .env.testing, .env.staging, .env.production templates.
-- roave/security-advisories is present; add composer audit to CI when available.
+- roave/security-advisories is present; CI includes composer audit and npm audit (high severity) checks.
 - For production: HTTPS, secure cookies, CSRF enabled; do not log sensitive fields.
 - Health checks included via spatie/laravel-health; configure DB/cache/queue/disk/security-advisories checks.
 

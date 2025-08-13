@@ -4,7 +4,9 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prettier": "npx prettier --write ."
+        "prettier": "npx prettier --write .",
+        "prettier:check": "npx prettier --check .",
+        "audit": "npm audit --audit-level=high"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.10",
