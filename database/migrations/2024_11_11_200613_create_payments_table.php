@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Order::class)->unique()->constrained()->cascadeOnDelete();
             $table->unsignedInteger('amount');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
