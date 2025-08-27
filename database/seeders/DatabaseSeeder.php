@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             ->sequence(fn ($sequence) => ['customer_id' => $customers->random(1)->first()->id])
             ->has(Payment::factory()->count(1))
             ->has(
-                OrderItem::factory()->count(rand(2, 5))
+                OrderItem::factory()->count(random_int(2, 5))
                     ->state(fn (array $attributes, Order $order) => [
                         'product_id' => $attributes['product_id'] = $products->random(1)->first()->id,
                         'unit_price' => $products->find($attributes['product_id'])->price,

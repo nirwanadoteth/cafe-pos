@@ -12,11 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('payments', static function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Order::class);
+            $table->foreignIdFor(Order::class)->unique()->constrained()->cascadeOnDelete();
             $table->unsignedInteger('amount');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

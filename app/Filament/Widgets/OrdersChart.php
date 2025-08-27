@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\OrderResource;
+use App\Filament\Resources\Orders\OrderResource;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
@@ -11,6 +11,11 @@ use Illuminate\Contracts\Support\Htmlable;
 class OrdersChart extends ChartWidget
 {
     protected static ?int $sort = 1;
+
+    public function getHeading(): string | Htmlable | null
+    {
+        return __('widgets/orders-chart.heading');
+    }
 
     protected function getData(): array
     {
@@ -39,10 +44,5 @@ class OrdersChart extends ChartWidget
     protected function getType(): string
     {
         return 'line';
-    }
-
-    public function getHeading(): string | Htmlable | null
-    {
-        return __('widgets/orders-chart.heading');
     }
 }

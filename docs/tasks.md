@@ -2,7 +2,7 @@
 
 A logically ordered, actionable checklist to improve the Cafe POS Laravel + Filament project. Each item is prefixed with a checkbox placeholder for tracking.
 
-1. [x] Add project overview architecture diagram (high-level) to docs/architecture.md (layers: UI/Filament, Application, Domain, Infrastructure). 
+1. [x] Add project overview architecture diagram (high-level) to docs/architecture.md (layers: UI/Filament, Application, Domain, Infrastructure).
 2. [x] Document runtime topology and external dependencies (DB, queues, storage, mail, Redis, cron) in docs/architecture.md.
 3. [x] Create .env.example completeness pass: ensure all required env vars are declared with safe defaults and comments.
 4. [x] Add environment-specific config guidance (local/staging/production) and sample .env.staging and .env.production templates.
@@ -92,4 +92,3 @@ A logically ordered, actionable checklist to improve the Cafe POS Laravel + Fila
 88. [ ] Review and optimize database schema for money precision/scale; ensure decimals are adequate and consistent.
 89. [ ] Implement graceful shutdown and retry policies for queue workers; configure SIGTERM handling in production.
 90. [ ] Add smoke tests to run post-deploy (health/DB/queue checks and critical path test).
-

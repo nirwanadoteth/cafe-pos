@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use BezhanSalleh\FilamentShield\Support\Utils;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\PermissionRegistrar;
 

@@ -6,6 +6,7 @@ use App\Models\Product;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Support\Str;
 
 class ProductImporter extends Importer
 {
@@ -44,13 +45,6 @@ class ProductImporter extends Importer
         ];
     }
 
-    public function resolveRecord(): ?Product
-    {
-        return Product::firstOrNew([
-            'slug' => $this->data['slug'],
-        ]);
-    }
-
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body = __('resources/product.import.completed', [
@@ -66,5 +60,13 @@ class ProductImporter extends Importer
         }
 
         return $body;
+    }
+
+    public function resolveRecord(): ?Product
+    {
+        $provided = trim((string) ($this->data['slug'] ?? ''));
+        $slug = $provided !== '' ? Str::slug($provided) : Str::slug((string) ($this->data['name'] ?? ''));
+
+        return Product::firstOrNew(['slug' => $slug]);
     }
 }

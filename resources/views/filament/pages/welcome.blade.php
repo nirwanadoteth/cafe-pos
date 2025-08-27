@@ -7,12 +7,16 @@
 @endphp
 
 @pushOnce('styles')
-    <link href="{{ $styleVersion }}" rel="stylesheet" data-navigate-track />
-    <style>
-        :root {
-            --filament-backgrounds-image: url('{{ $backgroundImage }}');
-        }
-    </style>
+<link
+    href="{{ $styleVersion }}"
+    rel="stylesheet"
+    data-navigate-track
+/>
+<style>
+    :root {
+        --filament-backgrounds-image: url('{{ $backgroundImage }}');
+    }
+</style>
 @endPushOnce
 
 <x-filament-panels::page.simple>

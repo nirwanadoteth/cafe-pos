@@ -10,9 +10,14 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class CustomersChart extends ChartWidget
 {
-    protected static ?string $heading = 'Total customers';
-
     protected static ?int $sort = 2;
+
+    protected ?string $heading = 'Total customers';
+
+    public function getHeading(): string | Htmlable | null
+    {
+        return __('widgets/customers-chart.heading');
+    }
 
     protected function getData(): array
     {
@@ -41,10 +46,5 @@ class CustomersChart extends ChartWidget
     protected function getType(): string
     {
         return 'line';
-    }
-
-    public function getHeading(): string | Htmlable | null
-    {
-        return __('widgets/customers-chart.heading');
     }
 }

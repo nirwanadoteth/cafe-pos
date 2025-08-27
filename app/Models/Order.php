@@ -58,7 +58,7 @@ class Order extends Model
     use SoftDeletes;
 
     /**
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'number',
@@ -74,6 +74,18 @@ class Order extends Model
         'total_price' => MoneyCast::class,
         'status' => OrderStatus::class,
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(static function (Order $order): void {
+            $order->total_price = (float) $order->items()
+                ->selectRaw('COALESCE(SUM(qty * unit_price), 0) as total')
+                ->value('total');
+        });
+        static::deleting(function (Order $order) {
+            $order->payment()->delete();
+        });
+    }
 
     /** @return BelongsTo<Customer,$this> */
     public function customer(): BelongsTo
@@ -91,14 +103,5 @@ class Order extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
-    }
-
-    protected static function booted(): void
-    {
-        static::saving(function (Order $order) {
-            $order->total_price = $order->items->sum(function ($item) {
-                return $item->qty * $item->unit_price;
-            });
-        });
     }
 }

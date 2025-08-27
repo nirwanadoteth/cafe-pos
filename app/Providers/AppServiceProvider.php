@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Http\Responses\LogoutResponse;
 use BezhanSalleh\FilamentShield\FilamentShield;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -28,33 +28,27 @@ use Spatie\SecurityAdvisoriesHealthCheck\SecurityAdvisoriesCheck;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-        $this->app->bind(LogoutResponseContract::class, LogoutResponse::class);
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::BODY_END,
-            fn (): View => view('components.footer.index'),
-        );
-    }
-
-    /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
         Model::unguard();
 
-        if (app()->isProduction()) {
+        if (app()->isProduction() === true) {
             URL::forceScheme('https');
         }
 
-        if (! Filament::isServing()) {
-            if (Filament::getCurrentPanel() !== null) {
-                FilamentColor::register(Filament::getCurrentPanel()->getColors());
+        Filament::serving(function () {
+            $panel = Filament::getCurrentOrDefaultPanel();
+            if ($panel !== null) {
+                FilamentColor::register($panel->getColors());
             }
-        }
+        });
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::BODY_END,
+            static fn (): View => view('components.footer.index'),
+        );
 
         FilamentShield::prohibitDestructiveCommands(app()->isProduction());
 
@@ -70,5 +64,13 @@ class AppServiceProvider extends ServiceProvider
             UsedDiskSpaceCheck::new(),
             SecurityAdvisoriesCheck::new(),
         ]);
+    }
+
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        $this->app->bind(LogoutResponseContract::class, LogoutResponse::class);
     }
 }

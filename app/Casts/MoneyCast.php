@@ -17,7 +17,7 @@ class MoneyCast implements CastsAttributes
     public function get($model, string $key, $value, array $attributes): float
     {
         // Transform the integer stored in the database into a float.
-        return round(floatval($value) / 100, precision: 2);
+        return round((float) $value / 100, precision: 2);
     }
 
     /**
@@ -28,6 +28,6 @@ class MoneyCast implements CastsAttributes
     public function set($model, string $key, $value, array $attributes): float
     {
         // Transform the float into an integer for storage.
-        return round(floatval($value) * 100);
+        return round((float) $value * 100);
     }
 }

@@ -2,18 +2,17 @@
 
 namespace App\Filament\Pages\Auth;
 
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
-class EditProfile extends BaseEditProfile
+class EditProfile extends \Filament\Auth\Pages\EditProfile
 {
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 $this->getNameFormComponent(),
                 $this->getEmailFormComponent(),
                 $this->getPasswordFormComponent(),
@@ -24,9 +23,9 @@ class EditProfile extends BaseEditProfile
 
     protected function getRoleFormComponent(): Component
     {
-        return Placeholder::make('roles')
+        return TextEntry::make('roles')
             ->label(__('pages/auth/edit-profile.form.role.label'))
             ->inlineLabel()
-            ->content(fn ($record) => Str::headline($record->roles->pluck('name')->join(', ')));
+            ->state(fn ($record) => Str::headline($record->roles->pluck('name')->join(', ')));
     }
 }
