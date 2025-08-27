@@ -167,11 +167,9 @@ class OrderForm
             ->disabled(fn (?Order $record, string $operation): bool => $record?->status !== OrderStatus::New && $operation !== 'create')
             ->relationship('items')
             ->table([
-                TableColumn::make('ID'),
                 TableColumn::make('Name'),
                 TableColumn::make('Qty'),
                 TableColumn::make('Price'),
-
             ])
             ->schema([
                 static::getProductIdField(),
