@@ -57,7 +57,7 @@ class StatsOverviewWidget extends BaseWidget
     private function createStats(string $title, string $table, ?string $column, DateRange $range, ?callable $formatter = null): Stat
     {
         $metrics = $this->calculateMetrics($table, $column, $range);
-        $value = $formatter ? $formatter($metrics['current']) : $this->formatNumber($metrics['current']);
+        $value = $formatter !== null ? $formatter($metrics['current']) : $this->formatNumber($metrics['current']);
 
         return $this->buildStat(
             title: $title,
@@ -133,7 +133,7 @@ class StatsOverviewWidget extends BaseWidget
     private function calculateTrend(int | float $diff): array
     {
         $isPositive = $diff >= 0;
-        $direction = $isPositive ? 'increase' : 'decrease';
+        $direction = $isPositive === true ? 'increase' : 'decrease';
 
         return $this->getTrendConfig($isPositive, $direction);
     }
@@ -145,8 +145,8 @@ class StatsOverviewWidget extends BaseWidget
     {
         return [
             'direction' => __('widgets/stats-overview.trend.' . $direction),
-            'icon' => $isPositive ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
-            'color' => $isPositive ? 'success' : 'danger',
+            'icon' => $isPositive === true ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
+            'color' => $isPositive === true ? 'success' : 'danger',
         ];
     }
 

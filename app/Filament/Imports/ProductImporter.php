@@ -51,8 +51,8 @@ class ProductImporter extends Importer
             'count' => number_format($import->successful_rows),
             'label' => str('row')->plural($import->successful_rows),
         ]);
-
-        if ($failedRowsCount = $import->getFailedRowsCount()) {
+        $failedRowsCount = $import->getFailedRowsCount();
+        if ($failedRowsCount > 0) {
             $body .= ' ' . __('resources/product.import.failed', [
                 'count' => number_format($failedRowsCount),
                 'label' => str('row')->plural($failedRowsCount),

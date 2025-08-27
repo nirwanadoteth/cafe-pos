@@ -204,14 +204,14 @@ class OrderForm
 
     protected static function validateItemsRepeater(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! static::isValidItemsArray($value)) {
+        if (static::isValidItemsArray($value) === false) {
             $fail('Please add at least one item.');
         }
     }
 
     protected static function isValidItemsArray(mixed $value): bool
     {
-        if (! is_array($value)) {
+        if (is_array($value) === false) {
             return false;
         }
 

@@ -121,16 +121,16 @@ class UserResource extends Resource implements HasShieldPermissions
 
     protected static function dehydrateEmailVerificationState(mixed $state, mixed $record): ?Carbon
     {
-        if ($record && $state === ($record->email_verified_at !== null)) {
+        if ($record !== null && $state === ($record->email_verified_at !== null)) {
             return $record->email_verified_at;
         }
 
-        return $state ? now() : null;
+        return $state !== null ? now() : null;
     }
 
     protected static function getEmailVerificationState(User $record): string
     {
-        return $record->email_verified_at ? __('resources/user.verified') : __('resources/user.unverified');
+        return $record->email_verified_at !== null ? __('resources/user.verified') : __('resources/user.unverified');
     }
 
     protected static function getEmailVerificationColor(string $state): string
