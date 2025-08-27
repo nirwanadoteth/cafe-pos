@@ -20,7 +20,7 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/10122222/cafe-pos.git
+   git clone https://github.com/nirwanadoteth/cafe-pos.git
    cd cafe-pos
    ```
 
@@ -103,4 +103,4 @@ composer run build     # Frontend build (Vite)
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-source software licensed under the [MIT License](LICENSE).

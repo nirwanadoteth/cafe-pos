@@ -70,6 +70,7 @@ class UserResource extends Resource implements HasShieldPermissions
 
                 TextInput::make('password')
                     ->label(fn (?User $record) => static::getPasswordLabel($record))
+                    ->required(fn (string $operation): bool => $operation === 'create')
                     ->password()
                     ->revealable()
                     ->rule(Password::default())
@@ -84,7 +85,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label(fn (?User $record) => static::getPasswordConfirmationLabel($record))
                     ->password()
                     ->revealable()
-                    ->required()
+                    ->required(fn (Get $get): bool => filled($get('password')))
                     ->visible(fn (Get $get): bool => filled($get('password')))
                     ->dehydrated(false)
                     ->inlineLabel(),
@@ -133,9 +134,9 @@ class UserResource extends Resource implements HasShieldPermissions
         return $record->email_verified_at !== null ? __('resources/user.verified') : __('resources/user.unverified');
     }
 
-    protected static function getEmailVerificationColor(string $state): string
+    protected static function getEmailVerificationColor(User $record): string
     {
-        return $state === __('resources/user.verified') ? 'success' : 'danger';
+        return $record->email_verified_at !== null ? 'success' : 'danger';
     }
 
     /**
@@ -147,11 +148,11 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return $query
             ->when(
-                $data['value'] === 'verified',
+                ($data['value'] ?? null) === 'verified',
                 fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')
             )
             ->when(
-                $data['value'] === 'unverified',
+                ($data['value'] ?? null) === 'unverified',
                 fn (Builder $query): Builder => $query->whereNull('email_verified_at')
             );
     }
@@ -172,7 +173,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label(__('resources/user.verified'))
                     ->badge()
                     ->getStateUsing(fn (User $record) => static::getEmailVerificationState($record))
-                    ->color(fn (string $state) => static::getEmailVerificationColor($state))
+                    ->color(color: fn (User $record) => static::getEmailVerificationColor($record))
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('roles')
@@ -191,8 +192,8 @@ class UserResource extends Resource implements HasShieldPermissions
                 SelectFilter::make('verified')
                     ->label(__('resources/user.verified'))
                     ->options([
-                        'verified' => 'Verified',
-                        'unverified' => 'Not Verified',
+                        'verified' => __('resources/user.verified'),
+                        'unverified' => __('resources/user.unverified'),
                     ])
                     ->query(
                         callback: fn (Builder $query, array $data): Builder => static::applyVerificationFilter($query, $data)

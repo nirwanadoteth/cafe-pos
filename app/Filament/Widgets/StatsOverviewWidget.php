@@ -57,7 +57,13 @@ class StatsOverviewWidget extends BaseWidget
     private function createStats(string $title, string $table, ?string $column, DateRange $range, ?callable $formatter = null): Stat
     {
         $metrics = $this->calculateMetrics($table, $column, $range);
-        $value = $formatter !== null ? $formatter($metrics['current']) : $this->formatNumber($metrics['current']);
+        $value = $formatter !== null
+            ? $formatter($metrics['current'])
+            : (
+                $column !== null
+                ? $this->formatNumber($metrics['current']) // currency (cents -> base units)
+                : (string) Number::format($metrics['current'], 0, locale: config('app.locale')) // counts
+            );
 
         return $this->buildStat(
             title: $title,

@@ -325,7 +325,7 @@ class OrderForm
 
     /**
      * @param  array<string,mixed>|null  $state
-     * @return array<string,mixed>
+     * @return array<int, array<string,mixed>>
      */
     protected static function formatItemsState(?array $state, ?Order $record): array
     {
@@ -349,13 +349,13 @@ class OrderForm
                 });
 
                 if ($record !== null) {
-                    $query->orWhereIn('id', $record->items()->pluck('product_id'));
+                    $query->orWhereIn('id', $record->items()->select('product_id'));
                 }
             });
     }
 
     /**
-     * @param  Collection<string|int, mixed>  $byId
+     * @param  Collection<int, array<string,mixed>>  $byId
      * @return array<string,mixed>
      */
     protected static function mapProductToItemUsingIndex(Product $product, Collection $byId): array
