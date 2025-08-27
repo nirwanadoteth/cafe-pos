@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('payments', static function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Order::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Order::class)->unique()->constrained()->cascadeOnDelete();
             $table->unsignedInteger('amount');
             $table->timestamps();
         });
