@@ -12,8 +12,8 @@ if (function_exists('getCarbonInstancesFromDateString') === false) {
 
         [$from, $to] = $dateString !== null ? explode(' - ', $dateString) : [now()->format($format), now()->format($format)];
 
-        $from = Carbon::createFromFormat($format, $from) ?? now();
-        $to = Carbon::createFromFormat($format, $to) ?? now();
+        $from = Carbon::createFromFormat($format, $from) ?: now();
+        $to = Carbon::createFromFormat($format, $to) ?: now();
 
         $diff = $from->diffInDays($to);
 
