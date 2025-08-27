@@ -243,6 +243,7 @@ class StatsOverviewWidget extends BaseWidget
     private function applyTrendPeriod(mixed $trend, string $label): mixed
     {
         return match ($label) {
+            'perYear' => $trend->perYear(),
             'perMonth' => $trend->perMonth(),
             'perWeek' => $trend->perWeek(),
             default => $trend->perDay(),

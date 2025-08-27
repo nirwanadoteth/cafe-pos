@@ -24,6 +24,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\Size;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class OrderForm
 {
@@ -202,7 +203,7 @@ class OrderForm
             ]);
     }
 
-    protected static function validateItemsRepeater(string $attribute, mixed $value, Closure $fail): void
+    protected static function validateItemsRepeater(string $_attribute, mixed $value, Closure $fail): void
     {
         if (static::isValidItemsArray($value) === false) {
             $fail('Please add at least one item.');
@@ -215,7 +216,13 @@ class OrderForm
             return false;
         }
 
-        return array_reduce($value, static fn ($carry, $item) => $carry || (($item['qty'] ?? 0) > 0), false);
+        foreach ($value as $item) {
+            if ((int) ($item['qty'] ?? 0) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected static function getProductIdField(): Hidden
@@ -323,9 +330,10 @@ class OrderForm
     protected static function formatItemsState(?array $state, ?Order $record): array
     {
         $query = static::buildProductQuery($record);
+        $byId = collect($state ?? [])->keyBy('product_id');
 
         return $query->get()
-            ->map(fn (Product $product) => static::mapProductToItem($product, $state))
+            ->map(fn (Product $product) => static::mapProductToItemUsingIndex($product, $byId))
             ->toArray();
     }
 
@@ -347,19 +355,17 @@ class OrderForm
     }
 
     /**
-     * @param  array<string,mixed>|null  $state
+     * @param  Collection<string|int, mixed>  $byId
      * @return array<string,mixed>
      */
-    protected static function mapProductToItem(Product $product, ?array $state): array
+    protected static function mapProductToItemUsingIndex(Product $product, Collection $byId): array
     {
-        $existingItem = collect($state)->first(
-            fn ($item) => $item['product_id'] === $product->id
-        );
+        $existingItem = $byId->get($product->id);
 
         return [
             'product_id' => $product->id,
             'product_name' => $product->name,
-            'qty' => $existingItem['qty'] ?? 0,
+            'qty' => (int) ($existingItem['qty'] ?? 0),
             'unit_price' => $existingItem['unit_price'] ?? $product->price,
         ];
     }
