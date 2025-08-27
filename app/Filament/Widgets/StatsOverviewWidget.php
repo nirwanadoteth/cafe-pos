@@ -116,7 +116,7 @@ class StatsOverviewWidget extends BaseWidget
     {
         $query = $this->buildCountQuery($table, $startDate, $endDate);
 
-        return (int) $query->selectRaw('COUNT(*) as count')->value('count');
+        return (int) $query->count();
     }
 
     /**

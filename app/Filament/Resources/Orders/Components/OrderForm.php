@@ -142,7 +142,7 @@ class OrderForm
     {
         return Action::make('reset')
             ->modalHeading(__('resources/order.messages.reset_confirmation'))
-            ->modalDescription(__('resources/order/messages/reset_description'))
+            ->modalDescription(__('resources/order.messages.reset_description'))
             ->requiresConfirmation()
             ->color('danger')
             ->action(fn (Set $set) => $set(
@@ -206,7 +206,7 @@ class OrderForm
     protected static function validateItemsRepeater(string $_attribute, mixed $value, Closure $fail): void
     {
         if (static::isValidItemsArray($value) === false) {
-            $fail('Please add at least one item.');
+            $fail(__('resources/order.validation.at_least_one_item'));
         }
     }
 

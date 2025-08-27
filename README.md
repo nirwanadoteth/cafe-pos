@@ -54,7 +54,7 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
    - Import the database from
 
      ```bash
-     cafe_pos.sql
+     mysql -u <user> -p<password> -h 127.0.0.1 cafe_pos < cafe_pos.sql
      ```
 
 5. **Install Frontend Dependencies**
