@@ -48,6 +48,12 @@ class OrderItem extends Pivot
         'unit_price' => MoneyCast::class,
     ];
 
+    protected static function booted(): void
+    {
+        static::saved(fn (OrderItem $item) => optional($item->order)->update());
+        static::deleted(fn (OrderItem $item) => optional($item->order)->update());
+    }
+
     /** @return BelongsTo<Order,$this> */
     public function order(): BelongsTo
     {

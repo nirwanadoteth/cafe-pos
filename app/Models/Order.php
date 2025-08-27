@@ -77,10 +77,13 @@ class Order extends Model
 
     protected static function booted(): void
     {
-        static::saving(static function (Order $order) {
-            $order->total_price = $order->items->sum(
-                callback: fn ($item) => $item->qty * $item->unit_price
-            );
+        static::saving(static function (Order $order): void {
+            $order->total_price = (float) $order->items()
+                ->selectRaw('COALESCE(SUM(qty * unit_price), 0) as total')
+                ->value('total');
+        });
+        static::deleting(function (Order $order) {
+            $order->payment()->delete();
         });
     }
 
