@@ -23,6 +23,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\Size;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderForm
 {
@@ -140,7 +141,7 @@ class OrderForm
     {
         return Action::make('reset')
             ->modalHeading(__('resources/order.messages.reset_confirmation'))
-            ->modalDescription(__('resources/order.messages.reset_description'))
+            ->modalDescription(__('resources/order/messages/reset_description'))
             ->requiresConfirmation()
             ->color('danger')
             ->action(fn (Set $set) => $set(
@@ -196,11 +197,25 @@ class OrderForm
                  * @param  array<int, array<string, mixed>>|null  $value
                  */
                 fn (): Closure => static function (string $attribute, $value, Closure $fail) {
-                    if (is_array($value) === false || array_reduce($value, static fn ($carry, $item) => $carry || (($item['qty'] ?? 0) > 0), false) === false) {
-                        $fail('Please add at least one item.');
-                    }
+                    static::validateItemsRepeater($attribute, $value, $fail);
                 },
             ]);
+    }
+
+    protected static function validateItemsRepeater(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (! static::isValidItemsArray($value)) {
+            $fail('Please add at least one item.');
+        }
+    }
+
+    protected static function isValidItemsArray(mixed $value): bool
+    {
+        if (! is_array($value)) {
+            return false;
+        }
+
+        return array_reduce($value, static fn ($carry, $item) => $carry || (($item['qty'] ?? 0) > 0), false);
     }
 
     protected static function getProductIdField(): Hidden
@@ -292,7 +307,7 @@ class OrderForm
 
                     $product = Product::find($itemData['product_id']);
 
-                    if (! $product) {
+                    if ($product === null) {
                         return null;
                     }
 
@@ -307,7 +322,17 @@ class OrderForm
      */
     protected static function formatItemsState(?array $state, ?Order $record): array
     {
-        $query = Product::query()
+        $query = static::buildProductQuery($record);
+
+        return $query->get()
+            ->map(fn (Product $product) => static::mapProductToItem($product, $state))
+            ->toArray();
+    }
+
+    /** @return Builder<Product> */
+    protected static function buildProductQuery(?Order $record): Builder
+    {
+        return Product::query()
             ->with('category')
             ->where(function ($query) use ($record) {
                 $query->where(function ($q) {
@@ -319,10 +344,6 @@ class OrderForm
                     $query->orWhereIn('id', $record->items()->pluck('product_id'));
                 }
             });
-
-        return $query->get()
-            ->map(fn (Product $product) => static::mapProductToItem($product, $state))
-            ->toArray();
     }
 
     /**
@@ -347,20 +368,28 @@ class OrderForm
     protected static function getItemsRepeaterColStyles(): array | Closure
     {
         return static function ($operation) {
-            if ($operation === 'create') {
-                return [
-                    'product_name' => 'width: 70%',
-                    'qty' => 'width: 15%',
-                    'unit_price' => 'width: 15%',
-                ];
-            }
-
-            return [
-                'product_name' => 'width: 60%',
-                'qty' => 'width: 20%',
-                'unit_price' => 'width: 20%',
-            ];
+            return static::getColumnStylesForOperation($operation);
         };
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    protected static function getColumnStylesForOperation(string $operation): array
+    {
+        if ($operation === 'create') {
+            return [
+                'product_name' => 'width: 70%',
+                'qty' => 'width: 15%',
+                'unit_price' => 'width: 15%',
+            ];
+        }
+
+        return [
+            'product_name' => 'width: 60%',
+            'qty' => 'width: 20%',
+            'unit_price' => 'width: 20%',
+        ];
     }
 
     protected static function getPaymentFormSchema(): Repeater

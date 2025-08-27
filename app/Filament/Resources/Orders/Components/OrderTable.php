@@ -119,17 +119,24 @@ class OrderTable
                         fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                     )
             )
-            ->indicateUsing(function (array $data): array {
-                $indicators = [];
-                if ($data['created_from'] ?? null) {
-                    $indicators['created_from'] = __('resources/order.filters.created_from') . ' ' . Carbon::parse($data['created_from'])->toFormattedDateString();
-                }
-                if ($data['created_until'] ?? null) {
-                    $indicators['created_until'] = __('resources/order.filters.created_until') . ' ' . Carbon::parse($data['created_until'])->toFormattedDateString();
-                }
+            ->indicateUsing(fn (array $data): array => static::generateDateFilterIndicators($data));
+    }
 
-                return $indicators;
-            });
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, string>
+     */
+    protected static function generateDateFilterIndicators(array $data): array
+    {
+        $indicators = [];
+        if ($data['created_from'] ?? null) {
+            $indicators['created_from'] = __('resources/order.filters.created_from') . ' ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+        }
+        if ($data['created_until'] ?? null) {
+            $indicators['created_until'] = __('resources/order.filters.created_until') . ' ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+        }
+
+        return $indicators;
     }
 
     /** @return array<ActionGroup> */
@@ -151,7 +158,9 @@ class OrderTable
             ->icon('heroicon-o-arrow-down-tray')
             ->action(function (Order $record) {
                 $record = $record->load('customer', 'items.product', 'payment');
-                $filename = 'INVOICE-' . $record->number . '-' . $record->created_at?->format('d-m-Y') . '.pdf';
+                // Sanitize the order number to prevent issues with special characters in filename
+                $safeNumber = preg_replace('/[^A-Za-z0-9\-]/', '', $record->number);
+                $filename = 'INVOICE-' . $safeNumber . '-' . $record->created_at?->format('d-m-Y') . '.pdf';
 
                 return response()->streamDownload(function () use ($record) {
                     echo Pdf::loadHtml(

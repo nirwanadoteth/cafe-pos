@@ -69,13 +69,7 @@ class ProductForm
             ->maxLength(255)
             ->autofocus(fn (string $operation) => $operation === 'create')
             ->lazy()
-            ->afterStateUpdated(function (Set $set, ?string $state) {
-                if ($state === null) {
-                    return;
-                }
-
-                $set('slug', Str::slug($state));
-            });
+            ->afterStateUpdated(static::getSlugUpdateCallback());
     }
 
     protected static function getSlugField(): TextInput
@@ -87,6 +81,17 @@ class ProductForm
             ->required()
             ->maxLength(255)
             ->unique(Product::class, 'slug', ignoreRecord: true);
+    }
+
+    protected static function getSlugUpdateCallback(): Closure
+    {
+        return function (Set $set, ?string $state) {
+            if ($state === null) {
+                return;
+            }
+
+            $set('slug', Str::slug($state));
+        };
     }
 
     protected static function getDescriptionField(): MarkdownEditor

@@ -9,6 +9,7 @@ use App\Filament\Resources\Categories\Pages\ViewCategory;
 use App\Filament\Resources\Categories\RelationManagers\ProductsRelationManager;
 use App\Models\Category;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -65,13 +66,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                                     ->maxLength(255)
                                     ->autofocus(fn (string $operation) => $operation === 'create')
                                     ->lazy()
-                                    ->afterStateUpdated(function (Set $set, ?string $state) {
-                                        if ($state === null) {
-                                            return;
-                                        }
-
-                                        $set('slug', Str::slug($state));
-                                    }),
+                                    ->afterStateUpdated(static::getSlugUpdateCallback()),
 
                                 TextInput::make('slug')
                                     ->label(__('resources/category.slug'))
@@ -104,6 +99,17 @@ class CategoryResource extends Resource implements HasShieldPermissions
                     ->hidden(fn (?Category $record) => $record === null),
             ])
             ->columns(3);
+    }
+
+    protected static function getSlugUpdateCallback(): Closure
+    {
+        return function (Set $set, ?string $state) {
+            if ($state === null) {
+                return;
+            }
+
+            $set('slug', Str::slug($state));
+        };
     }
 
     public static function table(Table $table): Table
@@ -158,10 +164,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
 
                         IconEntry::make('is_visible')
                             ->label(__('resources/category.visibility'))
-                            ->icon(fn (string $state): string => match ($state) {
-                                '1' => 'heroicon-o-check-circle',
-                                default => 'heroicon-o-x-circle',
-                            }),
+                            ->icon(fn (string $state): string => static::getVisibilityIcon($state)),
 
                         TextEntry::make('description')
                             ->markdown()
@@ -184,6 +187,14 @@ class CategoryResource extends Resource implements HasShieldPermissions
                     ->columnSpan(['lg' => 1]),
             ])
             ->columns(3);
+    }
+
+    protected static function getVisibilityIcon(string $state): string
+    {
+        return match ($state) {
+            '1' => 'heroicon-o-check-circle',
+            default => 'heroicon-o-x-circle',
+        };
     }
 
     public static function getRelations(): array

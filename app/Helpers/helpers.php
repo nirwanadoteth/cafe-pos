@@ -17,16 +17,27 @@ if (! function_exists('getCarbonInstancesFromDateString')) {
 
         $diff = $from->diffInDays($to);
 
-        if ($diff >= 365) {
-            $label = 'perYear';
-        } elseif ($diff >= 30) {
-            $label = 'perMonth';
-        } elseif ($diff >= 7) {
-            $label = 'perWeek';
-        } else {
-            $label = 'perDay';
-        }
+        $label = getDateRangeLabel($diff);
 
         return [$from, $to, $label];
+    }
+}
+
+if (! function_exists('getDateRangeLabel')) {
+    function getDateRangeLabel(float | int $diff): string
+    {
+        if ($diff >= 365) {
+            return 'perYear';
+        }
+
+        if ($diff >= 30) {
+            return 'perMonth';
+        }
+
+        if ($diff >= 7) {
+            return 'perWeek';
+        }
+
+        return 'perDay';
     }
 }
