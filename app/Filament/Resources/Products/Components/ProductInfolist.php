@@ -120,10 +120,15 @@ class ProductInfolist
     {
         return IconEntry::make('is_visible')
             ->label('Visibility')
-            ->icon(fn (string $state): string => match ($state) {
-                '1' => 'heroicon-o-check-circle',
-                default => 'heroicon-o-x-circle',
-            });
+            ->icon(fn (string $state): string => static::getVisibilityIcon($state));
+    }
+
+    protected static function getVisibilityIcon(string $state): string
+    {
+        return match ($state) {
+            '1' => 'heroicon-o-check-circle',
+            default => 'heroicon-o-x-circle',
+        };
     }
 
     protected static function getAssociationsSection(): Section

@@ -72,4 +72,8 @@ return [
         'cancelled' => 'Cancelled',
     ],
 
+    'validation' => [
+        'at_least_one_item' => 'The order must have at least one item.',
+    ],
+
 ];

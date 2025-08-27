@@ -7,6 +7,7 @@ use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -68,7 +69,8 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->inlineLabel(),
 
                 TextInput::make('password')
-                    ->label(fn (?User $record) => $record === null ? __('resources/user.password') : __('resources/user.new_password'))
+                    ->label(fn (?User $record) => static::getPasswordLabel($record))
+                    ->required(fn (string $operation): bool => $operation === 'create')
                     ->password()
                     ->revealable()
                     ->rule(Password::default())
@@ -80,10 +82,10 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->inlineLabel(),
 
                 TextInput::make('passwordConfirmation')
-                    ->label(fn (?User $record) => $record === null ? __('resources/user.password_confirmation') : __('resources/user.new_password_confirmation'))
+                    ->label(fn (?User $record) => static::getPasswordConfirmationLabel($record))
                     ->password()
                     ->revealable()
-                    ->required()
+                    ->required(fn (Get $get): bool => filled($get('password')))
                     ->visible(fn (Get $get): bool => filled($get('password')))
                     ->dehydrated(false)
                     ->inlineLabel(),
@@ -93,13 +95,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->onColor('success')
                     ->offColor('danger')
                     ->default(null)
-                    ->dehydrateStateUsing(function ($state, $record) {
-                        if ($record && $state === ($record->email_verified_at !== null)) {
-                            return $record->email_verified_at;
-                        }
-
-                        return $state ? now() : null;
-                    })
+                    ->dehydrateStateUsing(fn ($state, $record) => static::dehydrateEmailVerificationState($state, $record))
                     ->afterStateHydrated(fn ($component, $state) => $component->state($state !== null))
                     ->inlineLabel(),
 
@@ -112,6 +108,53 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label(__('resources/user.roles'))
                     ->inlineLabel(),
             ]);
+    }
+
+    protected static function getPasswordLabel(?User $record): string
+    {
+        return $record === null ? __('resources/user.password') : __('resources/user.new_password');
+    }
+
+    protected static function getPasswordConfirmationLabel(?User $record): string
+    {
+        return $record === null ? __('resources/user.password_confirmation') : __('resources/user.new_password_confirmation');
+    }
+
+    protected static function dehydrateEmailVerificationState(mixed $state, mixed $record): ?Carbon
+    {
+        if ($record !== null && (bool) $state === ($record->email_verified_at !== null)) {
+            return $record->email_verified_at;
+        }
+
+        return $state === true ? now() : null;
+    }
+
+    protected static function getEmailVerificationState(User $record): string
+    {
+        return $record->email_verified_at !== null ? __('resources/user.verified') : __('resources/user.unverified');
+    }
+
+    protected static function getEmailVerificationColor(User $record): string
+    {
+        return $record->email_verified_at !== null ? 'success' : 'danger';
+    }
+
+    /**
+     * @param  Builder<User>  $query
+     * @param  array<string, mixed>  $data
+     * @return Builder<User>
+     */
+    protected static function applyVerificationFilter(Builder $query, array $data): Builder
+    {
+        return $query
+            ->when(
+                ($data['value'] ?? null) === 'verified',
+                fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')
+            )
+            ->when(
+                ($data['value'] ?? null) === 'unverified',
+                fn (Builder $query): Builder => $query->whereNull('email_verified_at')
+            );
     }
 
     public static function table(Table $table): Table
@@ -129,8 +172,8 @@ class UserResource extends Resource implements HasShieldPermissions
                 TextColumn::make('email_verified_at')
                     ->label(__('resources/user.verified'))
                     ->badge()
-                    ->getStateUsing(fn (User $record) => $record->email_verified_at ? __('resources/user.verified') : __('resources/user.unverified'))
-                    ->color(fn (string $state) => $state === __('resources/user.verified') ? 'success' : 'danger')
+                    ->getStateUsing(fn (User $record) => static::getEmailVerificationState($record))
+                    ->color(color: fn (User $record) => static::getEmailVerificationColor($record))
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('roles')
@@ -149,19 +192,11 @@ class UserResource extends Resource implements HasShieldPermissions
                 SelectFilter::make('verified')
                     ->label(__('resources/user.verified'))
                     ->options([
-                        'verified' => 'Verified',
-                        'unverified' => 'Not Verified',
+                        'verified' => __('resources/user.verified'),
+                        'unverified' => __('resources/user.unverified'),
                     ])
                     ->query(
-                        callback: fn (Builder $query, array $data): Builder => $query
-                            ->when(
-                                $data['value'] === 'verified',
-                                fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')
-                            )
-                            ->when(
-                                $data['value'] === 'unverified',
-                                fn (Builder $query): Builder => $query->whereNull('email_verified_at')
-                            )
+                        callback: fn (Builder $query, array $data): Builder => static::applyVerificationFilter($query, $data)
                     ),
 
                 SelectFilter::make('role')
