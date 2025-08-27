@@ -25,6 +25,7 @@ class ProductsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return ProductResource::table($table)
+            ->defaultSort('name')
             ->headerActions([
                 CreateAction::make(),
             ])

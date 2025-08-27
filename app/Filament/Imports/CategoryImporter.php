@@ -6,6 +6,7 @@ use App\Models\Category;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Support\Str;
 
 class CategoryImporter extends Importer
 {
@@ -55,8 +56,9 @@ class CategoryImporter extends Importer
 
     public function resolveRecord(): ?Category
     {
-        return Category::firstOrNew([
-            'slug' => $this->data['slug'],
-        ]);
+        $provided = trim((string) ($this->data['slug'] ?? ''));
+        $slug = $provided !== '' ? Str::slug($provided) : Str::slug((string) ($this->data['name'] ?? ''));
+
+        return Category::firstOrNew(['slug' => $slug]);
     }
 }

@@ -14,7 +14,7 @@ readonly class DateRange
 
     public function previous(): self
     {
-        $diff = $this->start->diffInDays($this->end);
+        $diff = $this->start->diffInDays($this->end) + 1;
 
         return new self(
             $this->start->copy()->subDays($diff),

@@ -64,8 +64,9 @@ class ProductImporter extends Importer
 
     public function resolveRecord(): ?Product
     {
-        return Product::firstOrNew([
-            'slug' => $this->data['slug'] ? $this->data['slug'] : Str::slug($this->data['name']),
-        ]);
+        $provided = trim((string) ($this->data['slug'] ?? ''));
+        $slug = $provided !== '' ? Str::slug($provided) : Str::slug((string) ($this->data['name'] ?? ''));
+
+        return Product::firstOrNew(['slug' => $slug]);
     }
 }

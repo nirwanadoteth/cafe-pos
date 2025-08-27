@@ -64,7 +64,7 @@ class OrderForm
                         ->schema([
                             TextEntry::make('total_price')
                                 ->label(__('resources/order.total'))
-                                ->state(fn (Order $record): ?string => $record->total_price ? 'Rp ' . number_format($record->total_price, 2, ',', '.') : null),
+                                ->state(fn (Order $record): ?string => $record->total_price !== null ? 'Rp ' . number_format($record->total_price, 2, ',', '.') : null),
 
                             static::getPaymentFormSchema(),
                         ])
@@ -198,7 +198,7 @@ class OrderForm
                  * @param  array<int, array<string, mixed>>|null  $value
                  */
                 fn (): Closure => static function (string $attribute, $value, Closure $fail) {
-                    if (! is_array($value) || ! array_reduce($value, static fn ($carry, $item) => $carry || (($item['qty'] ?? 0) > 0), false)) {
+                    if (is_array($value) === false || array_reduce($value, static fn ($carry, $item) => $carry || (($item['qty'] ?? 0) > 0), false) === false) {
                         $fail('Please add at least one item.');
                     }
                 },
@@ -391,7 +391,7 @@ class OrderForm
             ->columnSpanFull()
             ->afterStateUpdated(function (Get $get, Set $set, $state) {
                 $totalPrice = $get('../../total_price') ?? 0;
-                if (! $state && ! $totalPrice) {
+                if ($state === 0 && $totalPrice === 0) {
                     return;
                 }
 
