@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('orders', static function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->string('number', 32)->unique();

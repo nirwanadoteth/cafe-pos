@@ -2,7 +2,8 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\OrderResource;
+use App\Filament\Resources\Orders\OrderResource;
+use App\Helpers\DateRange;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -10,26 +11,6 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Flowframe\Trend\Trend;
 use Illuminate\Support\Number;
-
-readonly class DateRange
-{
-    public function __construct(
-        public Carbon $start,
-        public Carbon $end,
-        public string $label
-    ) {}
-
-    public function previous(): self
-    {
-        $diff = $this->start->diffInDays($this->end);
-
-        return new self(
-            $this->start->copy()->subDays($diff),
-            $this->end->copy()->subDays($diff),
-            $this->label
-        );
-    }
-}
 
 class StatsOverviewWidget extends BaseWidget
 {
@@ -40,7 +21,7 @@ class StatsOverviewWidget extends BaseWidget
     protected function getStats(): array
     {
         [$from, $to, $label] = getCarbonInstancesFromDateString(
-            $this->filters['created_at'] ?? null
+            $this->pageFilters['created_at'] ?? null
         );
         $dateRange = new DateRange(
             $from,
@@ -103,9 +84,46 @@ class StatsOverviewWidget extends BaseWidget
         return compact('current', 'diff', 'trend');
     }
 
+    private function getSum(string $table, string $column, Carbon $startDate, Carbon $endDate): mixed
+    {
+        $query = OrderResource::getEloquentQuery()->whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($table === 'orders') {
+            $query->where('status', '!=', 'cancelled');
+        }
+
+        return $query->sum($column);
+    }
+
+    private function getCount(string $table, Carbon $startDate, Carbon $endDate): int
+    {
+        $query = $table === 'orders'
+            ? OrderResource::getEloquentQuery()
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('status', '!=', 'cancelled')
+            : Customer::whereBetween('created_at', [$startDate, $endDate]);
+
+        return (int) $query->selectRaw('COUNT(*) as count')->value('count');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function calculateTrend(int | float $diff): array
+    {
+        $isPositive = $diff >= 0 === true;
+        $direction = $isPositive ? 'increase' : 'decrease';
+
+        return [
+            'direction' => __('widgets/stats-overview.trend.' . $direction),
+            'icon' => $isPositive ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
+            'color' => $isPositive ? 'success' : 'danger',
+        ];
+    }
+
     private function formatNumber(int $number): string
     {
-        $number = round(floatval($number) / 100, 2);
+        $number = round((float) $number / 100, 2);
 
         return match (true) {
             $number < 1000 => (string) Number::format($number, 0, locale: config('app.locale')),
@@ -131,50 +149,13 @@ class StatsOverviewWidget extends BaseWidget
             ->color($metrics['trend']['color']);
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private function calculateTrend(int | float $diff): array
-    {
-        $isPositive = $diff >= 0;
-        $direction = $isPositive ? 'increase' : 'decrease';
-
-        return [
-            'direction' => __('widgets/stats-overview.trend.' . $direction),
-            'icon' => $isPositive ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
-            'color' => $isPositive ? 'success' : 'danger',
-        ];
-    }
-
     private function calculatePercentageChange(int | float $oldValue, int | float $diffValue): int | float
     {
-        if ($oldValue == 0) {
+        if ($oldValue === 0) {
             return $diffValue > 0 ? 100 : 0;
         }
 
         return round(($diffValue / $oldValue) * 100, 2);
-    }
-
-    private function getSum(string $table, string $column, Carbon $startDate, Carbon $endDate): mixed
-    {
-        $query = OrderResource::getEloquentQuery()->whereBetween('created_at', [$startDate, $endDate]);
-
-        if ($table === 'orders') {
-            $query->where('status', '!=', 'cancelled');
-        }
-
-        return $query->sum($column);
-    }
-
-    private function getCount(string $table, Carbon $startDate, Carbon $endDate): int
-    {
-        $query = $table === 'orders'
-            ? OrderResource::getEloquentQuery()
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->where('status', '!=', 'cancelled')
-            : Customer::whereBetween('created_at', [$startDate, $endDate]);
-
-        return (int) $query->selectRaw('COUNT(*) as count')->value('count');
     }
 
     /**

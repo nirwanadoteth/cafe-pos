@@ -36,13 +36,6 @@ class CategoryImporter extends Importer
         ];
     }
 
-    public function resolveRecord(): ?Category
-    {
-        return Category::firstOrNew([
-            'slug' => $this->data['slug'],
-        ]);
-    }
-
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body = __('resources/category.import.completed', [
@@ -58,5 +51,12 @@ class CategoryImporter extends Importer
         }
 
         return $body;
+    }
+
+    public function resolveRecord(): ?Category
+    {
+        return Category::firstOrNew([
+            'slug' => $this->data['slug'],
+        ]);
     }
 }

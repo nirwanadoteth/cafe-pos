@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Filament\Resources\Orders\Pages;
+
+use App\Filament\Resources\Orders\Components\OrderForm;
+use App\Filament\Resources\Orders\OrderResource;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\User;
+use Filament\Actions\Action;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Components\Wizard\Step;
+use Filament\Schemas\Schema;
+
+class CreateOrder extends CreateRecord
+{
+    use HasWizard;
+
+    protected static string $resource = OrderResource::class;
+
+    protected ?string $currentStep = null;
+
+    public function form(Schema $schema): Schema
+    {
+        return parent::form($schema)
+            ->components([
+                Wizard::make($this->getSteps())
+                    ->startOnStep($this->getStartStep())
+                    ->cancelAction($this->getCancelFormAction())
+                    ->submitAction($this->getSubmitFormAction())
+                    ->skippable($this->hasSkippableSteps())
+                    ->contained(false)
+                    ->persistStepInQueryString(),
+            ])
+            ->columns(null);
+    }
+
+    /** @return Step[] */
+    protected function getSteps(): array
+    {
+        return [
+            Step::make(__('resources/order.details'))
+                ->icon('heroicon-o-identification')
+                ->schema([
+                    Section::make()->schema(OrderForm::getDetailsFormSchema())->columns(),
+                ]),
+
+            Step::make(__('resources/order.items'))
+                ->icon('heroicon-o-shopping-bag')
+                ->schema([
+                    Section::make()->schema([
+                        OrderForm::getItemsRepeater(),
+                    ]),
+                ]),
+        ];
+    }
+
+    protected function afterCreate(): void
+    {
+        /** @var Order $order */
+        $order = $this->record;
+
+        /** @var int $total_price */
+        $total_price = $order->items->sum(
+            fn ($item) => $item->qty * $item->unit_price
+        );
+
+        $order->update(['total_price' => $total_price]);
+        /** @var User $user */
+        $user = auth()->guard()->user();
+
+        /** @var Customer $customer */
+        $customer = $order->customer;
+
+        Notification::make()
+            ->title(__('resources/order.notifications.new.title'))
+            ->icon('heroicon-o-shopping-bag')
+            ->body(
+                '**' . __('resources/order.notifications.new.body', [
+                    'customer' => $customer->name,
+                    'count' => $order->items->count(),
+                ]) . '**'
+            )
+            ->actions([
+                Action::make('View')
+                    ->url(OrderResource::getUrl('edit', ['record' => $order])),
+            ])
+            ->sendToDatabase($user);
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
+}

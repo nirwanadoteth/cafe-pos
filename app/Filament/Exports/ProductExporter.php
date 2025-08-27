@@ -33,8 +33,8 @@ class ProductExporter extends Exporter
             'count' => number_format($export->successful_rows),
             'label' => str('row')->plural($export->successful_rows),
         ]);
-
-        if ($failedRowsCount = $export->getFailedRowsCount()) {
+        $failedRowsCount = $export->getFailedRowsCount();
+        if ($failedRowsCount !== 0) {
             $body .= ' ' . __('resources/product.export.failed', [
                 'count' => number_format($failedRowsCount),
                 'label' => str('row')->plural($failedRowsCount),

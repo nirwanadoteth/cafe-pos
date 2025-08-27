@@ -24,7 +24,7 @@ class AdminUserSeeder extends Seeder
         }
 
         $user = User::firstOrCreate(
-            [ 'email' => $email ],
+            ['email' => $email],
             [
                 'name' => $name,
                 'password' => Hash::make($password),

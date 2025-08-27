@@ -6,7 +6,7 @@
 -- Generation Time: Feb 14, 2025 at 03:58 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.16
-
+USE `cafe_pos`;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -989,7 +989,7 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `name`, `slug`, `description`, `is_visible`, `price`, `created_at`, `updated_at`) VALUES
-(1, 5, 'Café Latte', 'cafe-latte', 'Sunt nulla qui odio numquam odit omnis nisi.', 1, 6032500, '2024-03-06 15:42:48', '2024-12-14 20:15:12'),
+(1, 5, 'CafÃ© Latte', 'cafe-latte', 'Sunt nulla qui odio numquam odit omnis nisi.', 1, 6032500, '2024-03-06 15:42:48', '2024-12-14 20:15:12'),
 (2, 4, 'Blueberry Scone', 'blueberry-scone', 'Facere laborum possimus dignissimos voluptate.', 1, 5571500, '2024-01-15 23:29:17', '2024-12-10 17:49:55'),
 (3, 8, 'Chai Tea Latte', 'chai-tea-latte', 'Sint consequatur adipisci officia laborum.', 1, 7428100, '2024-03-18 08:58:26', '2024-09-29 11:55:07'),
 (4, 4, 'Croissant', 'croissant', 'Inventore perspiciatis maiores numquam exercitationem.', 1, 6358700, '2024-02-07 10:27:23', '2024-11-10 03:30:33'),

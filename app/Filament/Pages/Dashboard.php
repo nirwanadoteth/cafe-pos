@@ -2,9 +2,9 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
 use Filament\Pages\Dashboard as BaseDashboard;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Malzariey\FilamentDaterangepickerFilter\Fields\DateRangePicker;
 
 class Dashboard extends BaseDashboard
@@ -13,10 +13,10 @@ class Dashboard extends BaseDashboard
 
     protected static string $routePath = '/dashboard';
 
-    public function filtersForm(Form $form): Form
+    public function filtersForm(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->schema([
                         DateRangePicker::make('created_at')

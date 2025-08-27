@@ -47,12 +47,14 @@ The system relies on the following runtime services and integrations. Local deve
 - Health checks: spatie/health integration for DB, cache, queue, disk, security advisories
 
 Example local setup (suggested):
+
 - DB: 127.0.0.1:3306
 - Redis: 127.0.0.1:6379
 - Mailhog: 127.0.0.1:1025 (SMTP), 8025 (UI)
 - Storage: local disk with `php artisan storage:link`
 
 Operational notes:
+
 - Always run database migrations and seeders with transactions where applicable.
 - Prefer environment-specific configuration via .env files; never commit secrets.
 - Enable debugging only in non-production environments.

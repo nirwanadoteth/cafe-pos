@@ -17,7 +17,15 @@ if (! function_exists('getCarbonInstancesFromDateString')) {
 
         $diff = $from->diffInDays($to);
 
-        $label = $diff >= 365 ? 'perMonth' : ($diff >= 30 ? 'perWeek' : 'perDay');
+        if ($diff >= 365) {
+            $label = 'perYear';
+        } elseif ($diff >= 30) {
+            $label = 'perMonth';
+        } elseif ($diff >= 7) {
+            $label = 'perWeek';
+        } else {
+            $label = 'perDay';
+        }
 
         return [$from, $to, $label];
     }

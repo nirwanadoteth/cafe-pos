@@ -7,6 +7,20 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## About Laravel
+
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
+
 # Cafe POS System
 
 A modern point-of-sale system built with Laravel for cafe and restaurant management.
@@ -14,9 +28,6 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 ## Documentation
 
 - 📄 [Installation Guide](#setup-instructions)
-- 📄 [User Manual](Buku%20Petunjuk%20Penggunaan%20Aplikasi%20POS%20Cafe.pdf)
-- 📄 [Technical Report](Laporan%20Tugas%20Besar%20Pemrograman%20Basis%20Data.pdf)
-- 🎥 [Demo Video](demo.mp4)
 - 💾 [Database File](cafe_pos.sql)
 
 ## Requirements
@@ -30,17 +41,20 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 ## Setup Instructions
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/10122222/cafe-pos.git
    cd cafe-pos
    ```
 
 2. **Install PHP Dependencies**
+
    ```bash
    composer install
    ```
 
 3. **Environment Setup**
+
    ```bash
    cp .env.example .env
    php artisan key:generate
@@ -50,7 +64,8 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 4. **Configure Database**
    - Create a new MySQL database
    - Update .env file with your database credentials:
-     ```
+
+     ```env
      DB_CONNECTION=mysql
      DB_HOST=127.0.0.1
      DB_PORT=3306
@@ -58,17 +73,21 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
      DB_USERNAME=your_username
      DB_PASSWORD=your_password
      ```
+
    - Import the database from
+
      ```bash
      cafe_pos.sql
      ```
 
 5. **Install Frontend Dependencies**
+
    ```bash
    npm install && npm run build
    ```
 
 6. **Start the Development Server**
+
    ```bash
    composer run dev
    ```
@@ -76,7 +95,9 @@ A modern point-of-sale system built with Laravel for cafe and restaurant managem
 ## Troubleshooting
 
 ### Permission Issues
+
 If you encounter storage or cache-related errors:
+
 ```bash
 chmod -R 775 storage bootstrap/cache
 sudo chown -R $USER:www-data storage bootstrap/cache
@@ -101,18 +122,7 @@ composer run lint      # PHP code style (Pint)
 composer run stan      # Static analysis (PHPStan)
 composer run test      # Test suite (PHPUnit)
 composer run build     # Frontend build (Vite)
-composer run ci        # Run lint, stan, tests, and frontend build
 ```
-
-## Docker (Local Infrastructure)
-
-For a quick local setup of MySQL, Redis, and Mailhog (and optional Meilisearch), this repo includes a docker-compose.yml. Run the Laravel app on your host (Windows) and point .env to the container ports.
-
-- Start services: `docker compose up -d`
-- Optional Meilisearch: `docker compose --profile optional up -d`
-- Mailhog UI: http://localhost:8025
-
-See docs/docker.md for full instructions and Windows PowerShell commands. If you prefer a fully containerized approach, you can use Laravel Sail (already required as a dev dependency).
 
 ## License
 

@@ -58,7 +58,7 @@ class Order extends Model
     use SoftDeletes;
 
     /**
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'number',
@@ -74,6 +74,15 @@ class Order extends Model
         'total_price' => MoneyCast::class,
         'status' => OrderStatus::class,
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(static function (Order $order) {
+            $order->total_price = $order->items->sum(
+                callback: fn ($item) => $item->qty * $item->unit_price
+            );
+        });
+    }
 
     /** @return BelongsTo<Customer,$this> */
     public function customer(): BelongsTo
@@ -91,14 +100,5 @@ class Order extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
-    }
-
-    protected static function booted(): void
-    {
-        static::saving(function (Order $order) {
-            $order->total_price = $order->items->sum(function ($item) {
-                return $item->qty * $item->unit_price;
-            });
-        });
     }
 }
