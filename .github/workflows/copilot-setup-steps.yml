@@ -22,6 +22,9 @@ jobs:
       CACHE_DRIVER: file
       SESSION_DRIVER: file
       QUEUE_CONNECTION: sync
+      ADMIN_EMAIL: "admin@cafe.pos"
+      ADMIN_NAME: "Administrator"
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}  # Set this secret in your repository settings.
 
     # Set the permissions to the lowest permissions possible needed for your steps.
     # Copilot will be given its own token for its operations.
