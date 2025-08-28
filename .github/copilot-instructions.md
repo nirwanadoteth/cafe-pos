@@ -25,19 +25,25 @@ These instructions guide AI coding agents working in this repository. Keep chang
   - `DateRangeService::getCarbonInstancesFromDateString()` returns [from, to, label] where label is one of `perDay|perWeek|perMonth|perYear`.
   - Trend charts use `flowframe/laravel-trend` with `between(...)->perX()->count()/sum()`.
 - Authorization:
-  - Filament Shield is enabled; policies under `app/Policies`. Use `$user->can('<permission>')`.
+  - Filament Shield (`BezhanSalleh\FilamentShield`) manages roles/permissions; policies under `app/Policies`. Use `$user->can('<permission>')`.
+  - Role management via `app/Filament/Resources/Roles/RoleResource.php` extends base Shield resource.
 
 ## Build, run, and test
+- Database setup (choose one):
+  - Quick: Import provided data: `mysql -u <user> -p <db> < cafe_pos.sql`
+  - Clean: Use migrations: `php artisan migrate --seed` (requires seeders)
 - Composer scripts:
   - `composer run dev` launches: PHP server, queue listener, logs, and Vite via concurrently.
   - `composer run lint` runs Pint. `composer run stan` runs PHPStan. `composer run test` runs PHPUnit.
-- Frontend: `npm install && npm run build` (or `npm run dev`).
+- Frontend: `npm install && npm run build` (or `npm run dev`). Note: dependencies may show UNMET initially.
 - Storage link: ensure `php artisan storage:link` during setup.
+- Testing: Use SQLite in-memory for Feature tests (see docs/guidelines.md). Unit tests work without DB.
 
 ## Integration points
 - Filament:
   - Panels configured via `app/Providers/Filament/AdminPanelProvider.php` and `FilamentConfigurationService`.
   - Pages like `Welcome.php` render Livewire `home` component.
+  - Health checks via `ShuvroRoy\FilamentSpatieLaravelHealth` plugin.
 - Charts and stats:
   - `StatsOverviewWidget` delegates to `StatsOverviewCalculator`.
   - `OrdersChart` and `CustomersChart` use `ChartDataService` and translate labels from `resources/lang`.
@@ -84,5 +90,6 @@ These instructions guide AI coding agents working in this repository. Keep chang
 - Stats extraction: see `app/Filament/Widgets/StatsOverviewWidget.php` using `StatsOverviewCalculator`.
 - Chart data: `app/Filament/Widgets/OrdersChart.php` delegates to `ChartDataService`.
 - Form validation: `OrderForm` uses `OrderFormValidator` for items repeater rules.
+- Component delegation: `OrderResource` uses `Components/OrderForm.php` and `Components/OrderTable.php`.
 
 If anything is unclear (e.g., where a calculation should live or how to structure a new widget), propose a small service-first change and reference similar files above.
