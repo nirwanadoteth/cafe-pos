@@ -24,7 +24,7 @@ jobs:
       QUEUE_CONNECTION: sync
       ADMIN_EMAIL: admin@example.com
       ADMIN_NAME: Administrator
-      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }} # store a strong value in repo/org secrets
+      ADMIN_PASSWORD: H#55AgaX73&##_sdaY
 
     # Set the permissions to the lowest permissions possible needed for your steps.
     # Copilot will be given its own token for its operations.
@@ -84,13 +84,23 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-      - name: Prepare SQLite env
+      - name: Prepare the application
         run: |
           php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
+
+      - name: Clear Config & Cache
+        run: |
           php artisan config:clear
           php artisan cache:clear
-          php artisan key:generate --force --no-interaction
-          php artisan storage:link || true
-          php artisan migrate --force --no-interaction
-          php artisan db:seed --force --no-interaction
-          php artisan db:seed --class=AdminUserSeeder --force --no-interaction
+
+      - name: Run Migration
+        run: php artisan migrate -v
+
+      - name: Seed Database
+        run: |
+          php artisan db:seed --no-interaction
+          php artisan db:seed --class=AdminUserSeeder --no-interaction
+
+      - name: Link storage
+        run: php artisan storage:link
