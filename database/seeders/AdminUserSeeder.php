@@ -18,7 +18,7 @@ class AdminUserSeeder extends Seeder
         $name = $this->command->ask('Admin name', 'Administrator');
         $password = $this->command->ask('Admin pass', '*Ah5cE#jw8F!2u+6Ab');
 
-        if (empty($password) === false || strlen($password) < 12) {
+        if (empty($password) === true || strlen($password) < 12) {
             // Interactive fallback only if no valid env password present
             $password = $this->secret('Admin password (min 12 chars, will not be shown)');
             while (is_string($password) === false || strlen($password) < 12) {
