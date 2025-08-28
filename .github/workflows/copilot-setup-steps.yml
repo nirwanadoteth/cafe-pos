@@ -80,8 +80,13 @@ jobs:
       - name: Prepare SQLite env
         run: |
           cp .env.example .env || true
+          mkdir -p database
           sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env || echo "DB_CONNECTION=sqlite" >> .env
           sed -i 's|^DB_DATABASE=.*|DB_DATABASE='$(pwd)'/database/database.sqlite|' .env || echo "DB_DATABASE=$(pwd)/database/database.sqlite" >> .env
+          sed -i 's/^CACHE_STORE=.*/CACHE_STORE=file/' .env || echo "CACHE_STORE=file" >> .env
+          sed -i 's/^CACHE_DRIVER=.*/CACHE_DRIVER=file/' .env || echo "CACHE_DRIVER=file" >> .env
+          sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' .env || echo "SESSION_DRIVER=file" >> .env
+          sed -i 's/^QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env || echo "QUEUE_CONNECTION=sync" >> .env
           php artisan config:clear
           php artisan cache:clear
           rm -f $(pwd)/database/database.sqlite || true
