@@ -129,10 +129,10 @@ class OrderTable
     protected static function generateDateFilterIndicators(array $data): array
     {
         $indicators = [];
-        if ($data['created_from'] ?? null) {
+        if (empty($data['created_from']) === false) {
             $indicators['created_from'] = __('resources/order.filters.created_from') . ' ' . Carbon::parse($data['created_from'])->toFormattedDateString();
         }
-        if ($data['created_until'] ?? null) {
+        if (empty($data['created_until']) === false) {
             $indicators['created_until'] = __('resources/order.filters.created_until') . ' ' . Carbon::parse($data['created_until'])->toFormattedDateString();
         }
 

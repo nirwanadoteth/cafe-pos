@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\MoneyCast;
 use App\Enums\OrderStatus;
+use App\Services\OrderCalculationService;
 use Database\Factories\OrderFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -78,12 +79,10 @@ class Order extends Model
     protected static function booted(): void
     {
         static::saving(static function (Order $order): void {
-            $order->total_price = (float) $order->items()
-                ->selectRaw('COALESCE(SUM(qty * unit_price), 0) as total')
-                ->value('total');
+            $order->total_price = OrderCalculationService::calculateTotalPrice($order);
         });
         static::deleting(function (Order $order) {
-            $order->payment()->delete();
+            OrderCalculationService::handleOrderDeletion($order);
         });
     }
 

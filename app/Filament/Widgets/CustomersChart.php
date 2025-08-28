@@ -2,10 +2,8 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Customer;
+use App\Services\ChartDataService;
 use Filament\Widgets\ChartWidget;
-use Flowframe\Trend\Trend;
-use Flowframe\Trend\TrendValue;
 use Illuminate\Contracts\Support\Htmlable;
 
 class CustomersChart extends ChartWidget
@@ -21,26 +19,13 @@ class CustomersChart extends ChartWidget
 
     protected function getData(): array
     {
-        $data = Trend::model(Customer::class)
-            ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
-            )
-            ->perMonth()
-            ->count()
-            ->map(fn (TrendValue $value) => $value->aggregate)
-            ->toArray();
+        $data = ChartDataService::getCustomersChartData();
 
-        return [
-            'datasets' => [
-                [
-                    'label' => __('widgets/customers-chart.datasets.label'),
-                    'data' => $data,
-                    'fill' => 'start',
-                ],
-            ],
-            'labels' => __('widgets/customers-chart.labels'),
-        ];
+        return ChartDataService::buildChartResponse(
+            $data,
+            __('widgets/customers-chart.datasets.label'),
+            __('widgets/customers-chart.labels')
+        );
     }
 
     protected function getType(): string

@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Filament\Resources\Products\ProductResource;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\OrderFormValidator;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
@@ -205,24 +206,14 @@ class OrderForm
 
     protected static function validateItemsRepeater(string $_attribute, mixed $value, Closure $fail): void
     {
-        if (static::isValidItemsArray($value) === false) {
-            $fail(__('resources/order.validation.at_least_one_item'));
+        if (OrderFormValidator::validateItemsArray($value) === false) {
+            $fail(OrderFormValidator::getItemsValidationMessage());
         }
     }
 
     protected static function isValidItemsArray(mixed $value): bool
     {
-        if (is_array($value) === false) {
-            return false;
-        }
-
-        foreach ($value as $item) {
-            if ((int) ($item['qty'] ?? 0) > 0) {
-                return true;
-            }
-        }
-
-        return false;
+        return OrderFormValidator::validateItemsArray($value);
     }
 
     protected static function getProductIdField(): Hidden

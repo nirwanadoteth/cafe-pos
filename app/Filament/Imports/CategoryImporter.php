@@ -39,19 +39,11 @@ class CategoryImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = __('resources/category.import.completed', [
-            'count' => number_format($import->successful_rows),
-            'label' => str('row')->plural($import->successful_rows),
-        ]);
-        $failedRowsCount = $import->getFailedRowsCount();
-        if ($failedRowsCount > 0) {
-            $body .= ' ' . __('resources/category.import.failed', [
-                'count' => number_format($failedRowsCount),
-                'label' => str('row')->plural($failedRowsCount),
-            ]);
-        }
-
-        return $body;
+        return \App\Services\NotificationBodyBuilder::buildImportCompletedBody(
+            $import,
+            'resources/category.import.completed',
+            'resources/category.import.failed'
+        );
     }
 
     public function resolveRecord(): ?Category

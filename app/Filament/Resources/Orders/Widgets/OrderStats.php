@@ -4,12 +4,9 @@ namespace App\Filament\Resources\Orders\Widgets;
 
 use App\Filament\Resources\Orders\OrderResource;
 use App\Filament\Resources\Orders\Pages\ListOrders;
+use App\Services\OrderStatsCalculator;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Stat;
-use Flowframe\Trend\Trend;
-use Flowframe\Trend\TrendValue;
-use Illuminate\Support\Number;
 
 class OrderStats extends BaseWidget
 {
@@ -32,33 +29,7 @@ class OrderStats extends BaseWidget
             $baseTrendQuery->where('status', $status);
         }
 
-        $totalOrders = $baseQuery->count();
-
-        $trendQuery = Trend::query($baseTrendQuery)
-            ->between(
-                start: now()->subYear(),
-                end: now(),
-            )
-            ->perMonth();
-
-        $orderData = $trendQuery->count();
-
-        $openOrders = $baseQuery->clone()
-            ->whereIn('status', ['new', 'processing'])
-            ->count();
-
-        $averagePrice = round((float) $baseQuery->avg('total_price') / 100, precision: 2);
-
-        return [
-            Stat::make(__('resources/order.stat.orders'), $totalOrders)
-                ->chart(
-                    $orderData
-                        ->map(fn (TrendValue $value) => $value->aggregate)
-                        ->toArray()
-                ),
-            Stat::make(__('resources/order.stat.open_orders'), $openOrders),
-            Stat::make(__('resources/order.stat.avg_price'), Number::currency($averagePrice, 'IDR', config('app.locale'))),
-        ];
+        return OrderStatsCalculator::calculateStats($baseQuery, $baseTrendQuery);
     }
 
     protected function getCurrentTabStatus(): ?string

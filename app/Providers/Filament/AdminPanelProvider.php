@@ -23,7 +23,6 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use ShuvroRoy\FilamentSpatieLaravelHealth\FilamentSpatieLaravelHealthPlugin;
-use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -81,8 +80,6 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('favicon/favicon.ico', app()->isProduction()))
             ->font('Poppins')
             ->plugins([
-                FilamentBackgroundsPlugin::make()
-                    ->remember(900),
                 FilamentShieldPlugin::make(),
                 FilamentSpatieLaravelHealthPlugin::make()
                     ->usingPage(HealthCheckResults::class),

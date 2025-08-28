@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\DateRangeService;
 use Carbon\Carbon;
 
 if (function_exists('getCarbonInstancesFromDateString') === false) {
@@ -8,38 +9,13 @@ if (function_exists('getCarbonInstancesFromDateString') === false) {
      */
     function getCarbonInstancesFromDateString(?string $dateString): array
     {
-        $format = 'd/m/Y';
-
-        [$from, $to] = $dateString !== null ? explode(' - ', $dateString) : [now()->format($format), now()->format($format)];
-
-        $parsedFrom = Carbon::createFromFormat($format, $from);
-        $from = $parsedFrom !== null ? $parsedFrom : now();
-        $parsedTo = Carbon::createFromFormat($format, $to);
-        $to = $parsedTo !== null ? $parsedTo : now();
-
-        $diff = $from->diffInDays($to);
-
-        $label = getDateRangeLabel($diff);
-
-        return [$from, $to, $label];
+        return DateRangeService::getCarbonInstancesFromDateString($dateString);
     }
 }
 
 if (function_exists('getDateRangeLabel') === false) {
     function getDateRangeLabel(float | int $diff): string
     {
-        if ($diff >= 365) {
-            return 'perYear';
-        }
-
-        if ($diff >= 30) {
-            return 'perMonth';
-        }
-
-        if ($diff >= 7) {
-            return 'perWeek';
-        }
-
-        return 'perDay';
+        return DateRangeService::getDateRangeLabel($diff);
     }
 }

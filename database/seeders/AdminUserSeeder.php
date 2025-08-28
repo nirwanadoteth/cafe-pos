@@ -18,7 +18,7 @@ class AdminUserSeeder extends Seeder
         $name = $this->command->ask('Admin name', 'Administrator');
 
         $password = $this->secret('Admin password (min 12 chars, will not be shown)');
-        while (! is_string($password) || strlen($password) < 12) {
+        while (is_string($password) === false || strlen($password) < 12) {
             $this->command->error('Password must be at least 12 characters.');
             $password = $this->secret('Admin password (min 12 chars, will not be shown)');
         }
@@ -35,7 +35,7 @@ class AdminUserSeeder extends Seeder
 
         // Ensure super_admin role exists
         $role = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
-        if (! $user->hasRole($role)) {
+        if ($user->hasRole($role) === false) {
             $user->assignRole($role);
         }
 

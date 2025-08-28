@@ -47,19 +47,11 @@ class ProductImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = __('resources/product.import.completed', [
-            'count' => number_format($import->successful_rows),
-            'label' => str('row')->plural($import->successful_rows),
-        ]);
-        $failedRowsCount = $import->getFailedRowsCount();
-        if ($failedRowsCount > 0) {
-            $body .= ' ' . __('resources/product.import.failed', [
-                'count' => number_format($failedRowsCount),
-                'label' => str('row')->plural($failedRowsCount),
-            ]);
-        }
-
-        return $body;
+        return \App\Services\NotificationBodyBuilder::buildImportCompletedBody(
+            $import,
+            'resources/product.import.completed',
+            'resources/product.import.failed'
+        );
     }
 
     public function resolveRecord(): ?Product

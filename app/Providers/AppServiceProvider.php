@@ -6,7 +6,6 @@ use App\Http\Responses\LogoutResponse;
 use BezhanSalleh\FilamentShield\FilamentShield;
 use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Facades\Filament;
-use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View;
@@ -34,15 +33,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
 
-        if (app()->isProduction() === true) {
+        if (\App\Services\EnvironmentService::isProduction()) {
             URL::forceScheme('https');
         }
 
         Filament::serving(function () {
-            $panel = Filament::getCurrentOrDefaultPanel();
-            if ($panel !== null) {
-                FilamentColor::register($panel->getColors());
-            }
+            \App\Services\FilamentConfigurationService::configureCurrentPanelColors();
         });
 
         FilamentView::registerRenderHook(

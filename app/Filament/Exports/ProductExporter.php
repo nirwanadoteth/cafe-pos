@@ -29,18 +29,10 @@ class ProductExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = __('resources/product.export.completed', [
-            'count' => number_format($export->successful_rows),
-            'label' => str('row')->plural($export->successful_rows),
-        ]);
-        $failedRowsCount = $export->getFailedRowsCount();
-        if ($failedRowsCount > 0) {
-            $body .= ' ' . __('resources/product.export.failed', [
-                'count' => number_format($failedRowsCount),
-                'label' => str('row')->plural($failedRowsCount),
-            ]);
-        }
-
-        return $body;
+        return \App\Services\NotificationBodyBuilder::buildExportCompletedBody(
+            $export,
+            'resources/product.export.completed',
+            'resources/product.export.failed'
+        );
     }
 }
