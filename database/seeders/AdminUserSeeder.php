@@ -14,13 +14,17 @@ class AdminUserSeeder extends Seeder
     {
         $this->command->warn(PHP_EOL . 'Creating admin user...');
 
-        $email = $this->command->ask('Admin email', 'admin@example.com');
-        $name = $this->command->ask('Admin name', 'Administrator');
+        $email = env('ADMIN_EMAIL') ?: $this->command->ask('Admin email', 'admin@example.com');
+        $name = env('ADMIN_NAME') ?: $this->command->ask('Admin name', 'Administrator');
+        $password = env('ADMIN_PASSWORD');
 
-        $password = $this->secret('Admin password (min 12 chars, will not be shown)');
-        while (is_string($password) === false || strlen($password) < 12) {
-            $this->command->error('Password must be at least 12 characters.');
+        if (empty($password) === true || strlen($password) < 12) {
+            // Interactive fallback only if no valid env password present
             $password = $this->secret('Admin password (min 12 chars, will not be shown)');
+            while (is_string($password) === false || strlen($password) < 12) {
+                $this->command->error('Password must be at least 12 characters.');
+                $password = $this->secret('Admin password (min 12 chars, will not be shown)');
+            }
         }
 
         $user = User::firstOrCreate(
