@@ -19,7 +19,6 @@ jobs:
       DB_CONNECTION: sqlite
       DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
       CACHE_STORE: file
-      CACHE_DRIVER: file
       SESSION_DRIVER: file
       QUEUE_CONNECTION: sync
       ADMIN_EMAIL: "admin@cafe.pos"
@@ -36,23 +35,24 @@ jobs:
     # If you do not check out your code, Copilot will do this for you.
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4
         with:
           php-version: '8.4'
           extensions: curl, gd, intl, mbstring, exif, mysqli, pcntl, pdo, pdo_mysql, pdo_sqlite, sqlite3, zip, opcache
           ini-values: opcache.enable=1, opcache.memory_consumption=128, opcache.max_accelerated_files=10000, post_max_size=256M, upload_max_filesize=256M, memory_limit=512M, max_execution_time=180
-          tools: composer, pint, phpstan, phpunit
+          tools: composer, pint, phpstan
           coverage: none
 
       - name: Get composer cache directory
         id: composer-cache-dir
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
         id: composer-cache # use this to check for `cache-hit` ==> if: steps.composer-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ steps.composer-cache-dir.outputs.dir }}
@@ -61,19 +61,21 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "22"
 
       - name: Get npm cache directory
         id: npm-cache-dir
-        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+        run: |
+          echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
 
       - name: Cache npm dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
         id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -82,25 +84,45 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install npm dependencies
-        run: npm ci
+        run: |
+          npm ci --no-audit --no-fund
 
       - name: Prepare the application
         run: |
           php -r "file_exists('.env') || copy('.env.example', '.env');"
-          php artisan key:generate
+          php artisan key:generate --force --no-interaction
 
       - name: Clear Config & Cache
         run: |
-          php artisan config:clear
-          php artisan cache:clear
+          php artisan optimize:clear
 
       - name: Run Migration
-        run: php artisan migrate -v
+        run: |
+          php artisan migrate --force --no-interaction -v
+
+      - name: Ensure ADMIN_PASSWORD for CI
+        run: |
+          if [ -z "${{ secrets.ADMIN_PASSWORD }}" ] || [ "${#ADMIN_PASSWORD}" -lt 12 ]; then
+            pw="$(openssl rand -base64 24 | tr -d '\n')"
+            echo "ADMIN_PASSWORD=$pw" >> "$GITHUB_ENV"
+          fi
 
       - name: Seed Database
         run: |
-          php artisan db:seed --no-interaction
-          php artisan db:seed --class=AdminUserSeeder --no-interaction
+          php artisan db:seed --force --no-interaction
+          php artisan db:seed --class=AdminUserSeeder --force --no-interaction
 
       - name: Link storage
-        run: php artisan storage:link
+        run: |
+          if [ ! -L public/storage ]; then
+            php artisan storage:link --relative || php artisan storage:link || true
+          fi
+
+      - name: Pint
+        run: |
+          pint -v
+
+      - name: PHPStan
+        run: |
+          phpstan analyse -v
+
