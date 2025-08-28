@@ -54,7 +54,6 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install composer dependencies
-        if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Set up Node.js
@@ -76,24 +75,25 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install npm dependencies
-        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Prepare SQLite env
         run: |
           cp .env.example .env || true
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env || echo "DB_CONNECTION=sqlite" >> .env
+          sed -i 's|^DB_DATABASE=.*|DB_DATABASE='$(pwd)'/database/database.sqlite|' .env || echo "DB_DATABASE=$(pwd)/database/database.sqlite" >> .env
           php artisan config:clear
           php artisan cache:clear
-          rm -f database/database.sqlite
-          touch database/database.sqlite
-          php artisan key:generate --force
-          php artisan storage:link
-          php artisan migrate --force
-          php artisan db:seed --force
+          rm -f $(pwd)/database/database.sqlite || true
+          touch $(pwd)/database/database.sqlite
+          php artisan key:generate --force --no-interaction
+          php artisan storage:link || true
+          php artisan migrate --force --no-interaction
+          php artisan db:seed --force --no-interaction
 
       - name: Seed admin user (non-interactive)
         env:
           ADMIN_EMAIL: admin@example.com
           ADMIN_NAME: Administrator
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }} # store a strong value in repo/org secrets
-        run: php artisan db:seed --class=AdminUserSeeder --no-interaction
+        run: php artisan db:seed --class=AdminUserSeeder --force --no-interaction
