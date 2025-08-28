@@ -14,9 +14,9 @@ class AdminUserSeeder extends Seeder
     {
         $this->command->warn(PHP_EOL . 'Creating admin user...');
 
-        $email = empty(env('ADMIN_EMAIL')) === false ? env('ADMIN_EMAIL') : $this->command->ask('Admin email', 'admin@example.com');
-        $name = empty(env('ADMIN_NAME')) === false ? env('ADMIN_NAME') : $this->command->ask('Admin name', 'Administrator');
-        $password = env('ADMIN_PASSWORD');
+        $email = $this->command->ask('Admin email', 'admin@example.com');
+        $name = $this->command->ask('Admin name', 'Administrator');
+        $password = $this->command->ask('Admin pass', '*Ah5cE#jw8F!2u+6Ab');
 
         if (empty($password) === false || strlen($password) < 12) {
             // Interactive fallback only if no valid env password present

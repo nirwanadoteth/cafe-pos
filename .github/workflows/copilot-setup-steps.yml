@@ -22,9 +22,6 @@ jobs:
       CACHE_DRIVER: file
       SESSION_DRIVER: file
       QUEUE_CONNECTION: sync
-      ADMIN_EMAIL: admin@example.com
-      ADMIN_NAME: Administrator
-      ADMIN_PASSWORD: H#55AgaX73&##_sdaY
 
     # Set the permissions to the lowest permissions possible needed for your steps.
     # Copilot will be given its own token for its operations.
