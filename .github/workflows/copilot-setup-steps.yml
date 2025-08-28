@@ -102,7 +102,7 @@ jobs:
 
       - name: Ensure ADMIN_PASSWORD for CI
         run: |
-          if [ -z "${{ secrets.ADMIN_PASSWORD }}" ] || [ "${#ADMIN_PASSWORD}" -lt 12 ]; then
+          if [ -z "$ADMIN_PASSWORD" ] || [ "$ADMIN_PASSWORD" -lt 12 ]; then
             pw="$(openssl rand -base64 24 | tr -d '\n')"
             echo "ADMIN_PASSWORD=$pw" >> "$GITHUB_ENV"
           fi
