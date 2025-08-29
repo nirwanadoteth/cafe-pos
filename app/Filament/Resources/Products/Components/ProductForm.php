@@ -35,6 +35,7 @@ class ProductForm
             Group::make()
                 ->schema([
                     static::getStatusSection(),
+                    static::getInventorySection(),
                     static::getAssociationsSection(),
                 ])
                 ->columnSpan(['lg' => 1]),
@@ -153,6 +154,35 @@ class ProductForm
         return static::getSection(__('resources/product.associations'), [
             static::getCategoryField(),
         ]);
+    }
+
+    protected static function getInventorySection(): Section
+    {
+        return static::getSection(__('resources/product.inventory'), [
+            static::getStockQuantityField(),
+            static::getLowStockThresholdField(),
+        ]);
+    }
+
+    protected static function getStockQuantityField(): TextInput
+    {
+        return TextInput::make('stock_quantity')
+            ->label(__('resources/product.stock_quantity'))
+            ->numeric()
+            ->integer()
+            ->minValue(0)
+            ->default(0)
+            ->required();
+    }
+
+    protected static function getLowStockThresholdField(): TextInput
+    {
+        return TextInput::make('low_stock_threshold')
+            ->label(__('resources/product.low_stock_threshold'))
+            ->numeric()
+            ->integer()
+            ->minValue(0)
+            ->helperText(__('resources/product.low_stock_threshold_help'));
     }
 
     protected static function getCategoryField(): Select

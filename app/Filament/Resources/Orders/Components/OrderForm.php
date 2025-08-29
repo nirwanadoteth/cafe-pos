@@ -201,6 +201,12 @@ class OrderForm
                 fn (): Closure => static function (string $attribute, $value, Closure $fail) {
                     static::validateItemsRepeater($attribute, $value, $fail);
                 },
+                /**
+                 * @param  array<int, array<string, mixed>>|null  $value
+                 */
+                fn (): Closure => static function (string $attribute, $value, Closure $fail) {
+                    static::validateInventoryAvailability($attribute, $value, $fail);
+                },
             ]);
     }
 
@@ -208,6 +214,13 @@ class OrderForm
     {
         if (OrderFormValidator::validateItemsArray($value) === false) {
             $fail(OrderFormValidator::getItemsValidationMessage());
+        }
+    }
+
+    protected static function validateInventoryAvailability(string $_attribute, mixed $value, Closure $fail): void
+    {
+        if (OrderFormValidator::validateInventoryAvailability($value) === false) {
+            $fail(OrderFormValidator::getInventoryValidationMessage());
         }
     }
 
