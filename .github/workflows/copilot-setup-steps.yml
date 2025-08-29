@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_CONNECTION: sqlite
-      DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
-      CACHE_STORE: file
-      SESSION_DRIVER: file
+      DB_DATABASE: database/database.sqlite
+      CACHE_STORE: array
+      SESSION_DRIVER: array
       QUEUE_CONNECTION: sync
       ADMIN_EMAIL: "admin@cafe.pos"
       ADMIN_NAME: "Administrator"
@@ -28,7 +28,6 @@ jobs:
     # Set the permissions to the lowest permissions possible needed for your steps.
     # Copilot will be given its own token for its operations.
     permissions:
-      # If you want to clone the repository as part of your setup steps, for example to install dependencies, you'll need the `contents: read` permission. If you don't clone the repository in your setup steps, Copilot will do this for you automatically after the steps complete.
       contents: read
 
     # You can define any steps you want, and they will run before the agent starts.
@@ -53,7 +52,7 @@ jobs:
 
       - name: Cache composer dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
-        id: composer-cache # use this to check for `cache-hit` ==> if: steps.composer-cache.outputs.cache-hit != 'true'
+        id: composer-cache
         with:
           path: ${{ steps.composer-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -76,7 +75,7 @@ jobs:
 
       - name: Cache npm dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        id: npm-cache
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -92,6 +91,12 @@ jobs:
           php -r "file_exists('.env') || copy('.env.example', '.env');"
           php artisan key:generate --force --no-interaction
 
+      # Ensure SQLite file exists before any command that might touch the DB
+      - name: Create SQLite database file
+        run: |
+          mkdir -p database
+          [ -f database/database.sqlite ] || : > database/database.sqlite
+
       - name: Clear Config & Cache
         run: |
           php artisan optimize:clear
@@ -102,7 +107,7 @@ jobs:
 
       - name: Ensure ADMIN_PASSWORD for CI
         run: |
-          if [ -z "$ADMIN_PASSWORD" ] || [ "$ADMIN_PASSWORD" -lt 12 ]; then
+          if [ -z "${ADMIN_PASSWORD:-}" ] || [ "${#ADMIN_PASSWORD}" -lt 12 ]; then
             pw="$(openssl rand -base64 24 | tr -d '\n')"
             echo "ADMIN_PASSWORD=$pw" >> "$GITHUB_ENV"
           fi
@@ -125,4 +130,3 @@ jobs:
       - name: PHPStan
         run: |
           phpstan analyse -v
-
