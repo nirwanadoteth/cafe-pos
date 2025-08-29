@@ -20,7 +20,7 @@ return new class extends Migration
         if (empty($tableNames) === true) {
             throw new Exception('Error: config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
-        if ($teams === true && empty($columnNames['team_foreign_key'] === true)) {
+        if ($teams === true && (empty($columnNames['team_foreign_key']) === true)) {
             throw new Exception('Error: team_foreign_key on config/permission.php not loaded. Run [php artisan config:clear] and try again.');
         }
 
@@ -123,9 +123,31 @@ return new class extends Migration
             $table->primary([$pivotPermission, $pivotRole], 'role_has_permissions_permission_id_role_id_primary');
         });
 
-        app('cache')
-            ->store(config('permission.cache.store') !== 'default' ? config('permission.cache.store') : null)
-            ->forget(config('permission.cache.key'));
+        // Clear the permission cache if possible. When the configured cache store
+        // uses the "database" driver and the cache table doesn't exist (e.g. in
+        // a fresh sqlite testing DB), attempting to clear the cache will cause
+        // a SQL error and fail the migration. Protect against that by checking
+        // the cache driver and the presence of the cache table, and swallow any
+        // unexpected errors so migrations can continue safely.
+        try {
+            $permissionStoreConfig = config('permission.cache.store');
+            $storeArg = $permissionStoreConfig !== 'default' ? $permissionStoreConfig : null;
+
+            $storeName = $permissionStoreConfig !== 'default' ? $permissionStoreConfig : config('cache.default');
+            $driver = config("cache.stores.$storeName.driver");
+
+            if ($driver === 'database') {
+                $table = config("cache.stores.$storeName.table", 'cache');
+                if (Schema::hasTable($table)) {
+                    app('cache')->store($storeArg)->forget(config('permission.cache.key'));
+                }
+            } else {
+                app('cache')->store($storeArg)->forget(config('permission.cache.key'));
+            }
+        } catch (\Throwable $e) {
+            // Intentionally ignore cache clearing errors during migration to
+            // avoid failing migrations when cache infrastructure isn't available.
+        }
     }
 
     /**

@@ -162,23 +162,58 @@
                         {{ number_format($order->total_price) }}
                     </td>
                 </tr>
-                <tr>
-                    <th class="font-base left">CASH</th>
-                    <td class="font-sm right">
-                        {{ number_format($order->payment->amount) }}
-                    </td>
-                </tr>
-                <tr>
-                    <th class="font-base left">CHANGE</th>
-                    <td class="font-sm right">
-                        {{
-                            number_format(
-                                $order->payment->amount -
-                                    $order->total_price,
-                            )
-                        }}
-                    </td>
-                </tr>
+
+                @php
+                    use App\Services\PaymentSettlementService;
+                    $paidAmount = PaymentSettlementService::getPaidAmount($order) / 100; // Convert cents to dollars
+                    $changeAmount = PaymentSettlementService::getChangeAmount($order) / 100; // Convert cents to dollars
+                @endphp
+
+                @if($order->payments->count() > 0)
+                    <tr>
+                        <th colspan="2">
+                            <hr />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="font-base">
+                            PAYMENTS
+                        </th>
+                    </tr>
+                    
+                    @foreach($order->payments->where('status', 'successful') as $payment)
+                        <tr>
+                            <th class="font-base left">{{ strtoupper($payment->method->getLabel()) }}</th>
+                            <td class="font-sm right">
+                                {{ number_format($payment->amount) }}
+                                @if($payment->reference)
+                                    <br><small>{{ $payment->reference }}</small>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    <tr>
+                        <th colspan="2">
+                            <hr />
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="font-base left">TOTAL PAID</th>
+                        <td class="font-sm right">
+                            {{ number_format($paidAmount) }}
+                        </td>
+                    </tr>
+
+                    @if($changeAmount > 0)
+                        <tr>
+                            <th class="font-base left">CHANGE</th>
+                            <td class="font-sm right">
+                                {{ number_format($changeAmount) }}
+                            </td>
+                        </tr>
+                    @endif
+                @endif
                 <tr>
                     <th colspan="2">
                         <hr />

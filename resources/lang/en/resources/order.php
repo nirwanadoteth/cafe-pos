@@ -19,6 +19,12 @@ return [
     'date' => 'Order Date',
     'notes' => 'Notes',
     'cash' => 'Cash',
+    'payments' => 'Payments',
+    'amount' => 'Amount',
+    'payment_method' => 'Payment Method',
+    'payment_status' => 'Status',
+    'payment_reference' => 'Reference',
+    'payment_reference_placeholder' => 'Transaction ID, reference number, etc.',
 
     // Actions
     'actions' => [

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Casts\MoneyCast;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use Database\Factories\PaymentFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,8 +18,13 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $order_id
  * @property float $amount
+ * @property PaymentMethod $method
+ * @property PaymentStatus $status
+ * @property string|null $reference
+ * @property array|null $meta
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property-read Order|null $order
  *
  * @method static PaymentFactory factory($count = null, $state = [])
@@ -26,8 +33,13 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|Payment query()
  * @method static Builder<static>|Payment whereAmount($value)
  * @method static Builder<static>|Payment whereCreatedAt($value)
+ * @method static Builder<static>|Payment whereDeletedAt($value)
  * @method static Builder<static>|Payment whereId($value)
+ * @method static Builder<static>|Payment whereMethod($value)
+ * @method static Builder<static>|Payment whereMeta($value)
  * @method static Builder<static>|Payment whereOrderId($value)
+ * @method static Builder<static>|Payment whereReference($value)
+ * @method static Builder<static>|Payment whereStatus($value)
  * @method static Builder<static>|Payment whereUpdatedAt($value)
  *
  * @mixin Eloquent
@@ -45,6 +57,10 @@ class Payment extends Model
     protected $fillable = [
         'order_id',
         'amount',
+        'method',
+        'status',
+        'reference',
+        'meta',
     ];
 
     /**
@@ -52,6 +68,9 @@ class Payment extends Model
      */
     protected $casts = [
         'amount' => MoneyCast::class,
+        'method' => PaymentMethod::class,
+        'status' => PaymentStatus::class,
+        'meta' => 'array',
     ];
 
     /** @return BelongsTo<Order,$this> */
