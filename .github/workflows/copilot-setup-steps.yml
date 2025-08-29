@@ -40,7 +40,7 @@ jobs:
         uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4
         with:
           php-version: '8.4'
-          extensions: curl, gd, intl, mbstring, exif, mysqli, pcntl, pdo, pdo_mysql, pdo_sqlite, sqlite3, zip, opcache
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
           ini-values: opcache.enable=1, opcache.memory_consumption=128, opcache.max_accelerated_files=10000, post_max_size=256M, upload_max_filesize=256M, memory_limit=512M, max_execution_time=180
           tools: composer, pint, phpstan
           coverage: none
@@ -61,7 +61,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
+          composer install --no-interaction --no-progress --prefer-dist
 
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -86,24 +86,20 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
 
-      - name: Prepare the application
-        run: |
-          php -r "file_exists('.env') || copy('.env.example', '.env');"
-          php artisan key:generate --force --no-interaction
+      - name: Copy environment file
+        run: cp .env.example .env
 
-      # Ensure SQLite file exists before any command that might touch the DB
+      - name: Generate app key
+        run: php artisan key:generate
+
       - name: Create SQLite database file
         run: |
           mkdir -p database
           [ -f database/database.sqlite ] || : > database/database.sqlite
 
-      - name: Clear Config & Cache
-        run: |
-          php artisan optimize:clear
-
       - name: Run Migration
         run: |
-          php artisan migrate --force --no-interaction -v
+          php artisan migrate --force --graceful --no-interaction -v
 
       - name: Ensure ADMIN_PASSWORD for CI
         run: |
@@ -119,9 +115,7 @@ jobs:
 
       - name: Link storage
         run: |
-          if [ ! -L public/storage ]; then
-            php artisan storage:link --relative || php artisan storage:link || true
-          fi
+          php artisan storage:link --force
 
       - name: Pint
         run: |
@@ -129,4 +123,4 @@ jobs:
 
       - name: PHPStan
         run: |
-          phpstan analyse -v
+          phpstan analyse -c phpstan.neon -v
