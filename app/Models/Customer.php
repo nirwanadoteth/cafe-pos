@@ -38,4 +38,11 @@ class Customer extends Model
     use HasFactory;
 
     use SoftDeletes;
+
+    /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+    ];
 }

@@ -57,6 +57,18 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
     /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'category_id',
+        'name',
+        'slug',
+        'description',
+        'is_visible',
+        'price',
+    ];
+
+    /**
      * @var array<string, string>
      */
     protected $casts = [

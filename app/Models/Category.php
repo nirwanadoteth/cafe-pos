@@ -42,6 +42,16 @@ class Category extends Model
     use HasFactory;
 
     /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'is_visible',
+    ];
+
+    /**
      * @var array<string, string>
      */
     protected $casts = [

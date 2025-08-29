@@ -62,6 +62,7 @@ class Order extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'customer_id',
         'number',
         'total_price',
         'status',

@@ -40,6 +40,14 @@ class Payment extends Model
     use SoftDeletes;
 
     /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'order_id',
+        'amount',
+    ];
+
+    /**
      * @var array<string, string>
      */
     protected $casts = [

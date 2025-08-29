@@ -42,6 +42,16 @@ class OrderItem extends Pivot
     use HasFactory;
 
     /**
+     * @var list<string>
+     */
+    protected $fillable = [
+        'order_id',
+        'product_id',
+        'qty',
+        'unit_price',
+    ];
+
+    /**
      * @var array<string, string>
      */
     protected $casts = [
