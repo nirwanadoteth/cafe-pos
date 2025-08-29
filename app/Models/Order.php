@@ -32,6 +32,8 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, OrderItem> $items
  * @property-read int|null $items_count
  * @property-read Payment|null $payment
+ * @property-read Collection<int, Payment> $payments
+ * @property-read int|null $payments_count
  *
  * @method static OrderFactory factory($count = null, $state = [])
  * @method static Builder<static>|Order newModelQuery()
@@ -103,6 +105,12 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /** @return HasMany<Payment,$this> */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     /** @return HasOne<Payment,$this> */
