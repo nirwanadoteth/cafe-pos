@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Orders\Components;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Filament\Resources\Products\ProductResource;
 use App\Models\Order;
 use App\Models\Product;
@@ -404,37 +406,62 @@ class OrderForm
 
     protected static function getPaymentFormSchema(): Repeater
     {
-        return Repeater::make('payment')
+        return Repeater::make('payments')
             ->relationship()
-            ->simple(static::getPaymentAmountField())
-            ->deletable(false)
-            ->maxItems(1)
+            ->schema([
+                static::getPaymentMethodField(),
+                static::getPaymentAmountField(),
+                static::getPaymentStatusField(),
+                static::getPaymentReferenceField(),
+            ])
+            ->defaultItems(0)
+            ->deletable()
             ->addActionLabel(__('resources/order.actions.add_payment'))
             ->hidden(fn (?Order $record): bool => $record?->status === OrderStatus::New)
-            ->label(__('resources/order.cash'))
-            ->hiddenLabel(fn (?array $state) => empty($state));
+            ->label(__('resources/order.payments'))
+            ->columnSpanFull()
+            ->columns(2);
+    }
+
+    protected static function getPaymentMethodField(): Select
+    {
+        return Select::make('method')
+            ->label(__('resources/order.payment_method'))
+            ->options(PaymentMethod::class)
+            ->default(PaymentMethod::Cash)
+            ->required()
+            ->columnSpan(1);
     }
 
     protected static function getPaymentAmountField(): TextInput
     {
         return TextInput::make('amount')
+            ->label(__('resources/order.amount'))
             ->numeric()
             ->prefix('Rp')
             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
             ->required()
             ->step(1000)
-            ->minValue(fn ($state, Get $get) => $get('../../total_price') ?? 0)
-            ->default(fn ($state, Get $get) => $get('../../total_price') ?? 0)
-            ->columnSpanFull()
-            ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                $totalPrice = $get('../../total_price') ?? 0;
-                if ($state === 0 && $totalPrice === 0) {
-                    return;
-                }
+            ->minValue(1)
+            ->columnSpan(1);
+    }
 
-                if ($state >= $totalPrice) {
-                    $set('../../status', OrderStatus::Completed);
-                }
-            });
+    protected static function getPaymentStatusField(): Select
+    {
+        return Select::make('status')
+            ->label(__('resources/order.payment_status'))
+            ->options(PaymentStatus::class)
+            ->default(PaymentStatus::Successful)
+            ->required()
+            ->columnSpan(1);
+    }
+
+    protected static function getPaymentReferenceField(): TextInput
+    {
+        return TextInput::make('reference')
+            ->label(__('resources/order.payment_reference'))
+            ->placeholder(__('resources/order.payment_reference_placeholder'))
+            ->maxLength(191)
+            ->columnSpan(1);
     }
 }

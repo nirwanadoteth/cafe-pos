@@ -26,6 +26,7 @@ class OrderCalculationService
      */
     public static function handleOrderDeletion(Order $order): void
     {
-        $order->payment()->delete();
+        // Delete all payments associated with this order
+        $order->payments()->delete();
     }
 }
