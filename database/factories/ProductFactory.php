@@ -57,6 +57,8 @@ class ProductFactory extends Factory
             'description' => fake()->sentence(),
             'is_visible' => fake()->boolean(),
             'price' => fake()->numberBetween(25000, 75000),
+            'stock_quantity' => fake()->numberBetween(0, 100),
+            'low_stock_threshold' => fake()->optional(0.7)->numberBetween(5, 20),
             'created_at' => fake()->dateTimeBetween('-1 year', '-6 month'),
             'updated_at' => fake()->dateTimeBetween('-5 month'),
         ];

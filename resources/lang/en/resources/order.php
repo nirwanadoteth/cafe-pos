@@ -74,6 +74,7 @@ return [
 
     'validation' => [
         'at_least_one_item' => 'The order must have at least one item.',
+        'insufficient_stock' => 'One or more items do not have sufficient stock available.',
     ],
 
 ];

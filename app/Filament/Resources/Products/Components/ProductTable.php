@@ -30,6 +30,7 @@ class ProductTable
             static::getNameColumn(),
             static::getCategoryColumn(),
             static::getPriceColumn(),
+            static::getStockQuantityColumn(),
             static::getVisibilityColumn(),
         ];
     }
@@ -86,6 +87,26 @@ class ProductTable
             ->toggleable();
     }
 
+    protected static function getStockQuantityColumn(): TextColumn
+    {
+        return TextColumn::make('stock_quantity')
+            ->label(__('resources/product.stock_quantity'))
+            ->numeric()
+            ->sortable()
+            ->badge()
+            ->color(fn (Product $record): string => $record->isLowStock() ? 'danger' : 'success')
+            ->formatStateUsing(function (Product $record): string {
+                $stock = $record->stock_quantity;
+                if ($record->isLowStock()) {
+                    return $stock . ' ' . __('resources/product.low_stock');
+                }
+
+                return (string) $stock;
+            })
+            ->icon(fn (Product $record): string => $record->isLowStock() ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')
+            ->toggleable();
+    }
+
     /** @return array<BaseFilter> */
     public static function getFilters(): array
     {
@@ -105,6 +126,9 @@ class ProductTable
                 NumberConstraint::make('price')
                     ->label(__('resources/product.price'))
                     ->icon('heroicon-m-currency-dollar'),
+                NumberConstraint::make('stock_quantity')
+                    ->label(__('resources/product.stock_quantity'))
+                    ->icon('heroicon-m-cube'),
                 BooleanConstraint::make('is_visible')
                     ->label(__('resources/product.visibility')),
             ])

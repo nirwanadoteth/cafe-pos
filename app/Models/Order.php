@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\MoneyCast;
 use App\Enums\OrderStatus;
+use App\Services\InventoryService;
 use App\Services\OrderCalculationService;
 use Database\Factories\OrderFactory;
 use Eloquent;
@@ -82,6 +83,11 @@ class Order extends Model
         static::saving(static function (Order $order): void {
             $order->total_price = OrderCalculationService::calculateTotalPrice($order);
         });
+
+        static::saved(static function (Order $order): void {
+            InventoryService::adjustForOrderSaved($order);
+        });
+
         static::deleting(function (Order $order) {
             OrderCalculationService::handleOrderDeletion($order);
         });

@@ -19,11 +19,16 @@ return [
     'category' => 'Category',
     'image' => 'Image',
     'visibility' => 'Visibility',
+    'inventory' => 'Inventory',
+    'stock_quantity' => 'Stock Quantity',
+    'low_stock_threshold' => 'Low Stock Threshold',
+    'low_stock' => '(Low Stock)',
     'created_at' => 'Created At',
     'updated_at' => 'Last Modified At',
 
     // Help texts
     'visibility_help' => 'This product will be hidden from all sales channels.',
+    'low_stock_threshold_help' => 'When stock quantity falls to or below this number, the product will be highlighted as low stock.',
 
     // Placeholders
     'no_images' => 'No images provided.',
@@ -47,6 +52,8 @@ return [
         'description' => 'Description',
         'is_visible' => 'Visible',
         'price' => 'Price',
+        'stock_quantity' => 'Stock Quantity',
+        'low_stock_threshold' => 'Low Stock Threshold',
     ],
 
     'import.examples' => [
@@ -56,6 +63,8 @@ return [
         'description' => 'This is the description for Product A',
         'is_visible' => 'yes',
         'price' => 10000,
+        'stock_quantity' => 100,
+        'low_stock_threshold' => 10,
     ],
 
 ];
