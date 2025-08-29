@@ -25,6 +25,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string|null $description
  * @property bool $is_visible
  * @property float|null $price
+ * @property int $stock_quantity
+ * @property int|null $low_stock_threshold
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Category|null $category
@@ -66,6 +68,8 @@ class Product extends Model implements HasMedia
         'description',
         'is_visible',
         'price',
+        'stock_quantity',
+        'low_stock_threshold',
     ];
 
     /**
@@ -74,6 +78,8 @@ class Product extends Model implements HasMedia
     protected $casts = [
         'is_visible' => 'boolean',
         'price' => MoneyCast::class,
+        'stock_quantity' => 'integer',
+        'low_stock_threshold' => 'integer',
     ];
 
     /** @return BelongsTo<Category,$this> */
@@ -86,6 +92,14 @@ class Product extends Model implements HasMedia
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Check if the product is low on stock
+     */
+    public function isLowStock(): bool
+    {
+        return $this->low_stock_threshold !== null && $this->stock_quantity <= $this->low_stock_threshold;
     }
 
     public function registerMediaCollections(): void
