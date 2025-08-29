@@ -9,7 +9,8 @@ class DateRangeService
     /**
      * Parse date string and return Carbon instances with label
      *
-     * @return array{0: Carbon, 1: Carbon, 2: string}
+     * @param  string|null  $dateString  Date range string in format 'd/m/Y - d/m/Y'
+     * @return array{0: Carbon, 1: Carbon, 2: string} Array containing start date, end date, and period label
      */
     public static function getCarbonInstancesFromDateString(?string $dateString): array
     {
@@ -31,6 +32,9 @@ class DateRangeService
 
     /**
      * Get appropriate date range label based on day difference
+     *
+     * @param  float|int  $diff  Number of days between dates
+     * @return string Period label: 'perDay', 'perWeek', 'perMonth', or 'perYear'
      */
     public static function getDateRangeLabel(float | int $diff): string
     {

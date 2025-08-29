@@ -8,6 +8,9 @@ class OrderCalculationService
 {
     /**
      * Calculate total price for an order based on its items
+     *
+     * @param  Order  $order  The order to calculate total for
+     * @return float The calculated total price
      */
     public static function calculateTotalPrice(Order $order): float
     {
@@ -18,6 +21,8 @@ class OrderCalculationService
 
     /**
      * Handle order deletion cleanup
+     *
+     * @param  Order  $order  The order being deleted
      */
     public static function handleOrderDeletion(Order $order): void
     {

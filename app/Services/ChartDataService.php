@@ -12,7 +12,7 @@ class ChartDataService
     /**
      * Get orders chart data for the year
      *
-     * @return array<int, int>
+     * @return array<int, int> Array of monthly order counts
      */
     public static function getOrdersChartData(): array
     {
@@ -26,7 +26,7 @@ class ChartDataService
     /**
      * Get customers chart data for the year
      *
-     * @return array<int, int>
+     * @return array<int, int> Array of monthly customer counts
      */
     public static function getCustomersChartData(): array
     {
@@ -38,9 +38,12 @@ class ChartDataService
     }
 
     /**
-     * Build trend data array
+     * Build trend data array from Trend query
      *
-     * @return array<int, int>
+     * @param  mixed  $trend  The Trend query instance
+     * @param  \Carbon\Carbon  $start  Start date for the trend
+     * @param  \Carbon\Carbon  $end  End date for the trend
+     * @return array<int, int> Array of aggregated values by month
      */
     private static function buildTrendData(mixed $trend, \Carbon\Carbon $start, \Carbon\Carbon $end): array
     {
@@ -55,9 +58,10 @@ class ChartDataService
     /**
      * Build chart response with datasets and labels
      *
-     * @param  array<int, int>  $data
-     * @param  array<int, string>  $labels
-     * @return array<string, mixed>
+     * @param  array<int, int>  $data  Chart data values
+     * @param  string  $label  Label for the dataset
+     * @param  array<int, string>  $labels  Labels for chart axes
+     * @return array<string, mixed> Formatted chart response
      */
     public static function buildChartResponse(array $data, string $label, array $labels): array
     {
