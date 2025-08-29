@@ -100,6 +100,7 @@ class ProductTable
                 if ($record->isLowStock()) {
                     return $stock . ' ' . __('resources/product.low_stock');
                 }
+
                 return (string) $stock;
             })
             ->icon(fn (Product $record): string => $record->isLowStock() ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')

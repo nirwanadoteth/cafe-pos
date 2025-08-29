@@ -20,7 +20,7 @@ class InventoryServiceTest extends TestCase
 
         // Should not throw exception
         InventoryService::ensureSufficientStock($product, 5);
-        
+
         $this->assertTrue(true); // Test passes if no exception thrown
     }
 
@@ -41,7 +41,7 @@ class InventoryServiceTest extends TestCase
         // Should not throw exception for zero or negative quantities
         InventoryService::ensureSufficientStock($product, 0);
         InventoryService::ensureSufficientStock($product, -1);
-        
+
         $this->assertTrue(true);
     }
 

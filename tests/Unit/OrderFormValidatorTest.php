@@ -19,7 +19,7 @@ class OrderFormValidatorTest extends TestCase
             [
                 'product_id' => $product->id,
                 'qty' => 5,
-            ]
+            ],
         ];
 
         $this->assertTrue(OrderFormValidator::validateInventoryAvailability($items));
@@ -33,7 +33,7 @@ class OrderFormValidatorTest extends TestCase
             [
                 'product_id' => $product->id,
                 'qty' => 5,
-            ]
+            ],
         ];
 
         $this->assertFalse(OrderFormValidator::validateInventoryAvailability($items));
@@ -52,7 +52,7 @@ class OrderFormValidatorTest extends TestCase
             [
                 'product_id' => $product2->id,
                 'qty' => 3, // This should fail
-            ]
+            ],
         ];
 
         $this->assertFalse(OrderFormValidator::validateInventoryAvailability($items));
@@ -66,7 +66,7 @@ class OrderFormValidatorTest extends TestCase
             [
                 'product_id' => $product->id,
                 'qty' => 0,
-            ]
+            ],
         ];
 
         $this->assertTrue(OrderFormValidator::validateInventoryAvailability($items));

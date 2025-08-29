@@ -39,7 +39,7 @@ class OrderFormValidator
 
             if ($qty > 0 && $productId) {
                 $product = Product::find($productId);
-                if ($product && $product->stock_quantity < $qty) {
+                if ($product instanceof Product && $product->stock_quantity < $qty) {
                     return false;
                 }
             }

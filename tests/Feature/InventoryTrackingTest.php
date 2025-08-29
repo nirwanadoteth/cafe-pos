@@ -18,12 +18,12 @@ class InventoryTrackingTest extends TestCase
     {
         $product = Product::factory()->create(['stock_quantity' => 5]);
         $customer = Customer::factory()->create();
-        
+
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => OrderStatus::New,
         ]);
-        
+
         $order->items()->create([
             'product_id' => $product->id,
             'qty' => 3,
@@ -41,9 +41,9 @@ class InventoryTrackingTest extends TestCase
     public function test_validation_prevents_overselling(): void
     {
         $product = Product::factory()->create(['stock_quantity' => 2]);
-        
+
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        
+
         \App\Services\InventoryService::ensureSufficientStock($product, 3);
     }
 
@@ -52,12 +52,12 @@ class InventoryTrackingTest extends TestCase
     {
         $product = Product::factory()->create(['stock_quantity' => 10]);
         $customer = Customer::factory()->create();
-        
+
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => OrderStatus::New,
         ]);
-        
+
         $order->items()->create([
             'product_id' => $product->id,
             'qty' => 2,
@@ -83,12 +83,12 @@ class InventoryTrackingTest extends TestCase
     {
         $product = Product::factory()->create(['stock_quantity' => 10]);
         $customer = Customer::factory()->create();
-        
+
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => OrderStatus::New,
         ]);
-        
+
         $orderItem = $order->items()->create([
             'product_id' => $product->id,
             'qty' => 1,
@@ -107,7 +107,7 @@ class InventoryTrackingTest extends TestCase
             [
                 'product_id' => $product->id,
                 'qty' => 1,
-            ]
+            ],
         ];
 
         // Update the quantity
@@ -118,7 +118,7 @@ class InventoryTrackingTest extends TestCase
             [
                 'product_id' => $product->id,
                 'qty' => 4,
-            ]
+            ],
         ];
 
         \App\Services\InventoryService::adjustForOrderItemChanges($order, $newItems, $oldItems);
@@ -143,12 +143,12 @@ class InventoryTrackingTest extends TestCase
     {
         $product = Product::factory()->create(['stock_quantity' => 10]);
         $customer = Customer::factory()->create();
-        
+
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => OrderStatus::New,
         ]);
-        
+
         $order->items()->create([
             'product_id' => $product->id,
             'qty' => 3,
@@ -164,12 +164,12 @@ class InventoryTrackingTest extends TestCase
     {
         $product = Product::factory()->create(['stock_quantity' => 10]);
         $customer = Customer::factory()->create();
-        
+
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => OrderStatus::New,
         ]);
-        
+
         $order->items()->create([
             'product_id' => $product->id,
             'qty' => 3,
@@ -188,18 +188,18 @@ class InventoryTrackingTest extends TestCase
         $product1 = Product::factory()->create(['stock_quantity' => 10]);
         $product2 = Product::factory()->create(['stock_quantity' => 5]);
         $customer = Customer::factory()->create();
-        
+
         $order = Order::factory()->create([
             'customer_id' => $customer->id,
             'status' => OrderStatus::New,
         ]);
-        
+
         $order->items()->create([
             'product_id' => $product1->id,
             'qty' => 2,
             'unit_price' => 1000,
         ]);
-        
+
         $order->items()->create([
             'product_id' => $product2->id,
             'qty' => 1,
@@ -211,7 +211,7 @@ class InventoryTrackingTest extends TestCase
 
         $product1->refresh();
         $product2->refresh();
-        
+
         $this->assertEquals(8, $product1->stock_quantity);
         $this->assertEquals(4, $product2->stock_quantity);
     }

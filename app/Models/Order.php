@@ -83,11 +83,11 @@ class Order extends Model
         static::saving(static function (Order $order): void {
             $order->total_price = OrderCalculationService::calculateTotalPrice($order);
         });
-        
+
         static::saved(static function (Order $order): void {
             InventoryService::adjustForOrderSaved($order);
         });
-        
+
         static::deleting(function (Order $order) {
             OrderCalculationService::handleOrderDeletion($order);
         });

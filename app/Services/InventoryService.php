@@ -15,6 +15,7 @@ class InventoryService
      *
      * @param  Product  $product  The product to check stock for
      * @param  int  $qty  The quantity requested
+     *
      * @throws ValidationException When insufficient stock is available
      */
     public static function ensureSufficientStock(Product $product, int $qty): void
@@ -44,7 +45,7 @@ class InventoryService
             $oldStatus = $order->getOriginal('status');
             // If oldStatus is already an OrderStatus enum, use it directly
             // If it's a string, convert it to enum
-            $oldStatusEnum = $oldStatus instanceof OrderStatus ? $oldStatus : 
+            $oldStatusEnum = $oldStatus instanceof OrderStatus ? $oldStatus :
                             ($oldStatus ? OrderStatus::from($oldStatus) : null);
             $newStatus = $order->status;
 
@@ -63,7 +64,7 @@ class InventoryService
     {
         // Deduct stock when moving to Processing or Completed
         if (in_array($newStatus, [OrderStatus::Processing, OrderStatus::Completed]) &&
-            !in_array($oldStatus, [OrderStatus::Processing, OrderStatus::Completed])) {
+            ! in_array($oldStatus, [OrderStatus::Processing, OrderStatus::Completed])) {
             static::deductStock($order);
         }
 
@@ -112,13 +113,13 @@ class InventoryService
      * Handle stock adjustments when order items are edited
      *
      * @param  Order  $order  The order being updated
-     * @param  array  $newItems  New item data
-     * @param  array  $oldItems  Old item data
+     * @param  array<string, mixed>  $newItems  New item data
+     * @param  array<string, mixed>  $oldItems  Old item data
      */
     public static function adjustForOrderItemChanges(Order $order, array $newItems, array $oldItems): void
     {
         // Only adjust stock if order is in Processing or Completed status
-        if (!in_array($order->status, [OrderStatus::Processing, OrderStatus::Completed])) {
+        if (! in_array($order->status, [OrderStatus::Processing, OrderStatus::Completed])) {
             return;
         }
 
