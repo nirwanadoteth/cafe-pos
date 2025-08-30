@@ -7,6 +7,7 @@ use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Services\OrderStatsCalculator;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class OrderStats extends BaseWidget
 {
@@ -29,7 +30,13 @@ class OrderStats extends BaseWidget
             $baseTrendQuery->where('status', $status);
         }
 
-        return OrderStatsCalculator::calculateStats($baseQuery, $baseTrendQuery);
+        $stats = OrderStatsCalculator::calculateStats($baseQuery, $baseTrendQuery);
+
+        return [
+            Stat::make('Total Orders', $stats['totalOrders']),
+            Stat::make('Open Orders', $stats['openOrders']),
+            Stat::make('Average Price', 'Rp ' . number_format($stats['averagePrice'], 2)),
+        ];
     }
 
     protected function getCurrentTabStatus(): ?string
