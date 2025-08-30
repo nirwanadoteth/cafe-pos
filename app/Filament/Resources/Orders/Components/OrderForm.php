@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
@@ -22,7 +23,6 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\Size;
-use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 
 class OrderForm
 {
@@ -88,11 +88,16 @@ class OrderForm
         ];
     }
 
-    public static function getItemsRepeater(): TableRepeater
+    public static function getItemsRepeater(): Repeater
     {
-        return TableRepeater::make('items')
+        return Repeater::make('items')
             ->disabled(fn (?Order $record, string $operation): bool => $record?->status !== OrderStatus::New && $operation !== 'create')
             ->relationship('items')
+            ->table([
+                TableColumn::make(__('resources.order.item.product'))->width('60%'),
+                TableColumn::make(__('resources.order.item.quantity'))->width('20%'),
+                TableColumn::make(__('resources.order.item.unit_price'))->width('20%'),
+            ])
             ->schema([
                 static::getProductIdField(),
                 static::getProductNameField(),
@@ -119,7 +124,6 @@ class OrderForm
             ->deletable(false)
             ->reorderable(false)
             ->hiddenLabel()
-            ->colStyles(static::getItemsRepeaterColStyles())
             ->collapsible()
             ->required()
             ->rules([
@@ -227,12 +231,13 @@ class OrderForm
         return Hidden::make('product_id');
     }
 
-    protected static function getProductNameField(): TextEntry
+    protected static function getProductNameField(): TextInput
     {
-        return TextEntry::make('product_name')
+        return TextInput::make('product_name')
             ->label(__('resources.order.item.product'))
-            ->state(fn (Get $get) => $get('product_name'))
-            ->extraAttributes(['class' => 'h-9 flex items-center px-1']);
+            ->disabled()
+            ->dehydrated(false)
+            ->extraInputAttributes(['class' => 'h-9 flex items-center px-1']);
     }
 
     protected static function getQuantityField(): TextInput
@@ -341,26 +346,6 @@ class OrderForm
                     return ProductResource::getUrl('view', ['record' => $product]);
                 }, shouldOpenInNewTab: true),
         ];
-    }
-
-    /** @return array<string,string>|Closure */
-    protected static function getItemsRepeaterColStyles(): array | Closure
-    {
-        return function ($operation) {
-            if ($operation === 'create') {
-                return [
-                    'product_name' => 'width: 70%',
-                    'qty' => 'width: 15%',
-                    'unit_price' => 'width: 15%',
-                ];
-            }
-
-            return [
-                'product_name' => 'width: 60%',
-                'qty' => 'width: 20%',
-                'unit_price' => 'width: 20%',
-            ];
-        };
     }
 
     /**
