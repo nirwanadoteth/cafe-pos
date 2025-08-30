@@ -40,7 +40,7 @@ class StatsOverviewWidget extends BaseWidget
     protected function getStats(): array
     {
         [$from, $to, $label] = getCarbonInstancesFromDateString(
-            $this->filters['created_at'] ?? null
+            $this->pageFilters['created_at'] ?? null
         );
         $dateRange = new DateRange(
             $from,
