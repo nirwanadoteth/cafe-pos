@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Casts;
 
 use App\Casts\MoneyCast;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class MoneyCastTest extends TestCase
 {
-    /**
-     * @dataProvider setProvider
-     */
+    #[DataProvider('setProvider')]
     public function test_set_rounds_to_integer_cents(float $input, float $expected): void
     {
         $cast = new MoneyCast;
@@ -35,9 +34,7 @@ class MoneyCastTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getProvider
-     */
+    #[DataProvider('getProvider')]
     public function test_get_divides_by_100_and_rounds(float $stored, float $expected): void
     {
         $cast = new MoneyCast;
