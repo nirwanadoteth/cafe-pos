@@ -7,9 +7,7 @@
         "prettier": "npx prettier --write ."
     },
     "devDependencies": {
-        "@tailwindcss/forms": "^0.5.9",
-        "@tailwindcss/postcss": "^4.1.12",
-        "@tailwindcss/typography": "^0.5.15",
+        "@tailwindcss/vite": "^4.1.12",
         "autoprefixer": "^10.4.20",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
