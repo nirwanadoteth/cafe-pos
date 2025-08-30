@@ -10,29 +10,30 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
-        "bezhansalleh/filament-shield": "^4.0@beta",
+        "bezhansalleh/filament-shield": "~4.0",
         "doctrine/dbal": "^4.2",
-        "filament/filament": "^4.0",
-        "filament/spatie-laravel-media-library-plugin": "^4.0",
+        "filament/filament": "~4.0",
+        "filament/spatie-laravel-media-library-plugin": "~4.0",
         "flowframe/laravel-trend": "^0.4.0",
-        "icetalker/filament-table-repeater": "^2.0",
+        "icetalker/filament-table-repeater": "~2.0",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.9",
-        "malzariey/filament-daterangepicker-filter": "^4.0",
-        "shuvroroy/filament-spatie-laravel-health": "^3.0@beta",
+        "laravel/tinker": "^2.10.1",
+        "malzariey/filament-daterangepicker-filter": "~4.0",
+        "shuvroroy/filament-spatie-laravel-health": "~3.0",
         "spatie/security-advisories-health-check": "^1.2",
-        "swisnl/filament-backgrounds": "^2.0"
+        "swisnl/filament-backgrounds": "~2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "filament/upgrade": "~4.0",
         "larastan/larastan": "^3.6",
-        "laravel/pail": "^1.2",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
+        "laravel/pail": "^1.2.2",
+        "laravel/pint": "^1.24",
+        "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.1",
+        "nunomaduro/collision": "^8.6",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpunit/phpunit": "^11.0.1",
+        "phpunit/phpunit": "^11.5.3",
         "spatie/laravel-ignition": "^2.8"
     },
     "autoload": {
@@ -69,14 +70,18 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test"
         ],
         "cs": [
             "pint",
             "npm run prettier"
         ],
-        "pint": "pint",
-        "test": "phpstan"
+        "pint": "pint --parallel",
+        "stan": "phpstan analyse -c phpstan.neon"
     },
     "extra": {
         "laravel": {

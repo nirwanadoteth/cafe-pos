@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f305e57b0c7518f743bddf410684591",
+    "content-hash": "308b148c35187e7f2de77d3e4df95232",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -13142,10 +13142,7 @@
     ],
     "aliases": [],
     "minimum-stability": "beta",
-    "stability-flags": {
-        "bezhansalleh/filament-shield": 10,
-        "shuvroroy/filament-spatie-laravel-health": 10
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
