@@ -15,6 +15,7 @@ use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
+use Filament\Schemas\Schema;
 
 class CreateOrder extends CreateRecord
 {
@@ -24,9 +25,9 @@ class CreateOrder extends CreateRecord
 
     protected ?string $currentStep = null;
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return parent::form($form)
+        return parent::form($schema)
             ->schema([
                 Wizard::make($this->getSteps())
                     ->startOnStep($this->getStartStep())

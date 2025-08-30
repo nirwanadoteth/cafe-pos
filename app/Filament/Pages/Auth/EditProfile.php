@@ -5,14 +5,15 @@ namespace App\Filament\Pages\Auth;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Schemas\Schema;
+use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Illuminate\Support\Str;
 
 class EditProfile extends BaseEditProfile
 {
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 $this->getNameFormComponent(),
                 $this->getEmailFormComponent(),

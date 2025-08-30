@@ -6,6 +6,7 @@ use App\Filament\Resources\ProductResource;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -13,9 +14,9 @@ class ProductsRelationManager extends RelationManager
 {
     protected static string $relationship = 'products';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return ProductResource::form($form);
+        return ProductResource::form($schema);
     }
 
     public function table(Table $table): Table
@@ -36,8 +37,8 @@ class ProductsRelationManager extends RelationManager
             ]);
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return ProductResource::infolist($infolist);
+        return ProductResource::infolist($schema);
     }
 }

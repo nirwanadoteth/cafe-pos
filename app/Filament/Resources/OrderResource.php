@@ -11,6 +11,7 @@ use App\Models\Order;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,9 +45,9 @@ class OrderResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema(OrderForm::getSchema())
             ->disabled(
                 fn (?Order $record): bool => $record?->status === OrderStatus::Completed ||

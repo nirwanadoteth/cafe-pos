@@ -11,6 +11,7 @@ use App\Models\Product;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
@@ -40,9 +41,9 @@ class ProductResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema(ProductForm::getSchema())
             ->columns(3);
     }
@@ -59,9 +60,9 @@ class ProductResource extends Resource implements HasShieldPermissions
             ->defaultSort('category.name');
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
+        return $schema
             ->schema(ProductInfolist::getSchema())
             ->columns(3);
     }

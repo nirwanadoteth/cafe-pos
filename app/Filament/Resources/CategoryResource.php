@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
+use Filament\Schemas\Schema;
 use Filament\Infolists\Components\Grid as InfolistsGrid;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section as InfolistsSection;
@@ -53,9 +54,9 @@ class CategoryResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Section::make()
                     ->schema([
@@ -146,9 +147,9 @@ class CategoryResource extends Resource implements HasShieldPermissions
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
+        return $schema
             ->schema([
                 InfolistsSection::make()
                     ->schema([
