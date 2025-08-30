@@ -288,6 +288,86 @@ public function test_that_true_is_true(): void
 
 ---
 
+## Modern Development Workflow (Laravel 12.x/Filament 4.x/Tailwind v4)
+
+### 1. Unified Development Environment
+
+**File:** `composer.json` - `dev` script
+**Description:** Concurrently runs all development services for optimal developer experience
+
+```json
+{
+  "scripts": {
+    "dev": [
+      "Composer\\Config::disableProcessTimeout",
+      "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+    ]
+  }
+}
+```
+
+### 2. Modern Asset Pipeline
+
+**File:** `vite.config.js` - Vite 7.x configuration
+**Description:** Optimized build configuration with Tailwind v4 integration
+
+```javascript
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+        tailwindcss(),
+    ],
+});
+```
+
+### 3. CSS-First Tailwind Configuration
+
+**File:** `resources/css/app.css` - Tailwind v4 approach
+**Description:** Modern CSS-first configuration replacing JavaScript config
+
+```css
+@import "tailwindcss";
+```
+
+### 4. Quality Assurance Workflow
+
+**File:** `composer.json` - Quality scripts
+**Description:** Streamlined commands for code quality and testing
+
+```json
+{
+  "scripts": {
+    "test": [
+      "@php artisan config:clear --ansi",
+      "@php artisan test"
+    ],
+    "cs": [
+      "pint",
+      "npm run prettier"
+    ],
+    "pint": "pint --parallel",
+    "stan": "phpstan analyse -c phpstan.neon"
+  }
+}
+```
+
+### Development Best Practices
+
+- **Hot Reload:** Vite 7.x provides instant asset updates during development
+- **Concurrent Services:** Single `composer dev` command starts all required services
+- **Code Quality:** Automated formatting with Pint and static analysis with PHPStan Level 8
+- **Asset Optimization:** Tailwind v4 delivers smaller bundles and faster compilation
+- **Testing Integration:** Unified test suite with database setup and fixtures
+
+---
+
 ## Anti-patterns to Avoid
 
 - Placing business logic in views

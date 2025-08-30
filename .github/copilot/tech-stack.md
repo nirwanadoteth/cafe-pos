@@ -7,10 +7,10 @@
 ## 1. Technology Identification Phase
 
 - **Primary Technologies Detected:**
-  - **Backend:** PHP (Laravel 11.9)
-  - **Frontend:** Blade, Filament (3.2), Vite (6.0), TailwindCSS (3.4.16), JavaScript (ESM)
-  - **Database:** MySQL
-  - **Testing:** PHPUnit (11.0.1), PHPStan (level 8), Pint (1.13)
+  - **Backend:** PHP (Laravel 12.0)
+  - **Frontend:** Blade, Filament (4.0), Vite (7.0), TailwindCSS (4.1), JavaScript (ESM)
+  - **Database:** MySQL/SQLite
+  - **Testing:** PHPUnit (11.5), PHPStan (level 8), Pint (1.24)
   - **Build Tools:** Composer, NPM
   - **Other:** Spatie Media Library, Filament plugins, FakerPHP
 
@@ -18,13 +18,13 @@
 - **Configuration Files:** composer.json, package.json, phpstan.neon, phpunit.xml, pint.json, vite.config.js, tailwind.config.js
 - **Version Information:**
   - PHP: ^8.2
-  - Laravel: ^11.9 (MIT License)
-  - Filament: ^3.2 (MIT License)
-  - Vite: ^6.0 (MIT License)
-  - TailwindCSS: ^3.4.16 (MIT License)
-  - PHPUnit: ^11.0.1 (MIT License)
-  - Pint: ^1.13 (MIT License)
-  - PHPStan: ^1.2 (MIT License)
+  - Laravel: ^12.0 (MIT License)
+  - Filament: ~4.0 (MIT License)
+  - Vite: ^7.0 (MIT License)
+  - TailwindCSS: ^4.1 (MIT License)
+  - PHPUnit: ^11.5 (MIT License)
+  - Pint: ^1.24 (MIT License)
+  - PHPStan: ^3.6 (MIT License)
   - FakerPHP: ^1.23 (MIT License)
   - All other dependencies: see composer.json and package.json
 
@@ -34,11 +34,11 @@
 
 ### PHP/Laravel
 
-- **Framework:** Laravel 11.x
+- **Framework:** Laravel 12.x
 - **ORM:** Eloquent
 - **Testing:** PHPUnit, PHPStan, Pint
 - **Auth:** Laravel Auth, Spatie Roles/Permissions
-- **Admin UI:** Filament
+- **Admin UI:** Filament v4
 - **Build:** Composer
 - **Configuration:** .env, config/*.php
 
@@ -52,8 +52,8 @@
 
 ### CSS
 
-- **Framework:** TailwindCSS
-- **Presets:** Filament preset
+- **Framework:** TailwindCSS v4
+- **Presets:** Filament v4 preset
 
 ---
 
