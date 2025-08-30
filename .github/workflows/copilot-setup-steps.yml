@@ -1,4 +1,4 @@
-name: "Copilot Setup Steps"
+name: 'Copilot Setup Steps'
 
 on:
   workflow_dispatch:
@@ -50,7 +50,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: "22"
+          node-version: '22'
 
       - name: Get npm cache directory
         id: npm-cache-dir
@@ -69,3 +69,15 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm ci --no-audit --no-fund
+
+      - name: Pint
+        run: |
+          composer pint
+
+      - name: PHPStan
+        run: |
+          composer stan
+
+      - name: Test
+        run: |
+          composer test
