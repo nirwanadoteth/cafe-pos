@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Http\Responses\LogoutResponse;
 use BezhanSalleh\FilamentShield\FilamentShield;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Facades\Filament;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -51,8 +51,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if (! Filament::isServing()) {
-            if (Filament::getCurrentPanel() !== null) {
-                FilamentColor::register(Filament::getCurrentPanel()->getColors());
+            if (Filament::getCurrentOrDefaultPanel() !== null) {
+                FilamentColor::register(Filament::getCurrentOrDefaultPanel()->getColors());
             }
         }
 
