@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\OrderResource;
+use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
