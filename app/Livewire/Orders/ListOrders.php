@@ -4,10 +4,12 @@ namespace App\Livewire\Orders;
 
 use App\Enums\OrderStatus;
 use App\Models\Order;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Summarizer;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Grouping\Group;
@@ -18,8 +20,9 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
-class ListOrders extends Component implements HasForms, HasTable
+class ListOrders extends Component implements HasActions, HasForms, HasTable
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithTable;
 
@@ -27,7 +30,7 @@ class ListOrders extends Component implements HasForms, HasTable
      * @var array<string, mixed> | null
      */
     #[Url]
-    public ?array $tableFilters = null;
+    public ?array $filters = null;
 
     public function table(Table $table): Table
     {
@@ -37,32 +40,32 @@ class ListOrders extends Component implements HasForms, HasTable
                     ->where('status', '=', OrderStatus::Completed)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Order Date')
                     ->date(),
 
-                Tables\Columns\TextColumn::make('min')
+                TextColumn::make('min')
                     ->summarize([
                         Summarizer::make()
                             ->using(fn (Builder $query) => $query->min('total_price'))
                             ->money('IDR', 100),
                     ]),
 
-                Tables\Columns\TextColumn::make('max')
+                TextColumn::make('max')
                     ->summarize([
                         Summarizer::make()
                             ->using(fn (Builder $query) => $query->max('total_price'))
                             ->money('IDR', 100),
                     ]),
 
-                Tables\Columns\TextColumn::make('sum')
+                TextColumn::make('sum')
                     ->summarize([
                         Summarizer::make()
                             ->using(fn (Builder $query) => $query->sum('total_price'))
                             ->money('IDR', 100),
                     ]),
 
-                Tables\Columns\TextColumn::make('avg')
+                TextColumn::make('avg')
                     ->summarize([
                         Summarizer::make()
                             ->using(fn (Builder $query) => $query->avg('total_price'))

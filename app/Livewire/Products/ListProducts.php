@@ -3,9 +3,13 @@
 namespace App\Livewire\Products;
 
 use App\Models\Product;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Summarizer;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -15,8 +19,9 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
-class ListProducts extends Component implements HasForms, HasTable
+class ListProducts extends Component implements HasActions, HasForms, HasTable
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithTable;
 
@@ -24,7 +29,7 @@ class ListProducts extends Component implements HasForms, HasTable
      * @var array<string, mixed> | null
      */
     #[Url]
-    public ?array $tableFilters = null;
+    public ?array $filters = null;
 
     public function table(Table $table): Table
     {
@@ -33,16 +38,16 @@ class ListProducts extends Component implements HasForms, HasTable
                 Product::query()
             )
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('items_sum_qty')
+                TextColumn::make('name'),
+                TextColumn::make('items_sum_qty')
                     ->label(__('clusters/pages/report.product.table.columns.ordered'))
                     ->sum('items', 'qty')
                     ->default(0)
                     ->summarize([
-                        Tables\Columns\Summarizers\Sum::make()
+                        Sum::make()
                             ->label('Total ordered quantity'),
 
-                        Tables\Columns\Summarizers\Summarizer::make()
+                        Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.least'))
                             ->using(
                                 fn (Builder $query) => $query
@@ -50,16 +55,16 @@ class ListProducts extends Component implements HasForms, HasTable
                                     ->value('name') ?? '-'
                             ),
                     ]),
-                Tables\Columns\TextColumn::make('items_sum_unit_price')
+                TextColumn::make('items_sum_unit_price')
                     ->label('Revenue')
                     ->sum('items', 'unit_price')
                     ->money('IDR', 100)
                     ->summarize([
-                        Tables\Columns\Summarizers\Sum::make('items_sum_unit_price')
+                        Sum::make('items_sum_unit_price')
                             ->label('Total revenue')
                             ->money('IDR', 100),
 
-                        Tables\Columns\Summarizers\Summarizer::make()
+                        Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.most'))
                             ->using(
                                 fn (Builder $query) => $query

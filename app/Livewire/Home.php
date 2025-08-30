@@ -3,16 +3,18 @@
 namespace App\Livewire;
 
 use App\Models\Product;
+use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Facades\Filament;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Actions\Action;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Grouping\Group;
@@ -20,8 +22,9 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class Home extends Component implements HasForms, HasTable
+class Home extends Component implements HasActions, HasForms, HasTable
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithTable;
 
@@ -38,7 +41,7 @@ class Home extends Component implements HasForms, HasTable
                     SpatieMediaLibraryImageColumn::make('product-image')
                         ->defaultImageUrl(url('https://placehold.co/100x100.webp?text=No+Image'))
                         ->square()
-                        ->size(100)
+                        ->imageSize(100)
                         ->collection('product-images')
                         ->conversion('webp')
                         ->grow(false)
@@ -50,7 +53,7 @@ class Home extends Component implements HasForms, HasTable
 
                     Stack::make([
                         TextColumn::make('name')
-                            ->size(TextColumnSize::Large)
+                            ->size(TextSize::Large)
                             ->weight(FontWeight::Bold),
 
                         TextColumn::make('price')
