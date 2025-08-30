@@ -19,7 +19,7 @@
 - **Version Information:**
   - PHP: ^8.2
   - Laravel: ^12.0 (MIT License)
-  - Filament: ~4.0 (MIT License)
+  - Filament: ^4.0 (MIT License)
   - Vite: ^7.0 (MIT License)
   - TailwindCSS: ^4.1 (MIT License)
   - PHPUnit: ^11.5 (MIT License)
