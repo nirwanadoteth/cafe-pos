@@ -19,10 +19,10 @@ class AuthenticationService
     /**
      * Redirect to intended URL or default Filament URL
      *
-     * @return \Illuminate\Http\RedirectResponse Redirect response
+     * @return \Illuminate\Http\RedirectResponse | \Livewire\Features\SupportRedirects\Redirector Redirect response
      */
-    public static function redirectToIntended(): \Illuminate\Http\RedirectResponse
+    public static function redirectToIntended(): \Illuminate\Http\RedirectResponse | \Livewire\Features\SupportRedirects\Redirector
     {
-        return redirect()->intended(Filament::getUrl());
+        return redirect()->intended(Filament::getDefaultPanel()->getRedirectUrl());
     }
 }
