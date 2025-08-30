@@ -3,6 +3,7 @@
 namespace App\Filament\Clusters\Reports\Pages;
 
 use App\Filament\Clusters\Reports;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
@@ -13,9 +14,9 @@ class SalesReports extends Page
     use HasFiltersForm;
     use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-currency-dollar';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-currency-dollar';
 
-    protected static string $view = 'filament.clusters.reports.pages.sales-reports';
+    protected string $view = 'filament.clusters.reports.pages.sales-reports';
 
     protected static ?string $cluster = Reports::class;
 

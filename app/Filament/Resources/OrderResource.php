@@ -8,6 +8,7 @@ use App\Filament\Resources\OrderResource\Components\OrderTable;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\Widgets\OrderStats;
 use App\Models\Order;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,7 +23,7 @@ class OrderResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'number';
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static ?int $navigationSort = 2;
 

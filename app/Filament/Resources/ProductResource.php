@@ -8,6 +8,7 @@ use App\Filament\Resources\ProductResource\Components\ProductTable;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\Widgets\ProductStats;
 use App\Models\Product;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
@@ -22,7 +23,7 @@ class ProductResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-bolt';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
 
     protected static ?int $navigationSort = 1;
 

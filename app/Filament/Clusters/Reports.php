@@ -2,12 +2,13 @@
 
 namespace App\Filament\Clusters;
 
+use BackedEnum;
 use Filament\Clusters\Cluster;
 use Illuminate\Contracts\Support\Htmlable;
 
 class Reports extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
     public function getTitle(): string | Htmlable
     {
