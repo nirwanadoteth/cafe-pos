@@ -56,11 +56,11 @@ This plan details the steps required to upgrade the project to Laravel 12.x+, Fi
 
 | Task      | Description                                                                 | Completed | Date       |
 |-----------|-----------------------------------------------------------------------------|-----------|------------|
-| TASK-010  | Run automated tests and fix failures                                        |           |            |
-| TASK-011  | Manually test all major workflows and UI                                    |           |            |
-| TASK-012  | Update documentation to reflect new versions and changes                    |           |            |
-| TASK-013  | Remove deprecated code and unused dependencies                              |           |            |
-| TASK-014  | Finalize and deploy upgraded codebase                                       |           |            |
+| TASK-010  | Run automated tests and fix failures                                        | ✅        | 2025-08-30 |
+| TASK-011  | Manually test all major workflows and UI                                    | ✅        | 2025-08-30 |
+| TASK-012  | Update documentation to reflect new versions and changes                    | ✅        | 2025-08-30 |
+| TASK-013  | Remove deprecated code and unused dependencies                              | ✅        | 2025-08-30 |
+| TASK-014  | Finalize and deploy upgraded codebase                                       | ✅        | 2025-08-30 |
 
 ## 3. Alternatives
 
