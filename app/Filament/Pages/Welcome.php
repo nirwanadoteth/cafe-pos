@@ -4,7 +4,7 @@ namespace App\Filament\Pages;
 
 use Filament\Facades\Filament;
 use Filament\Pages\SimplePage;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Tables\Table\Concerns\HasHeaderActions;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -12,7 +12,7 @@ class Welcome extends SimplePage
 {
     use HasHeaderActions;
 
-    protected static string $view = 'filament.pages.welcome';
+    protected string $view = 'filament.pages.welcome';
 
     public function mount(): void
     {
@@ -21,9 +21,9 @@ class Welcome extends SimplePage
         }
     }
 
-    public function getMaxWidth(): MaxWidth | string | null
+    public function getMaxWidth(): Width | string | null
     {
-        return MaxWidth::ScreenLarge;
+        return Width::ScreenLarge;
     }
 
     public function getTitle(): string | Htmlable

@@ -30,7 +30,7 @@
     <div {{-- x-data="{ state: $wire.entangle('{{ $getStatePath() }}') }"  --}} x-data="{ isCollapsed: @js($isCollapsed()) }"
         x-on:repeater-collapse.window="$event.detail === '{{ $getStatePath() }}' && (isCollapsed = true)"
         x-on:repeater-expand.window="$event.detail === '{{ $getStatePath() }}' && (isCollapsed = false)"
-        {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['bg-white border border-gray-300 shadow-sm rounded-xl relative dark:bg-gray-800 dark:border-gray-600']) }}>
+        {{ $attributes->merge($getExtraAttributes(), escape: false)->class(['bg-white border border-gray-300 shadow-xs rounded-xl relative dark:bg-gray-800 dark:border-gray-600']) }}>
 
         <div @class([
             'filament-tables-header',

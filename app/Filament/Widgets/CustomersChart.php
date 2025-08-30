@@ -10,7 +10,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class CustomersChart extends ChartWidget
 {
-    protected static ?string $heading = 'Total customers';
+    protected ?string $heading = 'Total customers';
 
     protected static ?int $sort = 2;
 
