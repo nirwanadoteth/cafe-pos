@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Roles\Pages;
 
 use App\Filament\Resources\Roles\RoleResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource\Pages\CreateRole as BaseCreateRole;
-use Filament\Actions;
+use Filament\Actions\Action;
 
 class CreateRole extends BaseCreateRole
 {
@@ -13,7 +13,7 @@ class CreateRole extends BaseCreateRole
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('reset')
+            Action::make('reset')
                 ->hiddenLabel()
                 ->icon('heroicon-o-arrow-path')
                 ->color('gray')

@@ -3,7 +3,10 @@
 namespace App\Filament\Resources\Orders\Pages;
 
 use App\Filament\Resources\Orders\OrderResource;
-use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditOrder extends EditRecord
@@ -13,15 +16,15 @@ class EditOrder extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('reset')
+            Action::make('reset')
                 ->hiddenLabel()
                 ->icon('heroicon-o-arrow-path')
                 ->color('gray')
                 ->tooltip('Reset')
                 ->action(fn () => $this->fillForm()),
-            Actions\DeleteAction::make(),
-            Actions\RestoreAction::make(),
-            Actions\ForceDeleteAction::make(),
+            DeleteAction::make(),
+            RestoreAction::make(),
+            ForceDeleteAction::make(),
         ];
     }
 

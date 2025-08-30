@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Products\Pages;
 
 use App\Filament\Resources\Products\ProductResource;
-use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateProduct extends CreateRecord
@@ -13,7 +13,7 @@ class CreateProduct extends CreateRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('reset')
+            Action::make('reset')
                 ->hiddenLabel()
                 ->icon('heroicon-o-arrow-path')
                 ->color('gray')

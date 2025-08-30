@@ -6,12 +6,12 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -133,7 +133,7 @@ class OrderTable
     protected static function getCreatedAtFilter(): Filter
     {
         return Filter::make('created_at')
-            ->form([
+            ->schema([
                 DatePicker::make('created_from')
                     ->label(__('resources/order.filters.created_from'))
                     ->placeholder(fn ($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),

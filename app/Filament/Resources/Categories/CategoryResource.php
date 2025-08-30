@@ -2,30 +2,28 @@
 
 namespace App\Filament\Resources\Categories;
 
-use App\Filament\Resources\Categories\Pages;
-use App\Filament\Resources\Categories\RelationManagers;
+use App\Filament\Resources\Categories\Pages\CreateCategory;
+use App\Filament\Resources\Categories\Pages\EditCategory;
+use App\Filament\Resources\Categories\Pages\ListCategories;
+use App\Filament\Resources\Categories\Pages\ViewCategory;
+use App\Filament\Resources\Categories\RelationManagers\ProductsRelationManager;
 use App\Models\Category;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Filament\Forms\Components\Grid;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Set;
-use Filament\Schemas\Schema;
-use Filament\Infolists\Components\Grid as InfolistsGrid;
 use Filament\Infolists\Components\IconEntry;
-use Filament\Infolists\Components\Section as InfolistsSection;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -57,7 +55,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->schema([
+            ->components([
                 Section::make()
                     ->schema([
                         Grid::make()
@@ -95,13 +93,13 @@ class CategoryResource extends Resource implements HasShieldPermissions
                     ->columnSpan(['lg' => fn (?Category $record) => $record === null ? 3 : 2]),
                 Section::make()
                     ->schema([
-                        Placeholder::make('created_at')
+                        TextEntry::make('created_at')
                             ->label(__('resources/category.created_at'))
-                            ->content(fn (Category $record): ?string => $record->created_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
+                            ->state(fn (Category $record): ?string => $record->created_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
 
-                        Placeholder::make('updated_at')
+                        TextEntry::make('updated_at')
                             ->label(__('resources/category.updated_at'))
-                            ->content(fn (Category $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
+                            ->state(fn (Category $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
                     ])
                     ->columnSpan(['lg' => 1])
                     ->hidden(fn (?Category $record) => $record === null),
@@ -136,11 +134,11 @@ class CategoryResource extends Resource implements HasShieldPermissions
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
@@ -150,10 +148,10 @@ class CategoryResource extends Resource implements HasShieldPermissions
     public static function infolist(Schema $schema): Schema
     {
         return $schema
-            ->schema([
-                InfolistsSection::make()
+            ->components([
+                Section::make()
                     ->schema([
-                        InfolistsGrid::make()
+                        Grid::make()
                             ->schema([
                                 TextEntry::make('name')
                                     ->label(__('resources/category.name')),
@@ -172,7 +170,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                             ->placeholder(__('resources/category.no_description')),
                     ])
                     ->columnSpan(['lg' => 2]),
-                InfolistsSection::make()
+                Section::make()
                     ->schema([
                         TextEntry::make('created_at')
                             ->label(__('resources/category.created_at'))
@@ -192,17 +190,17 @@ class CategoryResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ProductsRelationManager::class,
+            ProductsRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'view' => Pages\ViewCategory::route('/{record}'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => ListCategories::route('/'),
+            'create' => CreateCategory::route('/create'),
+            'view' => ViewCategory::route('/{record}'),
+            'edit' => EditCategory::route('/{record}/edit'),
         ];
     }
 

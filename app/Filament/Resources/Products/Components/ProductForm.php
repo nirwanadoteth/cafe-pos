@@ -4,15 +4,15 @@ namespace App\Filament\Resources\Products\Components;
 
 use App\Models\Product;
 use Closure;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Str;
 

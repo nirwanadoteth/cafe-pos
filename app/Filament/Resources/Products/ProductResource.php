@@ -5,15 +5,16 @@ namespace App\Filament\Resources\Products;
 use App\Filament\Resources\Products\Components\ProductForm;
 use App\Filament\Resources\Products\Components\ProductInfolist;
 use App\Filament\Resources\Products\Components\ProductTable;
-use App\Filament\Resources\Products\Pages;
+use App\Filament\Resources\Products\Pages\CreateProduct;
+use App\Filament\Resources\Products\Pages\EditProduct;
+use App\Filament\Resources\Products\Pages\ListProducts;
+use App\Filament\Resources\Products\Pages\ViewProduct;
 use App\Filament\Resources\Products\Widgets\ProductStats;
 use App\Models\Product;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Filament\Forms\Form;
-use Filament\Schemas\Schema;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -44,7 +45,7 @@ class ProductResource extends Resource implements HasShieldPermissions
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->schema(ProductForm::getSchema())
+            ->components(ProductForm::getSchema())
             ->columns(3);
     }
 
@@ -53,9 +54,8 @@ class ProductResource extends Resource implements HasShieldPermissions
         return $table
             ->columns(ProductTable::getColumns())
             ->filters(ProductTable::getFilters(), ProductTable::getFiltersLayout())
-            ->deferFilters()
-            ->actions(ProductTable::getActions())
-            ->bulkActions(ProductTable::getBulkActions())
+            ->recordActions(ProductTable::getActions())
+            ->toolbarActions(ProductTable::getBulkActions())
             ->groups(ProductTable::getGroups())
             ->defaultSort('category.name');
     }
@@ -63,7 +63,7 @@ class ProductResource extends Resource implements HasShieldPermissions
     public static function infolist(Schema $schema): Schema
     {
         return $schema
-            ->schema(ProductInfolist::getSchema())
+            ->components(ProductInfolist::getSchema())
             ->columns(3);
     }
 
@@ -84,10 +84,10 @@ class ProductResource extends Resource implements HasShieldPermissions
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'view' => Pages\ViewProduct::route('/{record}'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => ListProducts::route('/'),
+            'create' => CreateProduct::route('/create'),
+            'view' => ViewProduct::route('/{record}'),
+            'edit' => EditProduct::route('/{record}/edit'),
         ];
     }
 

@@ -2,19 +2,18 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
-use App\Filament\Resources\Orders\OrderResource;
 use App\Filament\Resources\Orders\Components\OrderForm;
+use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Wizard;
-use Filament\Forms\Components\Wizard\Step;
-use Filament\Forms\Form;
-use Filament\Notifications\Actions\Action;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 
 class CreateOrder extends CreateRecord
@@ -28,7 +27,7 @@ class CreateOrder extends CreateRecord
     public function form(Schema $schema): Schema
     {
         return parent::form($schema)
-            ->schema([
+            ->components([
                 Wizard::make($this->getSteps())
                     ->startOnStep($this->getStartStep())
                     ->cancelAction($this->getCancelFormAction())

@@ -7,21 +7,21 @@ use App\Filament\Resources\Products\ProductResource;
 use App\Models\Order;
 use App\Models\Product;
 use Closure;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Group;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
-use Filament\Support\Enums\ActionSize;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\IconSize;
+use Filament\Support\Enums\Size;
 use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 
 class OrderForm
@@ -51,20 +51,20 @@ class OrderForm
                 ->schema([
                     Section::make()
                         ->schema([
-                            Placeholder::make('created_at')
-                                ->content(fn (Order $record): ?string => $record->created_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
+                            TextEntry::make('created_at')
+                                ->state(fn (Order $record): ?string => $record->created_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
 
-                            Placeholder::make('updated_at')
-                                ->content(fn (Order $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
+                            TextEntry::make('updated_at')
+                                ->state(fn (Order $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
                         ])
                         ->columnSpan(['lg' => 1])
                         ->hidden(fn (?Order $record) => $record === null),
 
                     Section::make()
                         ->schema([
-                            Placeholder::make('total_price')
+                            TextEntry::make('total_price')
                                 ->label(__('resources/order.total'))
-                                ->content(fn (Order $record): ?string => $record->total_price ? 'Rp ' . number_format($record->total_price, 2, ',', '.') : null),
+                                ->state(fn (Order $record): ?string => $record->total_price ? 'Rp ' . number_format($record->total_price, 2, ',', '.') : null),
 
                             static::getPaymentFormSchema(),
                         ])
@@ -227,11 +227,11 @@ class OrderForm
         return Hidden::make('product_id');
     }
 
-    protected static function getProductNameField(): Placeholder
+    protected static function getProductNameField(): TextEntry
     {
-        return Placeholder::make('product_name')
+        return TextEntry::make('product_name')
             ->label(__('resources/order.item.product'))
-            ->content(fn (Get $get) => $get('product_name'))
+            ->state(fn (Get $get) => $get('product_name'))
             ->extraAttributes(['class' => 'h-9 flex items-center px-1']);
     }
 
@@ -249,7 +249,7 @@ class OrderForm
                     ->iconButton()
                     ->icon('heroicon-s-minus')
                     ->iconSize(IconSize::Small)
-                    ->size(ActionSize::Small)
+                    ->size(Size::Small)
                     ->action(fn (Get $get, Set $set) => $set('qty', $get('qty') - 1))
                     ->disabled(fn (TextInput $component, Get $get) => $component->isDisabled() || $get('qty') <= 0),
                 isInline: true
@@ -259,7 +259,7 @@ class OrderForm
                     ->iconButton()
                     ->icon('heroicon-s-plus')
                     ->iconSize(IconSize::Small)
-                    ->size(ActionSize::Small)
+                    ->size(Size::Small)
                     ->action(fn (Get $get, Set $set) => $set('qty', $get('qty') + 1))
                     ->disabled(fn (TextInput $component, Get $get) => $component->isDisabled() || $get('qty') >= 999),
                 isInline: true

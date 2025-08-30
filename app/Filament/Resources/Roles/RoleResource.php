@@ -2,7 +2,8 @@
 
 namespace App\Filament\Resources\Roles;
 
-use App\Filament\Resources\Roles\Pages;
+use App\Filament\Resources\Roles\Pages\CreateRole;
+use App\Filament\Resources\Roles\Pages\EditRole;
 use BezhanSalleh\FilamentShield\Resources\RoleResource as BaseRoleResource;
 use BezhanSalleh\FilamentShield\Resources\RoleResource\Pages\ListRoles;
 use BezhanSalleh\FilamentShield\Resources\RoleResource\Pages\ViewRole;
@@ -13,9 +14,9 @@ class RoleResource extends BaseRoleResource
     {
         return [
             'index' => ListRoles::route('/'),
-            'create' => Pages\CreateRole::route('/create'),
+            'create' => CreateRole::route('/create'),
             'view' => ViewRole::route('/{record}'),
-            'edit' => Pages\EditRole::route('/{record}/edit'),
+            'edit' => EditRole::route('/{record}/edit'),
         ];
     }
 }

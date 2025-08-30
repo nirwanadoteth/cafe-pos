@@ -5,14 +5,15 @@ namespace App\Filament\Resources\Orders;
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\Components\OrderForm;
 use App\Filament\Resources\Orders\Components\OrderTable;
-use App\Filament\Resources\Orders\Pages;
+use App\Filament\Resources\Orders\Pages\CreateOrder;
+use App\Filament\Resources\Orders\Pages\EditOrder;
+use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Resources\Orders\Widgets\OrderStats;
 use App\Models\Order;
 use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Filament\Forms\Form;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +49,7 @@ class OrderResource extends Resource implements HasShieldPermissions
     public static function form(Schema $schema): Schema
     {
         return $schema
-            ->schema(OrderForm::getSchema())
+            ->components(OrderForm::getSchema())
             ->disabled(
                 fn (?Order $record): bool => $record?->status === OrderStatus::Completed ||
                 $record?->status === OrderStatus::Cancelled
@@ -61,8 +62,8 @@ class OrderResource extends Resource implements HasShieldPermissions
         return $table
             ->columns(OrderTable::getColumns())
             ->filters(OrderTable::getFilters())
-            ->actions(OrderTable::getActions())
-            ->bulkActions(OrderTable::getBulkActions())
+            ->recordActions(OrderTable::getActions())
+            ->toolbarActions(OrderTable::getBulkActions())
             ->groups(OrderTable::getGroups())
             ->defaultSort('created_at', 'desc');
     }
@@ -112,9 +113,9 @@ class OrderResource extends Resource implements HasShieldPermissions
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrders::route('/'),
-            'create' => Pages\CreateOrder::route('/create'),
-            'edit' => Pages\EditOrder::route('/{record}/edit'),
+            'index' => ListOrders::route('/'),
+            'create' => CreateOrder::route('/create'),
+            'edit' => EditOrder::route('/{record}/edit'),
         ];
     }
 

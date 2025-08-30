@@ -5,7 +5,9 @@ namespace App\Filament\Resources\Products\Pages;
 use App\Filament\Exports\ProductExporter;
 use App\Filament\Imports\ProductImporter;
 use App\Filament\Resources\Products\ProductResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ImportAction;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Pages\ListRecords;
 
@@ -18,11 +20,11 @@ class ListProducts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ImportAction::make()
+            ImportAction::make()
                 ->importer(ProductImporter::class),
-            Actions\ExportAction::make()
+            ExportAction::make()
                 ->exporter(ProductExporter::class),
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 

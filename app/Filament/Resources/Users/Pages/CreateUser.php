@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Users\Pages;
 
 use App\Filament\Resources\Users\UserResource;
-use Filament\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateUser extends CreateRecord
@@ -13,7 +13,7 @@ class CreateUser extends CreateRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('reset')
+            Action::make('reset')
                 ->hiddenLabel()
                 ->icon('heroicon-o-arrow-path')
                 ->color('gray')

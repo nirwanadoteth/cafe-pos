@@ -4,12 +4,12 @@ namespace App\Filament\Resources\Products\Components;
 
 use App\Models\Product;
 use Closure;
-use Filament\Infolists\Components\Component;
-use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\IconEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ProductInfolist
