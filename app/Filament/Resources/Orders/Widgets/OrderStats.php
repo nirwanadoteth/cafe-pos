@@ -24,7 +24,7 @@ class OrderStats extends BaseWidget
 
     protected function getCurrentTabStatus(): ?string
     {
-        return $this->getPropertyValue('activeTab');
+        return $this->getPropertyValue('tab');
     }
 
     protected function getStats(): array
