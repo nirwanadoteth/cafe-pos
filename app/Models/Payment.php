@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property PaymentMethod $method
  * @property PaymentStatus $status
  * @property string|null $reference
- * @property array|null $meta
+ * @property array<string, mixed>|null $meta
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at

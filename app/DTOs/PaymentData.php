@@ -7,6 +7,15 @@ use App\Enums\PaymentStatus;
 
 readonly class PaymentData
 {
+    /**
+     * Constructor
+     *
+     * @param  PaymentMethod  $method  Payment method
+     * @param  int  $amount  Amount in cents
+     * @param  PaymentStatus  $status  Payment status
+     * @param  string|null  $reference  Optional payment reference
+     * @param  array<string, mixed>|null  $meta  Optional metadata
+     */
     public function __construct(
         public PaymentMethod $method,
         public int $amount, // Amount in cents
@@ -18,7 +27,7 @@ readonly class PaymentData
     /**
      * Create PaymentData from array
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {

@@ -28,6 +28,7 @@ class AcceptanceCriteriaTest extends TestCase
         $order = Order::factory()->make();
         $order->total_price = $totalPrice;
         $order->saveQuietly(); // Skip events/observers
+
         return $order;
     }
 
@@ -122,7 +123,7 @@ class AcceptanceCriteriaTest extends TestCase
 
         // Verify invoice shows payment breakdown
         $html = view('invoice', ['order' => $order])->render();
-        
+
         $this->assertStringContainsString('PAYMENTS', $html);
         $this->assertStringContainsString('CASH', $html);
         $this->assertStringContainsString('CARD', $html);
@@ -212,7 +213,7 @@ class AcceptanceCriteriaTest extends TestCase
         foreach ($methods as $methodData) {
             PaymentSettlementService::addPayment($order, new PaymentData(
                 method: $methodData['method'],
-                amount: (int)($methodData['amount'] * 100), // Convert to cents
+                amount: (int) ($methodData['amount'] * 100), // Convert to cents
                 reference: "REF-{$methodData['method']->value}"
             ));
         }

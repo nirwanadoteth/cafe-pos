@@ -23,6 +23,7 @@ class MultiPaymentTest extends TestCase
         $order = Order::factory()->make();
         $order->total_price = $totalPrice;
         $order->saveQuietly(); // Skip events/observers
+
         return $order;
     }
 
