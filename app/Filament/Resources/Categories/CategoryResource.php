@@ -61,7 +61,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                         Grid::make()
                             ->schema([
                                 TextInput::make('name')
-                                    ->label(__('resources/category.name'))
+                                    ->label(__('resources.category.name'))
                                     ->required()
                                     ->maxLength(255)
                                     ->autofocus(fn (string $operation) => $operation === 'create')
@@ -75,7 +75,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                                     }),
 
                                 TextInput::make('slug')
-                                    ->label(__('resources/category.slug'))
+                                    ->label(__('resources.category.slug'))
                                     ->disabled()
                                     ->dehydrated()
                                     ->required()
@@ -84,21 +84,21 @@ class CategoryResource extends Resource implements HasShieldPermissions
                             ]),
 
                         Toggle::make('is_visible')
-                            ->label(__('resources/category.is_visible'))
+                            ->label(__('resources.category.is_visible'))
                             ->default(true),
 
                         MarkdownEditor::make('description')
-                            ->label(__('resources/category.description')),
+                            ->label(__('resources.category.description')),
                     ])
                     ->columnSpan(['lg' => fn (?Category $record) => $record === null ? 3 : 2]),
                 Section::make()
                     ->schema([
                         TextEntry::make('created_at')
-                            ->label(__('resources/category.created_at'))
+                            ->label(__('resources.category.created_at'))
                             ->state(fn (Category $record): ?string => $record->created_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
 
                         TextEntry::make('updated_at')
-                            ->label(__('resources/category.updated_at'))
+                            ->label(__('resources.category.updated_at'))
                             ->state(fn (Category $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
                     ])
                     ->columnSpan(['lg' => 1])
@@ -112,21 +112,21 @@ class CategoryResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('resources/category.name'))
+                    ->label(__('resources.category.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('products_count')
-                    ->label(__('resources/category.total_products'))
+                    ->label(__('resources.category.total_products'))
                     ->counts('products')
                     ->alignCenter()
                     ->sortable(),
                 ToggleColumn::make('is_visible')
-                    ->label(__('resources/category.visibility'))
+                    ->label(__('resources.category.visibility'))
                     ->onColor('success')
                     ->offColor('danger')
                     ->sortable(),
                 TextColumn::make('updated_at')
-                    ->label(__('resources/category.updated_at'))
+                    ->label(__('resources.category.updated_at'))
                     ->date(timezone: 'Asia/Jakarta')
                     ->dateTimeTooltip(timezone: 'Asia/Jakarta')
                     ->sortable(),
@@ -154,11 +154,11 @@ class CategoryResource extends Resource implements HasShieldPermissions
                         Grid::make()
                             ->schema([
                                 TextEntry::make('name')
-                                    ->label(__('resources/category.name')),
+                                    ->label(__('resources.category.name')),
                             ]),
 
                         IconEntry::make('is_visible')
-                            ->label(__('resources/category.visibility'))
+                            ->label(__('resources.category.visibility'))
                             ->icon(fn (string $state): string => match ($state) {
                                 '1' => 'heroicon-o-check-circle',
                                 default => 'heroicon-o-x-circle',
@@ -166,19 +166,19 @@ class CategoryResource extends Resource implements HasShieldPermissions
 
                         TextEntry::make('description')
                             ->markdown()
-                            ->label(__('resources/category.description'))
-                            ->placeholder(__('resources/category.no_description')),
+                            ->label(__('resources.category.description'))
+                            ->placeholder(__('resources.category.no_description')),
                     ])
                     ->columnSpan(['lg' => 2]),
                 Section::make()
                     ->schema([
                         TextEntry::make('created_at')
-                            ->label(__('resources/category.created_at'))
+                            ->label(__('resources.category.created_at'))
                             ->since()
                             ->dateTimeTooltip(timezone: 'Asia/Jakarta'),
 
                         TextEntry::make('updated_at')
-                            ->label(__('resources/category.updated_at'))
+                            ->label(__('resources.category.updated_at'))
                             ->since()
                             ->dateTimeTooltip(timezone: 'Asia/Jakarta'),
                     ])
@@ -206,21 +206,21 @@ class CategoryResource extends Resource implements HasShieldPermissions
 
     public static function getModelLabel(): string
     {
-        return __('resources/category.single');
+        return __('resources.category.single');
     }
 
     public static function getModelLabelPlural(): string
     {
-        return __('resources/category.plural');
+        return __('resources.category.plural');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources/category.nav.group');
+        return __('resources.category.nav.group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('resources/category.plural');
+        return __('resources.category.plural');
     }
 }

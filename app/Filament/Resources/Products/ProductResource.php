@@ -113,21 +113,21 @@ class ProductResource extends Resource implements HasShieldPermissions
 
     public static function getModelLabel(): string
     {
-        return __('resources/product.single');
+        return __('resources.product.single');
     }
 
     public static function getModelLabelPlural(): string
     {
-        return __('resources/product.plural');
+        return __('resources.product.plural');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources/product.nav.group');
+        return __('resources.product.nav.group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('resources/product.plural');
+        return __('resources.product.plural');
     }
 }

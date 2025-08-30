@@ -71,7 +71,7 @@ class ProductTable
     {
         return [
             Group::make('category.name')
-                ->label(__('resources/product.category'))
+                ->label(__('resources.product.category'))
                 ->collapsible(),
         ];
     }
@@ -82,7 +82,7 @@ class ProductTable
             ->defaultImageUrl(url('https://placehold.co/40x40.webp?text=No+Image'))
             ->square()
             ->grow(false)
-            ->label(__('resources/product.image'))
+            ->label(__('resources.product.image'))
             ->collection('product-images')
             ->conversion('webp')
             ->checkFileExistence(false)
@@ -95,7 +95,7 @@ class ProductTable
     protected static function getNameColumn(): TextColumn
     {
         return TextColumn::make('name')
-            ->label(__('resources/product.name'))
+            ->label(__('resources.product.name'))
             ->searchable()
             ->sortable();
     }
@@ -103,7 +103,7 @@ class ProductTable
     protected static function getCategoryColumn(): TextColumn
     {
         return TextColumn::make('category.name')
-            ->label(__('resources/product.category'))
+            ->label(__('resources.product.category'))
             ->searchable()
             ->sortable()
             ->toggleable();
@@ -112,7 +112,7 @@ class ProductTable
     protected static function getVisibilityColumn(): ToggleColumn
     {
         return ToggleColumn::make('is_visible')
-            ->label(__('resources/product.visibility'))
+            ->label(__('resources.product.visibility'))
             ->onColor('success')
             ->offColor('danger')
             ->sortable()
@@ -122,7 +122,7 @@ class ProductTable
     protected static function getPriceColumn(): TextColumn
     {
         return TextColumn::make('price')
-            ->label(__('resources/product.price'))
+            ->label(__('resources.product.price'))
             ->searchable()
             ->sortable()
             ->money('IDR');
@@ -133,14 +133,14 @@ class ProductTable
         return QueryBuilder::make()
             ->constraints([
                 TextConstraint::make('name')
-                    ->label(__('resources/product.name')),
+                    ->label(__('resources.product.name')),
                 TextConstraint::make('description')
-                    ->label(__('resources/product.description')),
+                    ->label(__('resources.product.description')),
                 NumberConstraint::make('price')
-                    ->label(__('resources/product.price'))
+                    ->label(__('resources.product.price'))
                     ->icon('heroicon-m-currency-dollar'),
                 BooleanConstraint::make('is_visible')
-                    ->label(__('resources/product.visibility')),
+                    ->label(__('resources.product.visibility')),
             ])
             ->constraintPickerColumns();
     }

@@ -25,7 +25,7 @@ class EditProfile extends BaseEditProfile
     protected function getRoleFormComponent(): Component
     {
         return TextEntry::make('roles')
-            ->label(__('pages/auth/edit-profile.form.role.label'))
+            ->label(__('pages.auth.edit-profile.form.role.label'))
             ->inlineLabel()
             ->state(fn ($record) => Str::headline($record->roles->pluck('name')->join(', ')));
     }

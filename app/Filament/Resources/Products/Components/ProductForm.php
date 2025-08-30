@@ -62,28 +62,28 @@ class ProductForm
 
     protected static function getImagesSection(): Section
     {
-        return static::getSection(__('resources/product.images'), [
+        return static::getSection(__('resources.product.images'), [
             static::getImagesField(),
         ])->collapsible();
     }
 
     protected static function getPricingSection(): Section
     {
-        return static::getSection(__('resources/product.pricing'), [
+        return static::getSection(__('resources.product.pricing'), [
             static::getPriceField(),
         ]);
     }
 
     protected static function getStatusSection(): Section
     {
-        return static::getSection(__('resources/product.status'), [
+        return static::getSection(__('resources.product.status'), [
             static::getVisibilityField(),
         ]);
     }
 
     protected static function getAssociationsSection(): Section
     {
-        return static::getSection(__('resources/product.associations'), [
+        return static::getSection(__('resources.product.associations'), [
             static::getCategoryField(),
         ]);
     }
@@ -91,7 +91,7 @@ class ProductForm
     protected static function getNameField(): TextInput
     {
         return TextInput::make('name')
-            ->label(__('resources/product.name'))
+            ->label(__('resources.product.name'))
             ->unique('products', 'name', ignoreRecord: true)
             ->required()
             ->maxLength(255)
@@ -109,7 +109,7 @@ class ProductForm
     protected static function getSlugField(): TextInput
     {
         return TextInput::make('slug')
-            ->label(__('resources/product.slug'))
+            ->label(__('resources.product.slug'))
             ->disabled()
             ->dehydrated()
             ->required()
@@ -120,7 +120,7 @@ class ProductForm
     protected static function getDescriptionField(): MarkdownEditor
     {
         return MarkdownEditor::make('description')
-            ->label(__('resources/product.description'))
+            ->label(__('resources.product.description'))
             ->columnSpanFull();
     }
 
@@ -136,7 +136,7 @@ class ProductForm
     protected static function getPriceField(): TextInput
     {
         return TextInput::make('price')
-            ->label(__('resources/product.price'))
+            ->label(__('resources.product.price'))
             ->numeric()
             ->rules(['regex:/^\d{1,6}(\.\d{0,2})?$/'])
             ->required();
@@ -145,15 +145,15 @@ class ProductForm
     protected static function getVisibilityField(): Toggle
     {
         return Toggle::make('is_visible')
-            ->label(__('resources/product.visibility'))
-            ->helperText(__('resources/product.visibility_help'))
+            ->label(__('resources.product.visibility'))
+            ->helperText(__('resources.product.visibility_help'))
             ->default(true);
     }
 
     protected static function getCategoryField(): Select
     {
         return Select::make('category_id')
-            ->label(__('resources/product.category'))
+            ->label(__('resources.product.category'))
             ->relationship('category', 'name')
             ->searchable()
             ->preload()

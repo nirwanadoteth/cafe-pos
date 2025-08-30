@@ -37,11 +37,11 @@ class ListOrders extends ListRecords
         ];
 
         $tabs = [
-            null => Tab::make(__('resources/order.tabs.all')),
+            null => Tab::make(__('resources.order.tabs.all')),
         ];
 
         foreach ($statuses as $status => $color) {
-            $tabs[$status] = Tab::make(__('resources/order.tabs.' . $status))
+            $tabs[$status] = Tab::make(__('resources.order.tabs.' . $status))
                 ->query(fn ($query) => $query->where('status', $status))
                 ->badge(Order::query()->where('status', $status)->count())
                 ->badgeColor($color);

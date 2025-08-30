@@ -26,32 +26,32 @@ class LatestOrders extends BaseWidget
             )
             ->defaultPaginationPageOption(5)
             ->defaultSort('created_at', 'desc')
-            ->heading(__('widgets/latest-orders.heading'))
+            ->heading(__('widgets.latest-orders.heading'))
             ->columns([
                 TextColumn::make('created_at')
-                    ->label(__('widgets/latest-orders.column.created_at.label'))
+                    ->label(__('widgets.latest-orders.column.created_at.label'))
                     ->date()
                     ->sortable(),
                 TextColumn::make('number')
-                    ->label(__('widgets/latest-orders.column.number.label'))
+                    ->label(__('widgets.latest-orders.column.number.label'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('customer.name')
-                    ->label(__('widgets/latest-orders.column.customer.label'))
+                    ->label(__('widgets.latest-orders.column.customer.label'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
-                    ->label(__('widgets/latest-orders.column.status.label'))
+                    ->label(__('widgets.latest-orders.column.status.label'))
                     ->badge(),
                 TextColumn::make('total_price')
-                    ->label(__('widgets/latest-orders.column.total_price.label'))
+                    ->label(__('widgets.latest-orders.column.total_price.label'))
                     ->searchable()
                     ->sortable()
                     ->money('IDR'),
             ])
             ->recordActions([
                 Action::make('open')
-                    ->label(__('widgets/latest-orders.action.edit.label'))
+                    ->label(__('widgets.latest-orders.action.edit.label'))
                     ->url(fn (Order $record): string => OrderResource::getUrl('edit', ['record' => $record])),
             ]);
     }

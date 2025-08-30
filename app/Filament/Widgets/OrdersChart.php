@@ -27,12 +27,12 @@ class OrdersChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => __('widgets/orders-chart.datasets.label'),
+                    'label' => __('widgets.orders-chart.datasets.label'),
                     'data' => $data,
                     'fill' => 'start',
                 ],
             ],
-            'labels' => __('widgets/orders-chart.labels'),
+            'labels' => __('widgets.orders-chart.labels'),
         ];
     }
 
@@ -43,6 +43,6 @@ class OrdersChart extends ChartWidget
 
     public function getHeading(): string | Htmlable | null
     {
-        return __('widgets/orders-chart.heading');
+        return __('widgets.orders-chart.heading');
     }
 }

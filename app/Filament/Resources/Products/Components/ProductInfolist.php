@@ -107,7 +107,7 @@ class ProductInfolist
     {
         return TextEntry::make('description')
             ->markdown()
-            ->placeholder(__('resources/product.no_description'))
+            ->placeholder(__('resources.product.no_description'))
             ->columnSpanFull();
     }
 
@@ -117,7 +117,7 @@ class ProductInfolist
             ->collection('product-images')
             ->conversion('webp')
             ->hiddenLabel()
-            ->placeholder(__('resources/product.no_images'))
+            ->placeholder(__('resources.product.no_images'))
             ->checkFileExistence(false)
             ->extraImgAttributes(fn (Product $record) => [
                 'alt' => 'Product image of ' . $record->name,

@@ -27,13 +27,13 @@ class ProductStats extends BaseWidget
         $averagePrice = round(floatval($this->getPageTableQuery()->avg('price')) / 100, precision: 2);
 
         return [
-            Stat::make(__('resources/product.stat.total'), $totalProducts),
+            Stat::make(__('resources.product.stat.total'), $totalProducts),
             Stat::make(
-                __('resources/product.stat.favorite'),
+                __('resources.product.stat.favorite'),
                 $favoriteProduct instanceof Product ? $favoriteProduct->name : 'N/A'
             ),
             Stat::make(
-                __('resources/product.stat.avg_price'),
+                __('resources.product.stat.avg_price'),
                 Number::currency($averagePrice, 'IDR', 'id')
             ),
         ];

@@ -27,13 +27,13 @@ class CategoryExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = __('resources/category.export.completed', [
+        $body = __('resources.category.export.completed', [
             'count' => number_format($export->successful_rows),
             'label' => str('row')->plural($export->successful_rows),
         ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . __('resources/category.export.failed', [
+            $body .= ' ' . __('resources.category.export.failed', [
                 'count' => number_format($failedRowsCount),
                 'label' => str('row')->plural($failedRowsCount),
             ]);

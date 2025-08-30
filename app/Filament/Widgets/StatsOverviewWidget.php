@@ -50,20 +50,20 @@ class StatsOverviewWidget extends BaseWidget
 
         return [
             $this->createStats(
-                __('widgets/stats-overview.stats.revenue.title'),
+                __('widgets.stats-overview.stats.revenue.title'),
                 'orders',
                 'total_price',
                 $dateRange,
                 fn ($value) => 'Rp ' . $this->formatNumber($value)
             ),
             $this->createStats(
-                __('widgets/stats-overview.stats.new_customers.title'),
+                __('widgets.stats-overview.stats.new_customers.title'),
                 'customers',
                 null,
                 $dateRange
             ),
             $this->createStats(
-                __('widgets/stats-overview.stats.new_orders.title'),
+                __('widgets.stats-overview.stats.new_orders.title'),
                 'orders',
                 null,
                 $dateRange
@@ -140,7 +140,7 @@ class StatsOverviewWidget extends BaseWidget
         $direction = $isPositive ? 'increase' : 'decrease';
 
         return [
-            'direction' => __('widgets/stats-overview.trend.' . $direction),
+            'direction' => __('widgets.stats-overview.trend.' . $direction),
             'icon' => $isPositive ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
             'color' => $isPositive ? 'success' : 'danger',
         ];

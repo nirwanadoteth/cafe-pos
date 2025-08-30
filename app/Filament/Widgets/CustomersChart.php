@@ -29,12 +29,12 @@ class CustomersChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => __('widgets/customers-chart.datasets.label'),
+                    'label' => __('widgets.customers-chart.datasets.label'),
                     'data' => $data,
                     'fill' => 'start',
                 ],
             ],
-            'labels' => __('widgets/customers-chart.labels'),
+            'labels' => __('widgets.customers-chart.labels'),
         ];
     }
 
@@ -45,6 +45,6 @@ class CustomersChart extends ChartWidget
 
     public function getHeading(): string | Htmlable | null
     {
-        return __('widgets/customers-chart.heading');
+        return __('widgets.customers-chart.heading');
     }
 }

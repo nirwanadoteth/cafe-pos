@@ -22,11 +22,11 @@ class SalesReports extends Page
 
     public function getTitle(): string | Htmlable
     {
-        return __('clusters/pages/report.sales.title');
+        return __('clusters.pages.reports.sales.title');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('clusters/pages/report.sales.title');
+        return __('clusters.pages.reports.sales.title');
     }
 }

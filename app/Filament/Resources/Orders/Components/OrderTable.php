@@ -46,7 +46,7 @@ class OrderTable
             SelectFilter::make('status')
                 ->options(OrderStatus::class)
                 ->multiple()
-                ->label(__('resources/order.status')),
+                ->label(__('resources.order.status')),
         ];
     }
 
@@ -76,7 +76,7 @@ class OrderTable
     {
         return [
             Group::make('created_at')
-                ->label(__('resources/order.date'))
+                ->label(__('resources.order.date'))
                 ->date()
                 ->titlePrefixedWithLabel(false)
                 ->collapsible(),
@@ -86,7 +86,7 @@ class OrderTable
     protected static function getNumberColumn(): TextColumn
     {
         return TextColumn::make('number')
-            ->label(__('resources/order.number'))
+            ->label(__('resources.order.number'))
             ->searchable()
             ->sortable();
     }
@@ -94,7 +94,7 @@ class OrderTable
     protected static function getCustomerNameColumn(): TextColumn
     {
         return TextColumn::make('customer.name')
-            ->label(__('resources/order.customer'))
+            ->label(__('resources.order.customer'))
             ->searchable()
             ->sortable()
             ->toggleable();
@@ -104,13 +104,13 @@ class OrderTable
     {
         return TextColumn::make('status')
             ->badge()
-            ->label(__('resources/order.status'));
+            ->label(__('resources.order.status'));
     }
 
     protected static function getTotalPriceColumn(): TextColumn
     {
         return TextColumn::make('total_price')
-            ->label(__('resources/order.total'))
+            ->label(__('resources.order.total'))
             ->searchable()
             ->sortable()
             ->summarize([
@@ -123,7 +123,7 @@ class OrderTable
     protected static function getCreatedAtColumn(): TextColumn
     {
         return TextColumn::make('created_at')
-            ->label(__('resources/order.date'))
+            ->label(__('resources.order.date'))
             ->date(timezone: 'Asia/Jakarta')
             ->dateTimeTooltip(timezone: 'Asia/Jakarta')
             ->sortable()
@@ -135,10 +135,10 @@ class OrderTable
         return Filter::make('created_at')
             ->schema([
                 DatePicker::make('created_from')
-                    ->label(__('resources/order.filters.created_from'))
+                    ->label(__('resources.order.filters.created_from'))
                     ->placeholder(fn ($state): string => 'Dec 18, ' . now()->subYear()->format('Y')),
                 DatePicker::make('created_until')
-                    ->label(__('resources/order.filters.created_until'))
+                    ->label(__('resources.order.filters.created_until'))
                     ->placeholder(fn ($state): string => now()->format('M d, Y')),
             ])
             ->query(function (Builder $query, array $data): Builder {
@@ -155,10 +155,10 @@ class OrderTable
             ->indicateUsing(function (array $data): array {
                 $indicators = [];
                 if ($data['created_from'] ?? null) {
-                    $indicators['created_from'] = __('resources/order.filters.created_from') . ' ' . Carbon::parse($data['created_from'])->toFormattedDateString();
+                    $indicators['created_from'] = __('resources.order.filters.created_from') . ' ' . Carbon::parse($data['created_from'])->toFormattedDateString();
                 }
                 if ($data['created_until'] ?? null) {
-                    $indicators['created_until'] = __('resources/order.filters.created_until') . ' ' . Carbon::parse($data['created_until'])->toFormattedDateString();
+                    $indicators['created_until'] = __('resources.order.filters.created_until') . ' ' . Carbon::parse($data['created_until'])->toFormattedDateString();
                 }
 
                 return $indicators;
@@ -168,7 +168,7 @@ class OrderTable
     public static function getPdfAction(): Action
     {
         return Action::make('pdf')
-            ->label(__('resources/order.actions.pdf'))
+            ->label(__('resources.order.actions.pdf'))
             ->color('success')
             ->icon('heroicon-o-arrow-down-tray')
             ->action(function (Order $record) {

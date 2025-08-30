@@ -17,22 +17,22 @@ class CategoryImporter extends Importer
             ImportColumn::make('name')
                 ->requiredMapping()
                 ->rules(['required', 'max:255'])
-                ->label(__('resources/category.import.columns.name'))
-                ->example(__('resources/category.import.examples.name')),
+                ->label(__('resources.category.import.columns.name'))
+                ->example(__('resources.category.import.examples.name')),
             ImportColumn::make('slug')
                 ->requiredMapping()
                 ->rules(['required', 'max:255'])
-                ->label(__('resources/category.import.columns.slug'))
-                ->example(__('resources/category.import.examples.slug')),
+                ->label(__('resources.category.import.columns.slug'))
+                ->example(__('resources.category.import.examples.slug')),
             ImportColumn::make('description')
-                ->label(__('resources/category.import.columns.description'))
-                ->example(__('resources/category.import.examples.description')),
+                ->label(__('resources.category.import.columns.description'))
+                ->example(__('resources.category.import.examples.description')),
             ImportColumn::make('is_visible')
                 ->requiredMapping()
                 ->boolean()
                 ->rules(['required', 'boolean'])
-                ->label(__('resources/category.import.columns.is_visible'))
-                ->example(__('resources/category.import.examples.is_visible')),
+                ->label(__('resources.category.import.columns.is_visible'))
+                ->example(__('resources.category.import.examples.is_visible')),
         ];
     }
 
@@ -45,13 +45,13 @@ class CategoryImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = __('resources/category.import.completed', [
+        $body = __('resources.category.import.completed', [
             'count' => number_format($import->successful_rows),
             'label' => str('row')->plural($import->successful_rows),
         ]);
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . __('resources/category.import.failed', [
+            $body .= ' ' . __('resources.category.import.failed', [
                 'count' => number_format($failedRowsCount),
                 'label' => str('row')->plural($failedRowsCount),
             ]);

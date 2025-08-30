@@ -12,12 +12,12 @@ class ReportsCluster extends Cluster
 
     public function getTitle(): string | Htmlable
     {
-        return __('clusters/pages/report.title');
+        return __('clusters.pages.reports.title');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('clusters/pages/report.title');
+        return __('clusters.pages.reports.title');
     }
 
     public static function getNavigationGroup(): string

@@ -54,14 +54,14 @@ class UserResource extends Resource implements HasShieldPermissions
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label(__('resources/user.name'))
+                    ->label(__('resources.user.name'))
                     ->required()
                     ->maxLength(255)
                     ->autofocus(fn (string $operation) => $operation === 'create')
                     ->inlineLabel(),
 
                 TextInput::make('email')
-                    ->label(__('resources/user.email'))
+                    ->label(__('resources.user.email'))
                     ->email()
                     ->required()
                     ->maxLength(255)
@@ -69,7 +69,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->inlineLabel(),
 
                 TextInput::make('password')
-                    ->label(fn (?User $record) => $record === null ? __('resources/user.password') : __('resources/user.new_password'))
+                    ->label(fn (?User $record) => $record === null ? __('resources.user.password') : __('resources.user.new_password'))
                     ->password()
                     ->revealable()
                     ->rule(Password::default())
@@ -81,7 +81,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->inlineLabel(),
 
                 TextInput::make('passwordConfirmation')
-                    ->label(fn (?User $record) => $record === null ? __('resources/user.password_confirmation') : __('resources/user.new_password_confirmation'))
+                    ->label(fn (?User $record) => $record === null ? __('resources.user.password_confirmation') : __('resources.user.new_password_confirmation'))
                     ->password()
                     ->revealable()
                     ->required()
@@ -90,7 +90,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->inlineLabel(),
 
                 Toggle::make('email_verified_at')
-                    ->label(__('resources/user.verified'))
+                    ->label(__('resources.user.verified'))
                     ->onColor('success')
                     ->offColor('danger')
                     ->default(null)
@@ -110,7 +110,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->relationship('roles', 'name')
                     ->getOptionLabelFromRecordUsing(fn (Role $record): string => Str::headline($record->name))
                     ->preload()
-                    ->label(__('resources/user.roles'))
+                    ->label(__('resources.user.roles'))
                     ->inlineLabel(),
             ]);
     }
@@ -120,35 +120,35 @@ class UserResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('resources/user.name'))
+                    ->label(__('resources.user.name'))
                     ->searchable(isIndividual: true)
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label(__('resources/user.email'))
+                    ->label(__('resources.user.email'))
                     ->searchable(isIndividual: true, isGlobal: false)
                     ->sortable(),
                 TextColumn::make('email_verified_at')
-                    ->label(__('resources/user.verified'))
+                    ->label(__('resources.user.verified'))
                     ->badge()
-                    ->getStateUsing(fn (User $record) => $record->email_verified_at ? __('resources/user.verified') : __('resources/user.unverified'))
-                    ->color(fn (string $state) => $state === __('resources/user.verified') ? 'success' : 'danger')
+                    ->getStateUsing(fn (User $record) => $record->email_verified_at ? __('resources.user.verified') : __('resources.user.unverified'))
+                    ->color(fn (string $state) => $state === __('resources.user.verified') ? 'success' : 'danger')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('roles')
-                    ->label(__('resources/user.roles'))
+                    ->label(__('resources.user.roles'))
                     ->searchable(isGlobal: false)
                     ->toggleable()
                     ->getStateUsing(fn ($record) => $record->roles->pluck('name')->join(', '))
                     ->formatStateUsing(fn ($state): string => Str::headline($state)),
                 TextColumn::make('created_at')
-                    ->label(__('resources/user.created_at'))
+                    ->label(__('resources.user.created_at'))
                     ->date(timezone: 'Asia/Jakarta')
                     ->dateTimeTooltip(timezone: 'Asia/Jakarta')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('verified')
-                    ->label(__('resources/user.verified'))
+                    ->label(__('resources.user.verified'))
                     ->options([
                         'verified' => 'Verified',
                         'unverified' => 'Not Verified',
@@ -167,7 +167,7 @@ class UserResource extends Resource implements HasShieldPermissions
 
                 SelectFilter::make('role')
                     ->relationship('roles', 'name')
-                    ->label(__('resources/user.roles'))
+                    ->label(__('resources.user.roles'))
                     ->getOptionLabelFromRecordUsing(fn (Role $record): string => Str::headline($record->name)),
             ])
             ->recordActions([
@@ -203,22 +203,22 @@ class UserResource extends Resource implements HasShieldPermissions
 
     public static function getModelLabel(): string
     {
-        return __('resources/user.single');
+        return __('resources.user.single');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('resources/user.plural');
+        return __('resources.user.plural');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources/user.nav.group');
+        return __('resources.user.nav.group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('resources/user.plural');
+        return __('resources.user.plural');
     }
 
     /** @return Builder<User> */

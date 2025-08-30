@@ -70,22 +70,22 @@ class OrderResource extends Resource implements HasShieldPermissions
 
     public static function getModelLabel(): string
     {
-        return __('resources/order.single');
+        return __('resources.order.single');
     }
 
     public static function getModelLabelPlural(): string
     {
-        return __('resources/order.plural');
+        return __('resources.order.plural');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return __('resources/order.nav.group');
+        return __('resources.order.nav.group');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('resources/order.plural');
+        return __('resources.order.plural');
     }
 
     public static function getNavigationBadge(): ?string

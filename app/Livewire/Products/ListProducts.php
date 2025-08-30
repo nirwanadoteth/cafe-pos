@@ -40,7 +40,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('items_sum_qty')
-                    ->label(__('clusters/pages/report.product.table.columns.ordered'))
+                    ->label(__('clusters.pages.reports.product.table.columns.ordered'))
                     ->sum('items', 'qty')
                     ->default(0)
                     ->summarize([
@@ -48,7 +48,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
                             ->label('Total ordered quantity'),
 
                         Summarizer::make()
-                            ->label(__('clusters/pages/report.product.table.summary.least'))
+                            ->label(__('clusters.pages.reports.product.table.summary.least'))
                             ->using(
                                 fn (Builder $query) => $query
                                     ->orderBy('items_sum_qty', 'asc')
@@ -65,7 +65,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
                             ->money('IDR', 100),
 
                         Summarizer::make()
-                            ->label(__('clusters/pages/report.product.table.summary.most'))
+                            ->label(__('clusters.pages.reports.product.table.summary.most'))
                             ->using(
                                 fn (Builder $query) => $query
                                     ->orderBy('items_sum_qty', 'desc')

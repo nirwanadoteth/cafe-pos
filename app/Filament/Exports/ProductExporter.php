@@ -29,13 +29,13 @@ class ProductExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = __('resources/product.export.completed', [
+        $body = __('resources.product.export.completed', [
             'count' => number_format($export->successful_rows),
             'label' => str('row')->plural($export->successful_rows),
         ]);
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . __('resources/product.export.failed', [
+            $body .= ' ' . __('resources.product.export.failed', [
                 'count' => number_format($failedRowsCount),
                 'label' => str('row')->plural($failedRowsCount),
             ]);

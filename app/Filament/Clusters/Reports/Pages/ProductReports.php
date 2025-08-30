@@ -20,11 +20,11 @@ class ProductReports extends Page
 
     public function getTitle(): string | Htmlable
     {
-        return __('clusters/pages/report.product.title');
+        return __('clusters.pages.reports.product.title');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('clusters/pages/report.product.title');
+        return __('clusters.pages.reports.product.title');
     }
 }

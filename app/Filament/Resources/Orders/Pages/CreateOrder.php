@@ -58,10 +58,10 @@ class CreateOrder extends CreateRecord
         $customer = $order->customer;
 
         Notification::make()
-            ->title(__('resources/order.notifications.new.title'))
+            ->title(__('resources.order.notifications.new.title'))
             ->icon('heroicon-o-shopping-bag')
             ->body(
-                '**' . __('resources/order.notifications.new.body', [
+                '**' . __('resources.order.notifications.new.body', [
                     'customer' => $customer->name,
                     'count' => $order->items->count(),
                 ]) . '**'
@@ -77,13 +77,13 @@ class CreateOrder extends CreateRecord
     protected function getSteps(): array
     {
         return [
-            Step::make(__('resources/order.details'))
+            Step::make(__('resources.order.details'))
                 ->icon('heroicon-o-identification')
                 ->schema([
                     Section::make()->schema(OrderForm::getDetailsFormSchema())->columns(),
                 ]),
 
-            Step::make(__('resources/order.items'))
+            Step::make(__('resources.order.items'))
                 ->icon('heroicon-o-shopping-bag')
                 ->schema([
                     Section::make()->schema([
