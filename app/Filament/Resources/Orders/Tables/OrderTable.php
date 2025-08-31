@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Orders\Components;
+namespace App\Filament\Resources\Orders\Tables;
 
 use App\Enums\OrderStatus;
 use App\Models\Order;

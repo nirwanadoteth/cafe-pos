@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Products\Components;
+namespace App\Filament\Resources\Products\Tables;
 
 use App\Models\Product;
 use Filament\Actions\Action;

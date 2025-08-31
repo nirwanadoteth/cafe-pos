@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
-use App\Filament\Resources\Orders\Components\OrderForm;
 use App\Filament\Resources\Orders\OrderResource;
+use App\Filament\Resources\Orders\Schemas\OrderForm;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;

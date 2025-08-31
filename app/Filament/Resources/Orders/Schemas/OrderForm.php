@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Orders\Components;
+namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Products\ProductResource;

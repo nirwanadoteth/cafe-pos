@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Products;
 
-use App\Filament\Resources\Products\Components\ProductForm;
 use App\Filament\Resources\Products\Components\ProductInfolist;
-use App\Filament\Resources\Products\Components\ProductTable;
 use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Resources\Products\Pages\ViewProduct;
+use App\Filament\Resources\Products\Schemas\ProductForm;
+use App\Filament\Resources\Products\Tables\ProductTable;
 use App\Filament\Resources\Products\Widgets\ProductStats;
 use App\Models\Product;
 use BackedEnum;
