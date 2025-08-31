@@ -70,6 +70,12 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
 
+      - name: Copy environment file
+        run: cp .env.example .env
+
+      - name: Generate app key
+        run: php artisan key:generate
+
       - name: Pint
         run: |
           composer pint
