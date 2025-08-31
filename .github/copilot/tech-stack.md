@@ -8,7 +8,7 @@
 
 - **Primary Technologies Detected:**
   - **Backend:** PHP (Laravel 12.0)
-  - **Frontend:** Blade, Filament (4.0), Vite (7.0), TailwindCSS (4.1), JavaScript (ESM)
+  - **Frontend:** Blade, Filament (4.0, Server‑Driven UI), Vite (7.0), TailwindCSS (4.1), JavaScript (ESM)
   - **Database:** MySQL/SQLite
   - **Testing:** PHPUnit (11.5), PHPStan (level 8), Pint (1.24)
   - **Build Tools:** Composer, NPM
@@ -32,7 +32,7 @@
 
 ## 2. Core Technologies Analysis
 
-### PHP/Laravel
+### PHP/Laravel details
 
 - **Framework:** Laravel 12.x
 - **ORM:** Eloquent
@@ -41,6 +41,13 @@
 - **Admin UI:** Filament v4
 - **Build:** Composer
 - **Configuration:** .env, config/*.php
+
+### Filament (Server‑Driven UI)
+
+- **Nature:** Server‑Driven UI (SDUI) framework for Laravel that defines UIs entirely in PHP using structured configuration objects rather than traditional templating.
+- **Foundation:** Built on Livewire, Alpine.js, and Tailwind CSS; ships opinionated components for admin panels, dashboards, tables, forms, and widgets.
+- **DX:** Build full‑featured interfaces without custom JavaScript; server manages state/behavior while Livewire/Alpine hydrate interactivity on the client.
+- **Docs:** [Filament v4 Documentation](https://filamentphp.com/docs/4.x)
 
 ### JavaScript/Node
 
@@ -138,7 +145,7 @@ class AppServiceProvider extends ServiceProvider {
 ### Core Framework Usage
 
 - **Laravel:** Routing, ORM, Auth, Policies, Service Providers
-- **Filament:** Admin UI, dashboards, widgets
+- **Filament (SDUI):** Server‑driven admin UI, dashboards, tables, forms, and widgets built in PHP (powered by Livewire + Alpine + Tailwind)
 - **Vite:** Asset bundling, hot reload
 - **TailwindCSS:** Utility-first styling
 
@@ -182,7 +189,36 @@ class AppServiceProvider extends ServiceProvider {
 
 ---
 
-## 7. Technology Decision Context
+## 7. Blueprint for New Code Implementation
+
+- **File/Class Templates:**
+  - Use PascalCase for models/controllers, snake_case for migrations
+  - Service providers extend ServiceProvider
+  - Blade components use <x-*> syntax
+- **Code Snippets:**
+  - See usage examples above for controller, model, service, and UI patterns
+- **Implementation Checklist:**
+  - Add new model/controller/service in appropriate folder
+  - Register service providers in app/Providers
+  - Use request validation in controllers
+  - Write tests for new features
+- **Integration Points:**
+  - Use Eloquent for data access
+  - Use Filament for admin UI
+  - Use Laravel Auth/Spatie for authentication/authorization
+- **Testing Requirements:**
+  - Write PHPUnit tests for new code
+  - Use factories for test data
+  - Prefer PHPUnit 11+ attributes over docblock annotations (e.g., DataProvider) to avoid deprecations
+  - Use in-memory SQLite per phpunit.xml; refresh DB between tests via TestCase
+  - For header assertions, follow redirects and assert on the terminal response
+  - For Filament/Livewire, keep interactions at HTTP level in Feature tests; unit test pure logic separately
+- **Documentation Requirements:**
+  - Document new features in README or technical docs
+
+---
+
+## 8. Technology Decision Context
 
 - **Reasons for Choices:**
   - Laravel for rapid development, ecosystem, maintainability
@@ -204,3 +240,27 @@ class AppServiceProvider extends ServiceProvider {
 ---
 
 **For implementation-ready templates, follow the conventions and examples above.**
+
+---
+
+## 9. Project-Specific Guidance (Laravel 12 • Filament 4 • Tailwind v4)
+
+### Testing (PHPUnit 11+)
+
+- Use attributes instead of docblocks for PHPUnit metadata (e.g., DataProvider) to be forward-compatible with PHPUnit 12.
+- Use model factories for test data; leverage in-memory SQLite for speed and isolation.
+- When testing redirects and headers (e.g., security headers), assert against the final response after following redirects.
+- Keep feature tests focused on HTTP flows; isolate complex calculations into unit tests.
+
+### Security Headers & CSP
+
+- App-wide SecurityHeaders middleware sets: Content-Security-Policy (CSP), Strict-Transport-Security (HSTS in prod over HTTPS), X-Content-Type-Options, X-Frame-Options, Referrer-Policy, and Permissions-Policy.
+- CSP is environment-aware: dev allows Vite/HMR and ws:; production is stricter. Prefer dropping 'unsafe-inline' in production with nonces/hashes when feasible.
+- Consider adding `frame-ancestors 'self';` in CSP; you can keep X-Frame-Options temporarily for legacy compatibility.
+- HSTS only in production and only when the request is HTTPS; evaluate includeSubDomains/preload carefully before enabling.
+
+### Tailwind CSS v4 Notes
+
+- CSS-first setup: import Tailwind in CSS with `@import "tailwindcss"`; use the `@tailwindcss/vite` plugin in Vite 7.
+- Content scanning is simplified in v4; avoid legacy purge/content configs. Safelist any dynamic classes if generated at runtime.
+- Prefer utility classes and keep custom CSS minimal; verify Filament 4 styles remain intact after pruning.

@@ -31,12 +31,11 @@ Before generating code, scan the codebase to identify:
 ## Context Files
 
 Prioritize the following files in .github/copilot directory:
-- **architecture.md**: System architecture guidelines
-- **tech-stack.md**: Technology versions and framework details
-- **workflow.md**: Development workflow and conventions
-- **coding-standards.md**: Code style and formatting standards
-- **folder-structure.md**: Project organization guidelines
-- **exemplars.md**: Exemplary code patterns to follow
+- [architecture.md](copilot/architecture.md): System architecture guidelines and blueprint
+- [tech-stack.md](copilot/tech-stack.md): Technology stack details and version info
+- [workflow.md](copilot/workflow.md): Project workflows and process blueprints
+- [folder-structure.md](copilot/folder-structure.md): Project folder structure and organization
+- [exemplars.md](copilot/exemplars.md): High-quality code examples and best practices
 
 ## Codebase Scanning Instructions
 

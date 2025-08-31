@@ -17,7 +17,11 @@ This document identifies high-quality, representative code examples from the cod
   - [Table of Contents](#table-of-contents)
   - [Presentation Layer](#presentation-layer)
     - [1. Livewire Component: Orders List](#1-livewire-component-orders-list)
-    - [2. Filament Page: Dashboard](#2-filament-page-dashboard)
+    - [2. Filament Resource: Orders](#2-filament-resource-orders)
+    - [3. Filament Resource Page: ListOrders](#3-filament-resource-page-listorders)
+    - [4. Filament Table Component: OrderTable](#4-filament-table-component-ordertable)
+    - [5. Filament Widget: OrderStats (Exposes page table)](#5-filament-widget-orderstats-exposes-page-table)
+    - [6. Filament Page: Dashboard](#6-filament-page-dashboard)
   - [Business Logic Layer](#business-logic-layer)
     - [1. Order Model](#1-order-model)
     - [2. AppServiceProvider](#2-appserviceprovider)
@@ -31,6 +35,12 @@ This document identifies high-quality, representative code examples from the cod
     - [2. Unit Test Example](#2-unit-test-example)
   - [Consistency Patterns](#consistency-patterns)
   - [Architecture Observations](#architecture-observations)
+  - [Modern Development Workflow (Laravel 12.x/Filament 4.x/Tailwind v4)](#modern-development-workflow-laravel-12xfilament-4xtailwind-v4)
+    - [1. Unified Development Environment](#1-unified-development-environment)
+    - [2. Modern Asset Pipeline](#2-modern-asset-pipeline)
+    - [3. CSS-First Tailwind Configuration](#3-css-first-tailwind-configuration)
+    - [4. Quality Assurance Workflow](#4-quality-assurance-workflow)
+    - [Development Best Practices](#development-best-practices)
   - [Anti-patterns to Avoid](#anti-patterns-to-avoid)
   - [Conclusion](#conclusion)
 
@@ -65,31 +75,186 @@ public function table(Table $table): Table
 }
 ```
 
-### 2. Filament Page: Dashboard
+### 2. Filament Resource: Orders
+
+- **File:** `app/Filament/Resources/Orders/OrderResource.php`
+- **Description:** Central Filament v4 Resource for Orders. Demonstrates SDUI patterns: extracted table/form classes, policy-driven navigation, widgets, global search, and safe scope removal via `getEloquentQuery()`.
+- **Pattern:** Filament Resource (v4 SDUI)
+- **Key Details:**
+  - Uses extracted components: `OrderForm`, `OrderTable`, and `OrderStats` widget
+  - Overrides `getEloquentQuery()` to remove `SoftDeletingScope`
+  - Defines `getPages()` and `getWidgets()`; sets navigation labels and badges
+
+- **Code Snippet:**
+
+```php
+public static function table(Table $table): Table
+{
+  return $table
+    ->columns(OrderTable::getColumns())
+    ->filters(OrderTable::getFilters())
+    ->recordActions(OrderTable::getActions())
+    ->toolbarActions(OrderTable::getBulkActions())
+    ->groups(OrderTable::getGroups())
+    ->defaultSort('created_at', 'desc');
+}
+
+public static function getEloquentQuery(): Builder
+{
+  return parent::getEloquentQuery()->withoutGlobalScopes([
+    SoftDeletingScope::class,
+  ]);
+}
+```
+
+### 3. Filament Resource Page: ListOrders
+
+- **File:** `app/Filament/Resources/Orders/Pages/ListOrders.php`
+- **Description:** List page with header actions, resource widgets, and status-filtering tabs using badges and colors. Implements `ExposesTableToWidgets` for widget access to the page table.
+- **Pattern:** Filament Resource List page (v4)
+- **Key Details:**
+  - `getHeaderActions()` registers Create action
+  - `getHeaderWidgets()` returns Resource widgets (e.g., `OrderStats`)
+  - `getTabs()` defines semantic tabs per status with dynamic badges
+
+- **Code Snippet:**
+
+```php
+use Filament\Pages\Concerns\ExposesTableToWidgets;
+use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\CreateAction;
+use Filament\Schemas\Components\Tabs\Tab;
+
+class ListOrders extends ListRecords
+{
+  use ExposesTableToWidgets;
+
+  protected static string $resource = OrderResource::class;
+
+  protected function getHeaderActions(): array
+  {
+    return [CreateAction::make()];
+  }
+
+  protected function getHeaderWidgets(): array
+  {
+    return OrderResource::getWidgets();
+  }
+
+  public function getTabs(): array
+  {
+    $tabs = [null => Tab::make(__('resources.order.tabs.all'))];
+    foreach ([
+      'new' => 'info',
+      'processing' => 'warning',
+      'completed' => 'success',
+      'cancelled' => 'danger',
+    ] as $status => $color) {
+      $tabs[$status] = Tab::make(__('resources.order.tabs.' . $status))
+        ->query(fn ($q) => $q->where('status', $status))
+        ->badge(Order::query()->where('status', $status)->count())
+        ->badgeColor($color);
+    }
+    return $tabs;
+  }
+}
+```
+
+### 4. Filament Table Component: OrderTable
+
+- **File:** `app/Filament/Resources/Orders/Components/OrderTable.php`
+- **Description:** Extracted v4 table definition with columns, filters, actions, bulk actions, groups, and summarizers.
+- **Pattern:** Filament Table (extracted configuration class)
+- **Key Details:**
+  - Money summarizer for `total_price`
+  - Date grouping, trashed filter, status select filter
+  - PDF download action guarded by status
+
+- **Code Snippet:**
+
+```php
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
+
+protected static function getTotalPriceColumn(): TextColumn
+{
+  return TextColumn::make('total_price')
+    ->label(__('resources.order.total'))
+    ->searchable()
+    ->sortable()
+    ->summarize([Sum::make()->money('IDR', 100)])
+    ->money('IDR');
+}
+```
+
+### 5. Filament Widget: OrderStats (Exposes page table)
+
+- **File:** `app/Filament/Resources/Orders/Widgets/OrderStats.php`
+- **Description:** StatsOverview widget that reads the List page table query via `InteractsWithPageTable`. Demonstrates page-table-aware KPIs and charts.
+- **Pattern:** Filament Resource Widget + InteractsWithPageTable
+- **Key Details:**
+  - Links to `ListOrders` via `getTablePage()`
+  - Uses page table query to compute counts and trends
+
+- **Code Snippet:**
+
+```php
+use Filament\Widgets\Concerns\InteractsWithPageTable;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+
+class OrderStats extends BaseWidget
+{
+  use InteractsWithPageTable;
+
+  protected function getTablePage(): string
+  {
+    return ListOrders::class;
+  }
+
+  protected function getStats(): array
+  {
+    return [
+      Stat::make(__('resources.order.stat.orders'), $this->getPageTableQuery()->count()),
+    ];
+  }
+}
+```
+
+### 6. Filament Page: Dashboard
 
 - **File:** `app/Filament/Pages/Dashboard.php`
 - **Description:** Admin dashboard page with custom filters and date range picker.
 - **Pattern:** UI component, filter form
 - **Key Details:**
-  - Uses Filament's Form and Section components
-  - Integrates date range picker for analytics
+  - Uses Filament's Schema and Section components
+  - Integrates date range picker for analytics; uses `HasFiltersForm` trait
 
 - **Code Snippet:**
 
 ```php
-public function filtersForm(Form $form): Form
+use Filament\Pages\Dashboard as BaseDashboard;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Malzariey\FilamentDaterangepickerFilter\Fields\DateRangePicker;
+
+class Dashboard extends BaseDashboard
 {
-    return $form
-        ->schema([
-            Section::make()
-                ->schema([
-                    DateRangePicker::make('created_at')
-                        ->label('Date Range')
-                        ->defaultThisMonth()
-                        ->alwaysShowCalendar(false)
-                        ->autoApply(),
-                ]),
-        ]);
+  use BaseDashboard\Concerns\HasFiltersForm;
+
+  public function filtersForm(Schema $schema): Schema
+  {
+    return $schema
+      ->components([
+        Section::make()->schema([
+          DateRangePicker::make('created_at')
+            ->label('Date Range')
+            ->defaultThisMonth()
+            ->alwaysShowCalendar(false)
+            ->autoApply(),
+        ]),
+      ]);
+  }
 }
 ```
 
@@ -381,3 +546,10 @@ export default defineConfig({
 ## Conclusion
 
 These exemplars represent the coding standards and architectural patterns of the project. Refer to them when implementing new features, refactoring, or onboarding. Maintain consistency by following these patterns and avoiding noted anti-patterns.
+
+---
+
+## Additional Exemplars (Laravel 12 / Filament 4)
+
+- Security Headers Middleware: `app/Http/Middleware/SecurityHeaders.php` with env-aware CSP, conditional HSTS, and standard headers. Tests: `tests/Feature/Security/SecurityHeadersTest.php`.
+- Filament Repeater (Table Layout): Order items repeater using Filament’s native `Repeater` in table mode (no third-party plugin). See `app/Filament/Resources/Orders/Components/OrderForm.php`.

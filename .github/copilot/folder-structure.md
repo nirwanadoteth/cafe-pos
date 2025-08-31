@@ -1,16 +1,18 @@
 # Project Folders Structure Blueprint
 
-**Generated:** August 30, 2025
+**Generated:** August 31, 2025
 
 ---
 
 ## 1. Structural Overview
 
 - **Project Type:** Laravel (PHP), with frontend assets (Blade, Filament, Vite, TailwindCSS)
-- **Architecture:** Layered MVC, modular organization, admin UI via Filament
+- **Architecture:** Layered MVC, modular organization, admin UI via Filament (Server‑Driven UI)
 - **Organization Principle:** By layer (domain, application, infrastructure, presentation), with feature/domain separation in models, policies, controllers
 - **No monorepo or microservices detected**
-- **Frontend:** Present as Blade views, Filament, Vite/TailwindCSS assets
+- **Frontend:** Present as Blade views, Filament v4, Vite/TailwindCSS assets
+
+- **Filament v4 directory model:** Resources and Clusters follow a panel‑scoped structure. A typical resource contains a Resource class and a nested `Pages/` folder; optionally `Schemas/` and `Tables/` folders are used if forms/tables aren’t embedded in the Resource class (configurable via file generation flags).
 
 ---
 
@@ -26,8 +28,19 @@
     - Providers/
     - Enums/
     - Filament/
+      - Clusters/
+      - Exports/
+      - Imports/
       - Pages/
       - Resources/
+        - Example/
+          - ExampleResource.php
+          - Pages/
+            - CreateExample.php
+            - EditExample.php
+            - ListExamples.php
+          - (optional) Schemas/
+          - (optional) Tables/
       - Widgets/
     - Livewire/
       - Orders/
@@ -80,7 +93,12 @@
 - **Policies/**: Authorization logic per model
 - **Providers/**: Service providers, dependency injection
 - **Enums/**: Domain enums (OrderStatus, etc.)
-- **Filament/**: Admin UI (Pages, Resources, Widgets)
+- **Filament/**: Admin UI (Filament v4)
+  - **Resources/**: Eloquent‑backed CRUD. For each entity, Filament generates `{Entity}/{Entity}Resource.php` and a nested `Pages/` folder containing `List{Entity}.php`, `Create{Entity}.php`, `Edit{Entity}.php`. Optionally, `Schemas/` and `Tables/` are used when not embedding schemas/tables in the Resource class.
+  - **Pages/**: Standalone panel pages.
+  - **Widgets/**: Dashboard and data widgets (stats, charts, tables).
+  - **Clusters/**: Navigation grouping for related resources/pages; cluster folders mirror the cluster name and contain `Pages/` and `Resources/` under it.
+  - **Imports/** and **Exports/**: Bulk data import/export.
 - **Livewire/**: UI components for dynamic workflows
 - **Helpers/**: Utility functions
 - **Casts/**: Custom attribute casting
@@ -119,11 +137,22 @@
 - **Policies:** app/Policies/
 - **Providers:** app/Providers/
 - **Enums:** app/Enums/
-- **UI Components:** app/Filament/, app/Livewire/, resources/views/
+- **UI Components:** app/Filament/ (panel UI), app/Livewire/ (custom or non‑panel UI), resources/views/
 - **Tests:** tests/Feature/, tests/Unit/
 - **Migrations/Factories/Seeders:** database/migrations/, database/factories/, database/seeders/
 - **Assets:** resources/js/, resources/css/, public/css/, public/js/, public/images/
 - **Helpers/Casts:** app/Helpers/, app/Casts/
+
+### Filament‑specific placement (v4)
+
+- Resources:
+  - `app/Filament/Resources/{Entity}/{Entity}Resource.php`
+  - `app/Filament/Resources/{Entity}/Pages/*`
+  - Optional: `app/Filament/Resources/{Entity}/Schemas/*`, `app/Filament/Resources/{Entity}/Tables/*`
+- Pages: `app/Filament/Pages/*`
+- Widgets: `app/Filament/Widgets/*`
+- Clusters: `app/Filament/Clusters/{ClusterName}/*` with nested `Pages/` and `Resources/`
+- Imports/Exports: `app/Filament/Imports/*`, `app/Filament/Exports/*`
 
 ---
 
@@ -139,16 +168,21 @@
 ## 6. Navigation and Development Workflow
 
 - **Entry Points:** public/index.php (web), routes/web.php (routing)
-- **Add Features:**
-  - Model: app/Models/
-  - Controller: app/Http/Controllers/
-  - Policy: app/Policies/
-  - UI: app/Filament/ or app/Livewire/
-  - Migration/Factory: database/migrations/, database/factories/
-  - Test: tests/Feature/, tests/Unit/
+- **Common Development Tasks:**
+  - Add Model: app/Models/
+  - Add Controller: app/Http/Controllers/
+  - Add Policy: app/Policies/
+  - Add Filament Resource: app/Filament/Resources/{Entity} (plus nested `Pages/`)
+  - Add Filament Page: app/Filament/Pages/
+  - Add Filament Widget: app/Filament/Widgets/
+  - Add Filament Cluster: app/Filament/Clusters/
+  - Add Import/Export: app/Filament/Imports/, app/Filament/Exports/
+  - Add Livewire component: app/Livewire/
+  - Add Migration/Factory: database/migrations/, database/factories/
+  - Add Test: tests/Feature/, tests/Unit/
 - **Configuration:** config/*.php, .env
 - **Dependencies:** composer.json (PHP), package.json (JS)
-- **DI Registration:** app/Providers/
+- **DI Registration:** app/Providers/ (panel providers may live under `app/Providers/Filament/`)
 
 ---
 
@@ -163,9 +197,14 @@
 
 ## 8. Extension and Evolution
 
-- **Add Features:** Create new model/controller/policy/UI component in respective folders
-- **Scalability:** Add new domain folders, extend Filament/Livewire components
-- **Refactoring:** Move logic to services/helpers, update policies, reorganize folders as needed
+- **Extension Points:**
+  - Add new model/controller/policy/UI component in respective folders
+  - Add new domain folders, extend Filament/Livewire components
+- **Scalability Patterns:**
+  - Extend by adding new domain/feature folders
+  - Refactor by moving logic to services/helpers, updating policies, reorganizing folders as needed
+  - Use Filament Clusters to group related resources/pages in navigation.
+  - For larger teams, consider separate `Schemas/` and `Tables/` subfolders per resource; otherwise embed in the Resource class to reduce class sprawl (v4 option).
 
 ---
 
@@ -177,14 +216,48 @@
 app/Models/NewFeature.php
 app/Http/Controllers/NewFeatureController.php
 app/Policies/NewFeaturePolicy.php
-app/Filament/Resources/NewFeatureResource.php
-app/Livewire/NewFeatureComponent.php
+app/Filament/Resources/NewFeature/NewFeatureResource.php
+app/Filament/Resources/NewFeature/NewFeatureResource/Pages/CreateNewFeature.php
+app/Filament/Resources/NewFeature/NewFeatureResource/Pages/EditNewFeature.php
+app/Filament/Resources/NewFeature/NewFeatureResource/Pages/ListNewFeatures.php
+app/Filament/Pages/CustomPage.php                   # optional standalone panel page
+app/Filament/Widgets/NewFeatureStats.php            # optional widget
+app/Filament/Clusters/Settings/SettingsCluster.php  # optional cluster
+app/Livewire/NewFeatureComponent.php                # optional Livewire component
 resources/views/new-feature.blade.php
 database/migrations/xxxx_xx_xx_xxxxxx_create_new_features_table.php
 database/factories/NewFeatureFactory.php
 tests/Feature/NewFeatureTest.php
 tests/Unit/NewFeatureUnitTest.php
 ```
+
+### Cluster Template (optional)
+
+```text
+app/Filament/Clusters/Settings/SettingsCluster.php
+app/Filament/Clusters/Settings/Pages/ManageBranding.php
+app/Filament/Clusters/Settings/Pages/ManageNotifications.php
+app/Filament/Clusters/Settings/Resources/ColorResource.php
+app/Filament/Clusters/Settings/Resources/ColorResource/Pages/CreateColor.php
+app/Filament/Clusters/Settings/Resources/ColorResource/Pages/EditColor.php
+app/Filament/Clusters/Settings/Resources/ColorResource/Pages/ListColors.php
+```
+
+---
+
+## 10. Structure Enforcement
+
+- **Structure Validation:**
+  - PHPStan, Pint, and code reviews enforce structure
+  - Build checks for PSR-4 autoloading compliance
+- **Documentation Practices:**
+  - Structure changes documented in README and architecture.md
+  - Architectural decisions recorded in architecture.md
+  - Structure evolution tracked in version control
+  - Filament v4 includes tooling to standardize panel directories. Consider:
+    - `php artisan filament:upgrade-directory-structure-to-v4 --dry-run`
+    - `php artisan filament:upgrade-directory-structure-to-v4`
+  - Filament v4 file generation flags can embed schemas/tables into the Resource class or place classes outside directories. Configure via the Filament config file as needed.
 
 ---
 
@@ -196,3 +269,5 @@ tests/Unit/NewFeatureUnitTest.php
 - Easy navigation for development and extension
 - Build/output organization supports frontend and backend workflows
 - Templates provided for new features/components
+- Structure enforcement via static analysis, code reviews, and documentation
+- Last updated: August 31, 2025

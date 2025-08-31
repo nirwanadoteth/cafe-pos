@@ -1,8 +1,6 @@
 # Cafe POS System
 
-A modern, extensible Point-of-Sale (POS) application for cafes, built with the latest Laravel 12.x, Filament 4.x, and Tailwind CSS v4.x technology stack. It provides robust order management, reporting, and admin features with a clean, modular architecture and developer-friendly workflow.
-
-**🎉 Recently Upgraded:** Successfully completed comprehensive upgrade to Laravel 12.x/Filament 4.x/Tailwind v4.x with enhanced performance, security, and modern UI features.
+A modern, extensible Point-of-Sale (POS) application for cafes, built with Laravel 12.x, Filament 4.x (Server‑Driven UI on Livewire/Alpine/Tailwind), and Tailwind CSS v4.x. It provides robust order management, reporting, and admin features with a clean, modular architecture and developer-friendly workflow.
 
 ---
 
@@ -23,7 +21,7 @@ See [tech-stack.md](.github/copilot/tech-stack.md) for details.
 
 - Layered MVC (Model-View-Controller) with Service/Repository patterns
 - Modular organization: Models, Controllers, Policies, Providers, Enums, Factories, Migrations
-- Filament for admin UI (component-based)
+- Filament 4.x for admin UI as Server‑Driven UI (Resources, Pages, Widgets) powered by Livewire/Alpine/Tailwind
 - Clear separation of concerns, extensibility, and security via policy-based authorization
 
 See [architecture.md](.github/copilot/architecture.md) for full overview and diagrams.
@@ -48,34 +46,33 @@ npm install
 ### Setup
 
 - Copy `.env.example` to `.env` and configure database and environment variables
+
+```sh
+cp .env.example .env
+```
+
+- Generate app key
+
+```sh
+php artisan key:generate
+```
+
 - Run migrations and seeders:
 
 ```sh
 php artisan migrate --seed
 ```
 
-- Build frontend assets with Tailwind v4:
+- Run all development services concurrently
 
 ```sh
-npm run build
-```
-
-- Start the development server:
-
-```sh
-php artisan serve
-```
-
-### Development Workflow (Updated for v4 Stack)
-
-The project now uses the latest technology stack with enhanced development experience:
-
-```sh
-# Run all development services concurrently
 composer dev
+```
 
-# Or individually:
-php artisan serve          # Laravel development server  
+- Or individually:
+
+```sh
+php artisan serve         # Laravel development server
 npm run dev               # Vite dev server with Tailwind v4
 php artisan queue:listen  # Queue worker
 php artisan pail          # Real-time log monitoring
@@ -89,25 +86,37 @@ See [folder-structure.md](.github/copilot/folder-structure.md) for full details.
 
 ```text
 app/
-  Models/         # Domain entities
+  Models/           # Domain entities
   Http/Controllers/ # Request handling
-  Policies/       # Authorization logic
-  Providers/      # Service providers
-  Filament/       # Admin UI components
-  Livewire/       # UI workflows
-  Helpers/        # Utility functions
-  Casts/          # Custom attribute casting
+  Policies/         # Authorization logic
+  Providers/        # Service providers
+  Filament/         # Admin UI (Filament v4)
+    Resources/      # Eloquent-backed resources
+      Orders/
+        OrderResource.php
+        Pages/      # List/Create/Edit pages
+        Widgets/    # Resource widgets
+        Schemas/    # Extracted schemas
+        Tables/     # Extracted tables
+    Pages/          # Standalone panel pages (e.g., Dashboard)
+    Widgets/        # Dashboard widgets
+    Clusters/       # Optional navigation clusters
+    Imports/        # Bulk imports (optional)
+    Exports/        # Bulk exports (optional)
+  Livewire/         # UI workflows
+  Helpers/          # Utility functions
+  Casts/            # Custom attribute casting
 resources/
-  views/          # Blade templates
-  js/             # Frontend scripts
-  css/            # Stylesheets
-  lang/           # Localization
-public/           # Entry point and assets
-config/           # Configuration files
-routes/           # Route definitions
-storage/          # App storage
-tests/            # Feature and unit tests
-database/         # Migrations, factories, seeders
+  views/            # Blade templates
+  js/               # Frontend scripts
+  css/              # Stylesheets
+  lang/             # Localization
+public/             # Entry point and assets
+config/             # Configuration files
+routes/             # Route definitions
+storage/            # App storage
+tests/              # Feature and unit tests
+database/           # Migrations, factories, seeders
 ```
 
 ---
@@ -123,13 +132,6 @@ database/         # Migrations, factories, seeders
 - **Automated Testing:** PHPUnit with PHPStan static analysis and Pint code formatting
 - **Hot Reload Development:** Vite 7.x with lightning-fast asset compilation
 - **Database Flexibility:** Support for MySQL and SQLite with comprehensive seeding
-
-### Recent Upgrade Highlights
-
-✨ **Laravel 12.x:** Latest framework features, enhanced security, and performance improvements  
-✨ **Filament 4.x:** Modern admin interface with improved components and better developer experience  
-✨ **Tailwind CSS v4:** Faster compilation, smaller bundle sizes, and CSS-first configuration  
-✨ **Vite 7.x:** Enhanced build performance and improved development experience
 
 ---
 
@@ -149,7 +151,7 @@ database/         # Migrations, factories, seeders
 ```sh
 # Run all quality checks
 composer cs           # Code style (Pint + Prettier)
-composer stan         # Static analysis (PHPStan Level 8)  
+composer stan         # Static analysis (PHPStan Level 8)
 composer test         # PHPUnit test suite
 
 # Individual commands
@@ -165,7 +167,7 @@ See [workflow.md](.github/copilot/workflow.md) for workflow details.
 ## Coding Standards
 
 - PascalCase for classes, camelCase for methods/variables
-- Snake_case for migrations
+- snake_case for migrations
 - PSR-4 autoloading and folder structure
 - Separation of concerns: business logic in models/services, thin controllers
 - Consistent error handling and validation
@@ -176,12 +178,12 @@ See [exemplars.md](.github/copilot/exemplars.md) for code examples and [architec
 
 ## Testing
 
-- **Unit Tests:** `tests/Unit/` - Individual component testing
-- **Feature Tests:** `tests/Feature/` - End-to-end workflow testing  
-- **Test Data:** Factories and seeders for consistent test environments
-- **Quality Assurance:** PHPStan Level 8 static analysis (0 errors across 66 files)
-- **Code Style:** Laravel Pint formatting (123 files processed)
-- **Performance:** All tests passing with optimized database setup
+- **Unit Tests:** `tests/Unit/` — Isolated component tests
+- **Feature Tests:** `tests/Feature/` — End-to-end workflow tests  
+- **Test Data:** Factories and seeders for consistent environments
+- **Quality Assurance:** PHPStan Level 8 static analysis
+- **Code Style:** Laravel Pint formatting
+- **Performance:** Optimized database setup for test runs
 
 ### Running Tests
 
@@ -191,8 +193,8 @@ composer test         # PHPUnit tests
 composer stan         # PHPStan static analysis
 composer cs           # Code style formatting
 
-# Individual test commands  
-php artisan test                    # Run all tests
+# Individual test commands
+php artisan test                   # Run all tests
 php artisan test --filter=Unit     # Unit tests only
 php artisan test --filter=Feature  # Feature tests only
 ```
@@ -221,14 +223,34 @@ The project has been successfully upgraded to the latest technology stack. See c
 
 ---
 
+## Security headers
+
+This app adds standard security headers via `App\Http\Middleware\SecurityHeaders` and applies them to Filament pages as well:
+
+- Content-Security-Policy (CSP), X-Content-Type-Options=nosniff, X-Frame-Options=SAMEORIGIN
+- Referrer-Policy=no-referrer, Permissions-Policy for common features
+- Strict-Transport-Security (HSTS) in production over HTTPS
+
+CSP defaults: development allows localhost/ws for Vite/Livewire; production is stricter and limited to self with minimal inline allowances required by Filament/Livewire.
+
+Override CSP (choose one):
+
+- Edge/web server: set the Content-Security-Policy header in Nginx/Apache/CDN; the middleware won’t overwrite an existing header.
+- App-level: register your own middleware earlier in `bootstrap/app.php` or the Filament panel provider; or adjust `buildCsp()` in `app/Http/Middleware/SecurityHeaders.php`.
+- Per-route: apply a route or group middleware to set a different policy for specific pages.
+
+Tests assert these headers on core and Filament routes. If you move headers to the edge, ensure they remain present or update the tests accordingly.
+
+---
+
 ## Production Readiness
 
 ✅ **Latest Technology Stack:** Laravel 12.x, Filament 4.x, Tailwind v4.x  
 ✅ **Security:** All vulnerabilities patched, PHPStan Level 8 compliance  
 ✅ **Performance:** Optimized build pipeline, faster asset compilation  
-✅ **Testing:** 100% test pass rate with comprehensive coverage  
+✅ **Testing:** Comprehensive automated tests  
 ✅ **Documentation:** Complete upgrade documentation and developer guides  
-✅ **Code Quality:** Zero static analysis errors, consistent formatting
+✅ **Code Quality:** Enforced static analysis and consistent formatting
 
 ---
 
