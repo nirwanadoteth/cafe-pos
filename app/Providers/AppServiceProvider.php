@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Http\Responses\LogoutResponse;
+use App\Services\EnvironmentService;
+use App\Services\FilamentConfigurationService;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Facades\Filament;
@@ -33,12 +35,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
 
-        if (\App\Services\EnvironmentService::isProduction()) {
+        if (EnvironmentService::isProduction()) {
             URL::forceScheme('https');
         }
 
         Filament::serving(function () {
-            \App\Services\FilamentConfigurationService::configureCurrentPanelColors();
+            FilamentConfigurationService::configureCurrentPanelColors();
         });
 
         FilamentView::registerRenderHook(
