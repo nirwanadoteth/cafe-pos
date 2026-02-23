@@ -10,8 +10,6 @@ class CustomersChart extends ChartWidget
 {
     protected static ?int $sort = 2;
 
-    protected ?string $heading = 'Total customers';
-
     public function getHeading(): string | Htmlable | null
     {
         return __('widgets/customers-chart.heading');
