@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            // Remove unique constraint on order_id to allow multiple payments per order
+            // Drop foreign key first, then unique index (MySQL requires this order)
+            $table->dropForeign(['order_id']);
             $table->dropUnique(['order_id']);
+
+            // Re-add foreign key without the unique constraint
+            $table->foreign('order_id')->references('id')->on('orders')->cascadeOnDelete();
 
             // Add new payment fields with backwards-compatible defaults
             $table->string('method', 32)->default('cash')->after('amount');
@@ -32,8 +36,10 @@ return new class extends Migration
             // Remove new columns
             $table->dropColumn(['method', 'status', 'reference', 'meta']);
 
-            // Re-add unique constraint on order_id
+            // Drop foreign key, re-add unique index, then restore foreign key with unique
+            $table->dropForeign(['order_id']);
             $table->unique('order_id');
+            $table->foreign('order_id')->references('id')->on('orders')->cascadeOnDelete();
         });
     }
 };
