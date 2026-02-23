@@ -3,6 +3,7 @@
 namespace App\Filament\Exports;
 
 use App\Models\Category;
+use App\Services\NotificationBodyBuilder;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -27,7 +28,7 @@ class CategoryExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        return \App\Services\NotificationBodyBuilder::buildExportCompletedBody(
+        return NotificationBodyBuilder::buildExportCompletedBody(
             $export,
             'resources/category.export.completed',
             'resources/category.export.failed'
