@@ -34,6 +34,11 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
+            // SQL: SELECT products.*, SUM(order_item.qty) AS items_sum_qty,
+            //      SUM(order_item.unit_price) AS items_sum_unit_price
+            //      FROM products
+            //      LEFT JOIN order_item ON order_item.product_id = products.id
+            //      GROUP BY products.id
             ->query(
                 Product::query()
             )
@@ -50,6 +55,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
                         Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.least'))
                             ->using(
+                                // SQL: SELECT name FROM <products subquery> ORDER BY items_sum_qty ASC LIMIT 1
                                 fn (Builder $query) => $query
                                     ->orderBy('items_sum_qty')
                                     ->value('name') ?? '-'
@@ -67,6 +73,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
                         Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.most'))
                             ->using(
+                                // SQL: SELECT name FROM <products subquery> ORDER BY items_sum_qty DESC LIMIT 1
                                 fn (Builder $query) => $query
                                     ->orderBy('items_sum_qty', 'desc')
                                     ->value('name') ?? '-'

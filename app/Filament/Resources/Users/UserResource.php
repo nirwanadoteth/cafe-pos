@@ -150,10 +150,12 @@ class UserResource extends Resource implements HasShieldPermissions
         return $query
             ->when(
                 ($data['value'] ?? null) === 'verified',
+                // SQL: WHERE email_verified_at IS NOT NULL
                 fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')
             )
             ->when(
                 ($data['value'] ?? null) === 'unverified',
+                // SQL: WHERE email_verified_at IS NULL
                 fn (Builder $query): Builder => $query->whereNull('email_verified_at')
             );
     }
@@ -259,6 +261,9 @@ class UserResource extends Resource implements HasShieldPermissions
     /** @return Builder<User> */
     public static function getEloquentQuery(): Builder
     {
+        // SQL: SELECT users.*, roles.name FROM users
+        //      LEFT JOIN model_has_roles ON model_has_roles.model_id = users.id AND model_has_roles.model_type = 'App\Models\User'
+        //      LEFT JOIN roles ON roles.id = model_has_roles.role_id
         return parent::getEloquentQuery()->with('roles');
     }
 }

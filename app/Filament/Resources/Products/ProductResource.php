@@ -108,6 +108,10 @@ class ProductResource extends Resource implements HasShieldPermissions
     /** @return Builder<Product> */
     public static function getGlobalSearchEloquentQuery(): Builder
     {
+        // SQL: SELECT products.*, categories.*
+        //      FROM products
+        //      LEFT JOIN categories ON categories.id = products.category_id
+        //      WHERE products.name LIKE '%:search%'
         return parent::getGlobalSearchEloquentQuery()->with(['category']);
     }
 

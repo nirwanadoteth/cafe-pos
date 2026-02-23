@@ -86,6 +86,7 @@ class InventoryService
             foreach ($order->items as $item) {
                 if ($item->product) {
                     // Use decrement for atomic operation with race condition protection
+                    // SQL: UPDATE products SET stock_quantity = stock_quantity - :qty WHERE id = :id
                     $item->product->decrement('stock_quantity', $item->qty);
                 }
             }
@@ -103,6 +104,7 @@ class InventoryService
             foreach ($order->items as $item) {
                 if ($item->product) {
                     // Use increment for atomic operation
+                    // SQL: UPDATE products SET stock_quantity = stock_quantity + :qty WHERE id = :id
                     $item->product->increment('stock_quantity', $item->qty);
                 }
             }
@@ -137,10 +139,12 @@ class InventoryService
                 $delta = $newQty - $oldQty;
 
                 if ($delta !== 0) {
+                    // SQL: SELECT * FROM products WHERE id = :product_id LIMIT 1
                     $product = Product::find($productId);
                     if ($product) {
                         // Negative delta means stock should be reduced (more items ordered)
                         // Positive delta means stock should be increased (fewer items ordered)
+                        // SQL: UPDATE products SET stock_quantity = stock_quantity - :delta WHERE id = :id
                         $product->increment('stock_quantity', -$delta);
                     }
                 }

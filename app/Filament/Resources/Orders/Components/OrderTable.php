@@ -108,14 +108,17 @@ class OrderTable
                     ->label(__('resources/order.filters.created_until'))
                     ->placeholder(fn ($state): string => now()->format('M d, Y')),
             ])
+            // SQL: WHERE DATE(created_at) >= ':created_from' AND DATE(created_at) <= ':created_until'
             ->query(
                 callback: fn (Builder $query, array $data): Builder => $query
                     ->when(
                         $data['created_from'] ?? null,
+                        // SQL: AND DATE(created_at) >= ':created_from'
                         fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
                     )
                     ->when(
                         $data['created_until'] ?? null,
+                        // SQL: AND DATE(created_at) <= ':created_until'
                         fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
                     )
             )

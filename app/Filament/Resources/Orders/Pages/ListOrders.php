@@ -30,7 +30,9 @@ class ListOrders extends ListRecords
 
         foreach ($statuses as $status => $color) {
             $tabs[$status] = Tab::make(__('resources/order.tabs.' . $status))
+                // SQL: WHERE status = ':status'
                 ->query(fn ($query) => $query->where('status', $status))
+                // SQL: SELECT COUNT(*) FROM orders WHERE status = ':status'
                 ->badge(Order::query()->where('status', $status)->count())
                 ->badgeColor($color);
         }

@@ -142,6 +142,11 @@ class OrderResource extends Resource implements HasShieldPermissions
     /** @return Builder<Order> */
     public static function getGlobalSearchEloquentQuery(): Builder
     {
+        // SQL: SELECT orders.*, customers.*, order_item.*
+        //      FROM orders
+        //      LEFT JOIN customers ON customers.id = orders.customer_id
+        //      LEFT JOIN order_item ON order_item.order_id = orders.id
+        //      WHERE orders.number LIKE '%:search%'
         return parent::getGlobalSearchEloquentQuery()->with(['customer', 'items']);
     }
 }

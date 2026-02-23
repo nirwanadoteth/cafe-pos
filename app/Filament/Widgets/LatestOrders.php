@@ -21,6 +21,7 @@ class LatestOrders extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
+            // SQL: SELECT * FROM orders WHERE status != 'cancelled' ORDER BY created_at DESC
             ->query(
                 OrderResource::getEloquentQuery()->where('status', '!=', 'cancelled')
             )

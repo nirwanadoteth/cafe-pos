@@ -35,6 +35,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
+            // SQL: SELECT * FROM orders WHERE status = 'completed'
             ->query(
                 Order::query()
                     ->where('status', '=', OrderStatus::Completed)
@@ -47,6 +48,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
                 TextColumn::make('min')
                     ->summarize([
                         Summarizer::make()
+                            // SQL: SELECT MIN(total_price) FROM orders WHERE status = 'completed' AND [date filters]
                             ->using(fn (Builder $query) => $query->min('total_price'))
                             ->money('IDR', 100),
                     ]),
@@ -54,6 +56,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
                 TextColumn::make('max')
                     ->summarize([
                         Summarizer::make()
+                            // SQL: SELECT MAX(total_price) FROM orders WHERE status = 'completed' AND [date filters]
                             ->using(fn (Builder $query) => $query->max('total_price'))
                             ->money('IDR', 100),
                     ]),
@@ -61,6 +64,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
                 TextColumn::make('sum')
                     ->summarize([
                         Summarizer::make()
+                            // SQL: SELECT SUM(total_price) FROM orders WHERE status = 'completed' AND [date filters]
                             ->using(fn (Builder $query) => $query->sum('total_price'))
                             ->money('IDR', 100),
                     ]),
@@ -68,6 +72,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
                 TextColumn::make('avg')
                     ->summarize([
                         Summarizer::make()
+                            // SQL: SELECT AVG(total_price) FROM orders WHERE status = 'completed' AND [date filters]
                             ->using(fn (Builder $query) => $query->avg('total_price'))
                             ->money('IDR', 100),
                     ]),

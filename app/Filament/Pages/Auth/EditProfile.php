@@ -27,6 +27,9 @@ class EditProfile extends BaseEditProfile
         return TextEntry::make('roles')
             ->label(__('pages/auth/edit-profile.form.role.label'))
             ->inlineLabel()
+            // SQL: SELECT roles.name FROM roles
+            //      INNER JOIN model_has_roles ON model_has_roles.role_id = roles.id
+            //      WHERE model_has_roles.model_id = :user_id AND model_has_roles.model_type = 'App\Models\User'
             ->state(fn ($record) => Str::headline($record->roles->pluck('name')->join(', ')));
     }
 }

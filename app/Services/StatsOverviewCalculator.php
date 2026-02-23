@@ -52,6 +52,9 @@ class StatsOverviewCalculator
      */
     protected static function getSum(string $table, string $column, Carbon $startDate, Carbon $endDate): mixed
     {
+        // SQL: SELECT SUM(:column) FROM orders
+        //      WHERE created_at BETWEEN :startDate AND :endDate
+        //      AND status != 'cancelled'
         $query = OrderResource::getEloquentQuery()->whereBetween('created_at', [$startDate, $endDate]);
 
         if ($table === 'orders') {
@@ -79,17 +82,21 @@ class StatsOverviewCalculator
     protected static function buildCountQuery(string $table, Carbon $startDate, Carbon $endDate): Builder
     {
         if ($table === 'orders') {
+            // SQL: SELECT COUNT(*) FROM orders
+            //      WHERE created_at BETWEEN :startDate AND :endDate AND status != 'cancelled'
             return OrderResource::getEloquentQuery()
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', '!=', 'cancelled');
         }
 
         if ($table === 'customers') {
+            // SQL: SELECT COUNT(*) FROM customers WHERE created_at BETWEEN :startDate AND :endDate
             return Customer::query()
                 ->whereBetween('created_at', [$startDate, $endDate]);
         }
 
         // Default fallback to orders
+        // SQL: SELECT COUNT(*) FROM orders WHERE created_at BETWEEN :startDate AND :endDate
         return OrderResource::getEloquentQuery()
             ->whereBetween('created_at', [$startDate, $endDate]);
     }

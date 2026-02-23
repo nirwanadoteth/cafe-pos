@@ -31,6 +31,7 @@ class Home extends Component implements HasActions, HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
+            // SQL: SELECT * FROM products WHERE is_visible = 1
             ->query(Product::query()->where('is_visible', true))
             ->heading(__('pages/welcome.table_heading'))
             ->headerActions([
