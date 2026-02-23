@@ -10,6 +10,7 @@ use App\Filament\Resources\Orders\Pages\EditOrder;
 use App\Filament\Resources\Orders\Pages\ListOrders;
 use App\Filament\Resources\Orders\Widgets\OrderStats;
 use App\Models\Order;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -24,7 +25,7 @@ class OrderResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'number';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static ?int $navigationSort = 2;
 
@@ -89,10 +90,7 @@ class OrderResource extends Resource implements HasShieldPermissions
 
     public static function getNavigationBadge(): ?string
     {
-        /** @var class-string<Model> $modelClass */
-        $modelClass = static::$model;
-
-        return (string) $modelClass::where('status', 'new')->count();
+        return (string) Order::where('status', OrderStatus::New)->count();
     }
 
     public static function getRelations(): array
@@ -137,7 +135,7 @@ class OrderResource extends Resource implements HasShieldPermissions
         /** @var Order $record */
 
         return [
-            'Customer' => optional($record->customer)->name,
+            'Customer' => $record->customer?->name,
         ];
     }
 

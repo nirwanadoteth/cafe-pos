@@ -50,7 +50,7 @@ class OrderForm
                             static::getItemsRepeater(),
                         ]),
                 ])
-                ->columnSpan(['lg' => fn (?Order $record) => $record === null ? 3 : 2]),
+                ->columnSpan(['lg' => fn (?Order $record): int => $record === null ? 3 : 2]),
 
             Section::make()
                 ->schema([
@@ -63,7 +63,7 @@ class OrderForm
                                 ->state(fn (Order $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
                         ])
                         ->columnSpan(['lg' => 1])
-                        ->hidden(fn (?Order $record) => $record === null),
+                        ->hidden(fn (?Order $record): bool => $record === null),
 
                     Section::make()
                         ->schema([
@@ -74,11 +74,11 @@ class OrderForm
                             static::getPaymentFormSchema(),
                         ])
                         ->columnSpan(['lg' => 1])
-                        ->hidden(fn (?Order $record) => $record === null),
+                        ->hidden(fn (?Order $record): bool => $record === null),
                 ])
                 ->compact()
                 ->columnSpan(['lg' => 1])
-                ->hidden(fn (?Order $record) => $record === null),
+                ->hidden(fn (?Order $record): bool => $record === null),
         ];
     }
 
@@ -123,7 +123,7 @@ class OrderForm
                     ->modalSubmitActionLabel(__('resources/order.actions.create_customer'))
                     ->modalWidth('lg')
             )
-            ->autofocus(fn (string $operation) => $operation === 'create');
+            ->autofocus(fn (string $operation): bool => $operation === 'create');
     }
 
     protected static function getStatusField(): ToggleButtons
@@ -214,21 +214,16 @@ class OrderForm
 
     protected static function validateItemsRepeater(string $_attribute, mixed $value, Closure $fail): void
     {
-        if (OrderFormValidator::validateItemsArray($value) === false) {
+        if (! OrderFormValidator::validateItemsArray($value)) {
             $fail(OrderFormValidator::getItemsValidationMessage());
         }
     }
 
     protected static function validateInventoryAvailability(string $_attribute, mixed $value, Closure $fail): void
     {
-        if (OrderFormValidator::validateInventoryAvailability($value) === false) {
+        if (! OrderFormValidator::validateInventoryAvailability($value)) {
             $fail(OrderFormValidator::getInventoryValidationMessage());
         }
-    }
-
-    protected static function isValidItemsArray(mixed $value): bool
-    {
-        return OrderFormValidator::validateItemsArray($value);
     }
 
     protected static function getProductIdField(): Hidden
