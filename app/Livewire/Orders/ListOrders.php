@@ -41,7 +41,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
             )
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('Order Date')
+                    ->label(__('clusters/pages/report.sales.table.columns.order_date'))
                     ->date(),
 
                 TextColumn::make('min')
@@ -74,7 +74,7 @@ class ListOrders extends Component implements HasActions, HasForms, HasTable
             ])
             ->filters([
                 DateRangeFilter::make('created_at')
-                    ->label('Date Range')
+                    ->label(__('actions.date_range'))
                     ->defaultThisYear()
                     ->alwaysShowCalendar(false)
                     ->autoApply(),

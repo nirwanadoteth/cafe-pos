@@ -7,6 +7,7 @@ return [
     'nav.group' => 'Catalog',
 
     // Form labels
+    'id' => 'ID',
     'name' => 'Name',
     'slug' => 'Slug',
     'is_visible' => 'Visible to customers',

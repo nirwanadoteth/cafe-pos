@@ -7,6 +7,7 @@ return [
     'nav.group' => 'Catalog',
 
     // Labels
+    'id' => 'ID',
     'name' => 'Name',
     'slug' => 'Slug',
     'images' => 'Images',

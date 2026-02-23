@@ -28,12 +28,12 @@ class Welcome extends SimplePage
 
     public function getTitle(): string | Htmlable
     {
-        return 'Welcome';
+        return __('pages/welcome.title');
     }
 
     public function getHeading(): string | Htmlable
     {
-        return 'Welcome to CafePOS';
+        return __('pages/welcome.heading');
     }
 
     public function hasLogo(): bool

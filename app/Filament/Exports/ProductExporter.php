@@ -16,7 +16,7 @@ class ProductExporter extends Exporter
     {
         return [
             ExportColumn::make('id')
-                ->label('ID'),
+                ->label(__('resources/product.id')),
             ExportColumn::make('category.name'),
             ExportColumn::make('name'),
             ExportColumn::make('slug'),

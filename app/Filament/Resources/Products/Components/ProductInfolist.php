@@ -77,7 +77,7 @@ class ProductInfolist
 
     protected static function getImagesSection(): Section
     {
-        return static::getSection('Images', [
+        return static::getSection(__('resources/product.images'), [
             static::getImageEntry(),
         ]);
     }
@@ -98,7 +98,7 @@ class ProductInfolist
 
     protected static function getPricingSection(): Section
     {
-        return static::getSection('Pricing', [
+        return static::getSection(__('resources/product.pricing'), [
             static::getPriceEntry(),
         ]);
     }
@@ -111,7 +111,7 @@ class ProductInfolist
 
     protected static function getStatusSection(): Section
     {
-        return static::getSection('Status', [
+        return static::getSection(__('resources/product.status'), [
             static::getVisibilityEntry(),
         ]);
     }
@@ -119,7 +119,7 @@ class ProductInfolist
     protected static function getVisibilityEntry(): IconEntry
     {
         return IconEntry::make('is_visible')
-            ->label('Visibility')
+            ->label(__('resources/product.visibility'))
             ->icon(fn (string $state): string => static::getVisibilityIcon($state));
     }
 
@@ -133,7 +133,7 @@ class ProductInfolist
 
     protected static function getAssociationsSection(): Section
     {
-        return static::getSection('Associations', [
+        return static::getSection(__('resources/product.associations'), [
             static::getCategoryEntry(),
         ]);
     }

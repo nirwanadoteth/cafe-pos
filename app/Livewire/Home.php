@@ -32,7 +32,7 @@ class Home extends Component implements HasActions, HasForms, HasTable
     {
         return $table
             ->query(Product::query()->where('is_visible', true))
-            ->heading('List of our categories and products')
+            ->heading(__('pages/welcome.table_heading'))
             ->headerActions([
                 static::loginAction(),
             ])
@@ -86,7 +86,7 @@ class Home extends Component implements HasActions, HasForms, HasTable
     {
         return Action::make('login')
             ->button()
-            ->label('Login')
+            ->label(__('actions.login'))
             ->url(Filament::getLoginUrl());
     }
 

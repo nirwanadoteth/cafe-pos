@@ -2,6 +2,10 @@
 
 return [
 
+    'filter' => [
+        'date_range' => 'Date Range',
+    ],
+
     'filters' => [
 
         'start' => [

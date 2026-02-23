@@ -45,7 +45,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
                     ->default(0)
                     ->summarize([
                         Sum::make()
-                            ->label('Total ordered quantity'),
+                            ->label(__('clusters/pages/report.product.table.summary.total_ordered')),
 
                         Summarizer::make()
                             ->label(__('clusters/pages/report.product.table.summary.least'))
@@ -56,12 +56,12 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
                             ),
                     ]),
                 TextColumn::make('items_sum_unit_price')
-                    ->label('Revenue')
+                    ->label(__('clusters/pages/report.product.table.columns.revenue'))
                     ->sum('items', 'unit_price')
                     ->money('IDR', 100)
                     ->summarize([
                         Sum::make('items_sum_unit_price')
-                            ->label('Total revenue')
+                            ->label(__('clusters/pages/report.product.table.summary.total_revenue'))
                             ->money('IDR', 100),
 
                         Summarizer::make()
@@ -75,7 +75,7 @@ class ListProducts extends Component implements HasActions, HasForms, HasTable
             ])
             ->filters([
                 DateRangeFilter::make('created_at')
-                    ->label('Date Range')
+                    ->label(__('actions.date_range'))
                     ->defaultThisYear()
                     ->alwaysShowCalendar(false)
                     ->autoApply()

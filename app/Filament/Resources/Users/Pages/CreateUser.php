@@ -17,7 +17,7 @@ class CreateUser extends CreateRecord
                 ->hiddenLabel()
                 ->icon('heroicon-o-arrow-path')
                 ->color('gray')
-                ->tooltip('Reset')
+                ->tooltip(__('actions.reset'))
                 ->action(fn () => $this->fillForm()),
         ];
     }

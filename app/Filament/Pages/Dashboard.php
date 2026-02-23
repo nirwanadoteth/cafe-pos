@@ -20,7 +20,7 @@ class Dashboard extends BaseDashboard
                 Section::make()
                     ->schema([
                         DateRangePicker::make('created_at')
-                            ->label('Date Range')
+                            ->label(__('pages/dashboard.filter.date_range'))
                             ->defaultThisMonth()
                             ->alwaysShowCalendar(false)
                             ->autoApply(),

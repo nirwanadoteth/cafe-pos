@@ -16,7 +16,7 @@ class CategoryExporter extends Exporter
     {
         return [
             ExportColumn::make('id')
-                ->label('ID'),
+                ->label(__('resources/category.id')),
             ExportColumn::make('name'),
             ExportColumn::make('slug'),
             ExportColumn::make('description'),
