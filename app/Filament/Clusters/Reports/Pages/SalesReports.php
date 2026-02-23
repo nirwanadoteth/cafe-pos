@@ -16,6 +16,11 @@ class SalesReports extends Page
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-currency-dollar';
 
+    protected static function getPagePermission(): ?string
+    {
+        return 'page_SalesReports';
+    }
+
     protected static ?string $cluster = ReportsCluster::class;
 
     protected string $view = 'filament.clusters.reports.pages.sales-reports';

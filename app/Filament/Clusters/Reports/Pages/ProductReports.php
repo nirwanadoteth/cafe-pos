@@ -14,6 +14,11 @@ class ProductReports extends Page
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-document-chart-bar';
 
+    protected static function getPagePermission(): ?string
+    {
+        return 'page_ProductReports';
+    }
+
     protected static ?string $cluster = ReportsCluster::class;
 
     protected string $view = 'filament.clusters.reports.pages.product-reports';
