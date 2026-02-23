@@ -3,6 +3,7 @@
 namespace App\Filament\Imports;
 
 use App\Models\Category;
+use App\Services\NotificationBodyBuilder;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -39,7 +40,7 @@ class CategoryImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        return \App\Services\NotificationBodyBuilder::buildImportCompletedBody(
+        return NotificationBodyBuilder::buildImportCompletedBody(
             $import,
             'resources/category.import.completed',
             'resources/category.import.failed'

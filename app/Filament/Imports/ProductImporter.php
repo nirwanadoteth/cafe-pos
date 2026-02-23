@@ -3,6 +3,7 @@
 namespace App\Filament\Imports;
 
 use App\Models\Product;
+use App\Services\NotificationBodyBuilder;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
@@ -47,7 +48,7 @@ class ProductImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        return \App\Services\NotificationBodyBuilder::buildImportCompletedBody(
+        return NotificationBodyBuilder::buildImportCompletedBody(
             $import,
             'resources/product.import.completed',
             'resources/product.import.failed'
