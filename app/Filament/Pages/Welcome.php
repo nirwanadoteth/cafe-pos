@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Services\AuthenticationService;
 use Filament\Pages\SimplePage;
 use Filament\Support\Enums\Width;
 use Filament\Tables\Table\Concerns\HasHeaderActions;
@@ -15,8 +16,8 @@ class Welcome extends SimplePage
 
     public function mount(): void
     {
-        if (\App\Services\AuthenticationService::isUserAuthenticated()) {
-            \App\Services\AuthenticationService::redirectToIntended();
+        if (AuthenticationService::isUserAuthenticated()) {
+            AuthenticationService::redirectToIntended();
         }
     }
 
