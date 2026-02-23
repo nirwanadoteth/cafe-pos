@@ -25,7 +25,7 @@ class ListOrders extends ListRecords
         ];
 
         $tabs = [
-            null => Tab::make(__('resources/order.tabs.all')),
+            'all' => Tab::make(__('resources/order.tabs.all')),
         ];
 
         foreach ($statuses as $status => $color) {
