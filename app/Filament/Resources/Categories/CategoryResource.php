@@ -8,6 +8,7 @@ use App\Filament\Resources\Categories\Pages\ListCategories;
 use App\Filament\Resources\Categories\Pages\ViewCategory;
 use App\Filament\Resources\Categories\RelationManagers\ProductsRelationManager;
 use App\Models\Category;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Closure;
 use Filament\Actions\BulkActionGroup;
@@ -35,7 +36,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-tag';
 
     protected static ?int $navigationSort = 0;
 
@@ -64,7 +65,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                                     ->label(__('resources/category.name'))
                                     ->required()
                                     ->maxLength(255)
-                                    ->autofocus(fn (string $operation) => $operation === 'create')
+                                    ->autofocus(fn (string $operation): bool => $operation === 'create')
                                     ->lazy()
                                     ->afterStateUpdated(static::getSlugUpdateCallback()),
 
@@ -84,7 +85,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                         MarkdownEditor::make('description')
                             ->label(__('resources/category.description')),
                     ])
-                    ->columnSpan(['lg' => fn (?Category $record) => $record === null ? 3 : 2]),
+                    ->columnSpan(['lg' => fn (?Category $record): int => $record === null ? 3 : 2]),
                 Section::make()
                     ->schema(components: [
                         TextEntry::make('created_at')
@@ -96,7 +97,7 @@ class CategoryResource extends Resource implements HasShieldPermissions
                             ->state(fn (Category $record): ?string => $record->updated_at?->setTimezone('Asia/Jakarta')->diffForHumans()),
                     ])
                     ->columnSpan(['lg' => 1])
-                    ->hidden(fn (?Category $record) => $record === null),
+                    ->hidden(fn (?Category $record): bool => $record === null),
             ])
             ->columns(3);
     }
