@@ -6,6 +6,7 @@ use App\Filament\Resources\Users\Pages\CreateUser;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
@@ -32,7 +33,7 @@ class UserResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
     protected static ?int $navigationSort = 3;
 
@@ -57,7 +58,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label(__('resources/user.name'))
                     ->required()
                     ->maxLength(255)
-                    ->autofocus(fn (string $operation) => $operation === 'create')
+                    ->autofocus(fn (string $operation): bool => $operation === 'create')
                     ->inlineLabel(),
 
                 TextInput::make('email')
