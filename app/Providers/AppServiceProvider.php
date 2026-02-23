@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Responses\LogoutResponse;
-use BezhanSalleh\FilamentShield\FilamentShield;
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Filament\Facades\Filament;
 use Filament\Support\Facades\FilamentView;

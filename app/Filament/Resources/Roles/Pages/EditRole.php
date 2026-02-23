@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Roles\Pages;
 
 use App\Filament\Resources\Roles\RoleResource;
-use BezhanSalleh\FilamentShield\Resources\RoleResource\Pages\EditRole as BaseEditRole;
+use BezhanSalleh\FilamentShield\Resources\Roles\Pages\EditRole as BaseEditRole;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 
