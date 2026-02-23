@@ -11,7 +11,7 @@ class OrderFormValidator
      */
     public static function validateItemsArray(mixed $value): bool
     {
-        if (is_array($value) === false) {
+        if (! is_array($value)) {
             return false;
         }
 
@@ -29,7 +29,7 @@ class OrderFormValidator
      */
     public static function validateInventoryAvailability(mixed $value): bool
     {
-        if (is_array($value) === false) {
+        if (! is_array($value)) {
             return true; // Let other validation handle array validation
         }
 

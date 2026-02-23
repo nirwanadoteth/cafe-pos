@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use Flowframe\Trend\Trend;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class OrderStatsCalculator
 {
@@ -37,9 +39,9 @@ class OrderStatsCalculator
      * @param  Builder<\App\Models\Order>  $baseTrendQuery
      * @return \Illuminate\Support\Collection<int, \Flowframe\Trend\TrendValue>
      */
-    protected static function calculateTrendData(Builder $baseTrendQuery)
+    protected static function calculateTrendData(Builder $baseTrendQuery): Collection
     {
-        $trendQuery = \Flowframe\Trend\Trend::query($baseTrendQuery)
+        $trendQuery = Trend::query($baseTrendQuery)
             ->between(
                 start: now()->subYear(),
                 end: now(),

@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Filament\Facades\Filament;
+use Illuminate\Http\RedirectResponse;
+use Livewire\Features\SupportRedirects\Redirector;
 
 class AuthenticationService
 {
@@ -13,15 +15,15 @@ class AuthenticationService
      */
     public static function isUserAuthenticated(): bool
     {
-        return Filament::auth()->check() === true;
+        return Filament::auth()->check();
     }
 
     /**
      * Redirect to intended URL or default Filament URL
      *
-     * @return \Illuminate\Http\RedirectResponse | \Livewire\Features\SupportRedirects\Redirector Redirect response
+     * @return RedirectResponse|Redirector Redirect response
      */
-    public static function redirectToIntended(): \Illuminate\Http\RedirectResponse | \Livewire\Features\SupportRedirects\Redirector
+    public static function redirectToIntended(): RedirectResponse | Redirector
     {
         return redirect()->intended(Filament::getDefaultPanel()->getRedirectUrl());
     }

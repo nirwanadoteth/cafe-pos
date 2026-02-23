@@ -100,7 +100,7 @@ class StatsOverviewCalculator
     protected static function calculateTrend(int | float $diff): array
     {
         $isPositive = $diff >= 0;
-        $direction = $isPositive === true ? 'increase' : 'decrease';
+        $direction = $isPositive ? 'increase' : 'decrease';
 
         return self::getTrendConfig($isPositive, $direction);
     }
@@ -112,8 +112,8 @@ class StatsOverviewCalculator
     {
         return [
             'direction' => __('widgets/stats-overview.trend.' . $direction),
-            'icon' => $isPositive === true ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
-            'color' => $isPositive === true ? 'success' : 'danger',
+            'icon' => $isPositive ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down',
+            'color' => $isPositive ? 'success' : 'danger',
         ];
     }
 }

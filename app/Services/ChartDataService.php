@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Customer;
+use Carbon\Carbon;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
@@ -41,11 +42,11 @@ class ChartDataService
      * Build trend data array from Trend query
      *
      * @param  mixed  $trend  The Trend query instance
-     * @param  \Carbon\Carbon  $start  Start date for the trend
-     * @param  \Carbon\Carbon  $end  End date for the trend
+     * @param  Carbon  $start  Start date for the trend
+     * @param  Carbon  $end  End date for the trend
      * @return array<int, int> Array of aggregated values by month
      */
-    private static function buildTrendData(mixed $trend, \Carbon\Carbon $start, \Carbon\Carbon $end): array
+    private static function buildTrendData(mixed $trend, Carbon $start, Carbon $end): array
     {
         return $trend
             ->between(start: $start, end: $end)
