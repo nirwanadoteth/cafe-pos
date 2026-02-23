@@ -135,7 +135,7 @@ class OrderResource extends Resource implements HasShieldPermissions
         /** @var Order $record */
 
         return [
-            'Customer' => $record->customer?->name,
+            'Customer' => $record->customer->name,
         ];
     }
 

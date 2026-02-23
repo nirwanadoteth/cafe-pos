@@ -101,7 +101,7 @@ class ProductResource extends Resource implements HasShieldPermissions
         /** @var Product $record */
 
         return [
-            'Category' => $record->category?->name,
+            'Category' => $record->category->name,
         ];
     }
 
