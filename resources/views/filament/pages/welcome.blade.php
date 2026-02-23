@@ -1,3 +1,3 @@
 <x-filament-panels::page.simple>
-    @livewire('home')
+    <livewire:home />
 </x-filament-panels::page.simple>

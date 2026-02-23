@@ -1,3 +1,3 @@
 <x-filament-panels::page>
-    @livewire('orders.list-orders')
+    <livewire:orders.list-orders />
 </x-filament-panels::page>
