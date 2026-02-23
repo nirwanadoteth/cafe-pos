@@ -10,13 +10,18 @@ class HealthCheckResults extends BaseHealthCheckResults
 {
     use HasPageShield;
 
+    protected static function getPagePermission(): ?string
+    {
+        return 'page_HealthCheckResults';
+    }
+
     public static function getNavigationSort(): ?int
     {
         return 5;
     }
 
-    public function getTitle(): string | Htmlable
+    public static function getNavigationLabel(): string
     {
-        return __('filament-spatie-health::health.pages.health_check_results.title');
+        return 'Monitoring';
     }
 }
