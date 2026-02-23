@@ -45,7 +45,7 @@ class ProductTable
             ->collection('product-images')
             ->conversion('webp')
             ->checkFileExistence(false)
-            ->extraImgAttributes(fn (Product $record) => [
+            ->extraImgAttributes(fn (Product $record): array => [
                 'alt' => 'Product image of ' . $record->name,
                 'loading' => 'lazy',
             ]);

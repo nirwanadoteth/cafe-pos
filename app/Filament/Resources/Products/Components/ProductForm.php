@@ -68,7 +68,7 @@ class ProductForm
             ->unique('products', 'name', ignoreRecord: true)
             ->required()
             ->maxLength(255)
-            ->autofocus(fn (string $operation) => $operation === 'create')
+            ->autofocus(fn (string $operation): bool => $operation === 'create')
             ->lazy()
             ->afterStateUpdated(static::getSlugUpdateCallback());
     }

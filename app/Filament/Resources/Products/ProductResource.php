@@ -11,6 +11,7 @@ use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Resources\Products\Pages\ViewProduct;
 use App\Filament\Resources\Products\Widgets\ProductStats;
 use App\Models\Product;
+use BackedEnum;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -24,7 +25,7 @@ class ProductResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-bolt';
 
     protected static ?int $navigationSort = 1;
 
@@ -100,7 +101,7 @@ class ProductResource extends Resource implements HasShieldPermissions
         /** @var Product $record */
 
         return [
-            'Category' => optional($record->category)->name,
+            'Category' => $record->category?->name,
         ];
     }
 

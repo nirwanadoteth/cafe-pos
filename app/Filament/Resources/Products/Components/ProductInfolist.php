@@ -90,7 +90,7 @@ class ProductInfolist
             ->hiddenLabel()
             ->placeholder(__('resources/product.no_images'))
             ->checkFileExistence(false)
-            ->extraImgAttributes(fn (Product $record) => [
+            ->extraImgAttributes(fn (Product $record): array => [
                 'alt' => 'Product image of ' . $record->name,
                 'loading' => 'lazy',
             ]);
