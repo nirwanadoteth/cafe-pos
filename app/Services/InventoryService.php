@@ -82,6 +82,8 @@ class InventoryService
      */
     protected static function deductStock(Order $order): void
     {
+        $order->loadMissing('items.product');
+
         DB::transaction(function () use ($order) {
             foreach ($order->items as $item) {
                 if ($item->product) {
@@ -100,6 +102,8 @@ class InventoryService
      */
     protected static function restoreStock(Order $order): void
     {
+        $order->loadMissing('items.product');
+
         DB::transaction(function () use ($order) {
             foreach ($order->items as $item) {
                 if ($item->product) {
