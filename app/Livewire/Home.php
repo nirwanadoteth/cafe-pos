@@ -31,8 +31,10 @@ class Home extends Component implements HasActions, HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            // SQL: SELECT * FROM products WHERE is_visible = 1
-            ->query(Product::query()->where('is_visible', true))
+            // SQL: SELECT products.*, categories.* FROM products
+            //      LEFT JOIN categories ON categories.id = products.category_id
+            //      WHERE products.is_visible = 1
+            ->query(Product::query()->where('is_visible', true)->with('category'))
             ->heading(__('pages/welcome.table_heading'))
             ->headerActions([
                 static::loginAction(),
@@ -80,7 +82,7 @@ class Home extends Component implements HasActions, HasForms, HasTable
                 'sm' => 1,
                 'xl' => 2,
             ])
-            ->paginated(false);
+            ->paginated([12, 24, 48]);
     }
 
     public static function loginAction(): Action
