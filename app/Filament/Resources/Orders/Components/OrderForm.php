@@ -6,6 +6,7 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Filament\Resources\Products\ProductResource;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Services\OrderFormValidator;
@@ -150,14 +151,12 @@ class OrderForm
             ->color('danger')
             ->action(fn (Set $set) => $set(
                 'items',
-                // SQL: SELECT products.*, categories.*
-                //      FROM products
-                //      INNER JOIN categories ON categories.id = products.category_id
-                //      WHERE products.is_visible = 1 AND categories.is_visible = 1
+                // SQL: SELECT * FROM products
+                //      WHERE is_visible = 1
+                //        AND category_id IN (SELECT id FROM categories WHERE is_visible = 1)
                 Product::query()
-                    ->with('category')
                     ->whereIsVisible(true)
-                    ->whereHas('category', fn ($query) => $query->whereIsVisible(true))
+                    ->whereIn('category_id', Category::whereIsVisible(true)->select('id'))
                     ->get()
                     ->map(fn (Product $product) => [
                         'product_id' => $product->id,
@@ -251,7 +250,7 @@ class OrderForm
             ->minValue(0)
             ->maxValue(999)
             ->default(0)
-            ->live(debounce: 1000)
+            ->lazy()
             ->prefixAction(
                 Action::make('decrement')
                     ->iconButton()
@@ -345,21 +344,20 @@ class OrderForm
     /** @return Builder<Product> */
     protected static function buildProductQuery(?Order $record): Builder
     {
-        // SQL: SELECT products.*, categories.*
-        //      FROM products
-        //      LEFT JOIN categories ON categories.id = products.category_id
-        //      WHERE (products.is_visible = 1 AND categories.is_visible = 1)
-        //         OR products.id IN (SELECT product_id FROM order_item WHERE order_id = :order_id)
+        // SQL: SELECT * FROM products
+        //      WHERE (
+        //          is_visible = 1
+        //          AND category_id IN (SELECT id FROM categories WHERE is_visible = 1)
+        //      )
+        //      OR id IN (SELECT product_id FROM order_items WHERE order_id = :order_id)
         return Product::query()
-            ->with('category')
             ->where(function ($query) use ($record) {
                 $query->where(function ($q) {
                     $q->whereIsVisible(true)
-                        ->whereHas('category', fn ($q) => $q->whereIsVisible(true));
+                        ->whereIn('category_id', Category::whereIsVisible(true)->select('id'));
                 });
 
                 if ($record !== null) {
-                    // SQL: OR products.id IN (SELECT product_id FROM order_item WHERE order_id = :order_id)
                     $query->orWhereIn('id', $record->items()->select('product_id'));
                 }
             });
