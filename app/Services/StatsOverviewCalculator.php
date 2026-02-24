@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Filament\Resources\Orders\OrderResource;
 use App\Helpers\DateRange;
 use App\Models\Customer;
 use App\Models\Order;
@@ -55,7 +54,12 @@ class StatsOverviewCalculator
         // SQL: SELECT SUM(:column) FROM orders
         //      WHERE created_at BETWEEN :startDate AND :endDate
         //      AND status != 'cancelled'
-        $query = OrderResource::getEloquentQuery()->whereBetween('created_at', [$startDate, $endDate]);
+        // SQL: SELECT SUM(:column) FROM orders
+        //      WHERE created_at BETWEEN :startDate AND :endDate
+        //      AND status != 'cancelled'
+        $query = Order::query()
+            ->withoutGlobalScopes()
+            ->whereBetween('created_at', [$startDate, $endDate]);
 
         if ($table === 'orders') {
             $query->where('status', '!=', 'cancelled');
@@ -84,7 +88,8 @@ class StatsOverviewCalculator
         if ($table === 'orders') {
             // SQL: SELECT COUNT(*) FROM orders
             //      WHERE created_at BETWEEN :startDate AND :endDate AND status != 'cancelled'
-            return OrderResource::getEloquentQuery()
+            return Order::query()
+                ->withoutGlobalScopes()
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', '!=', 'cancelled');
         }
@@ -97,7 +102,8 @@ class StatsOverviewCalculator
 
         // Default fallback to orders
         // SQL: SELECT COUNT(*) FROM orders WHERE created_at BETWEEN :startDate AND :endDate
-        return OrderResource::getEloquentQuery()
+        return Order::query()
+            ->withoutGlobalScopes()
             ->whereBetween('created_at', [$startDate, $endDate]);
     }
 
