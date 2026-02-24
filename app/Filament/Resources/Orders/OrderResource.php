@@ -148,6 +148,6 @@ class OrderResource extends Resource implements HasShieldPermissions
         //      LEFT JOIN customers ON customers.id = orders.customer_id
         //      LEFT JOIN order_item ON order_item.order_id = orders.id
         //      WHERE orders.number LIKE '%:search%'
-        return parent::getGlobalSearchEloquentQuery()->with(['customer', 'items']);
+        return parent::getGlobalSearchEloquentQuery()->with(['customer']);
     }
 }
