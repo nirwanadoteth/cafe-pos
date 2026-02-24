@@ -15,7 +15,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\IconEntry;
@@ -82,8 +82,9 @@ class CategoryResource extends Resource implements HasShieldPermissions
                             ->label(__('resources/category.is_visible'))
                             ->default(true),
 
-                        MarkdownEditor::make('description')
-                            ->label(__('resources/category.description')),
+                        Textarea::make('description')
+                            ->label(__('resources/category.description'))
+                            ->rows(3),
                     ])
                     ->columnSpan(['lg' => fn (?Category $record): int => $record === null ? 3 : 2]),
                 Section::make()
