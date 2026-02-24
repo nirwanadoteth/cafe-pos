@@ -35,24 +35,25 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Customers created.');
 
         $this->command->warn(PHP_EOL . 'Creating orders...');
-        $orders = $this->withProgressBar(50, fn () => Order::factory(1)
-            ->sequence(fn ($sequence) => ['customer_id' => $customers->random(1)->first()->id])
-            ->has(Payment::factory()->count(1))
-            ->has(
-                OrderItem::factory()->count(random_int(2, 5))
-                    ->state(fn (array $attributes, Order $order) => [
-                        'product_id' => $attributes['product_id'] = $products->random(1)->first()->id,
-                        'unit_price' => $products->find($attributes['product_id'])->price,
-                    ]),
-                'items'
-            )
-            ->create()
-            ->each(function ($order) {
-                $totalPrice = $order->items->sum(function ($item) {
-                    return $item->qty * $item->unit_price;
-                });
-                $order->update(['total_price' => $totalPrice]);
-            }));
+        $orders = $this->withProgressBar(50, function () use ($customers, $products) {
+            $itemCount = random_int(2, 5);
+            // Pick unique products to avoid duplicate items per order
+            $selectedProducts = $products->random(min($itemCount, $products->count()));
+
+            return Order::factory(1)
+                ->sequence(fn ($sequence) => ['customer_id' => $customers->random(1)->first()->id])
+                ->has(Payment::factory()->count(1))
+                ->has(
+                    OrderItem::factory()
+                        ->count($selectedProducts->count())
+                        ->sequence(...$selectedProducts->map(fn (Product $product) => [
+                            'product_id' => $product->id,
+                            'unit_price' => $product->price,
+                        ])->toArray()),
+                    'items'
+                )
+                ->create();
+        });
         $this->command->info('Orders created.');
 
         $this->call([
