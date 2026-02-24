@@ -24,6 +24,12 @@ class ListOrders extends ListRecords
             'cancelled' => 'danger',
         ];
 
+        // Single query instead of 4 separate COUNT queries
+        $counts = Order::query()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
         $tabs = [
             'all' => Tab::make(__('resources/order.tabs.all')),
         ];
@@ -32,8 +38,7 @@ class ListOrders extends ListRecords
             $tabs[$status] = Tab::make(__('resources/order.tabs.' . $status))
                 // SQL: WHERE status = ':status'
                 ->query(fn ($query) => $query->where('status', $status))
-                // SQL: SELECT COUNT(*) FROM orders WHERE status = ':status'
-                ->badge(Order::query()->where('status', $status)->count())
+                ->badge($counts->get($status, 0))
                 ->badgeColor($color);
         }
 

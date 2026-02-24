@@ -90,7 +90,7 @@ class OrderResource extends Resource implements HasShieldPermissions
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) Order::where('status', OrderStatus::New)->count();
+        return (string) cache()->remember('orders_new_count', now()->addSeconds(30), fn () => Order::where('status', OrderStatus::New)->count());
     }
 
     public static function getRelations(): array
@@ -122,7 +122,8 @@ class OrderResource extends Resource implements HasShieldPermissions
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->with(['customer']);
     }
 
     public static function getGloballySearchableAttributes(): array

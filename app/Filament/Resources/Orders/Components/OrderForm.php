@@ -151,10 +151,11 @@ class OrderForm
             ->color('danger')
             ->action(fn (Set $set) => $set(
                 'items',
-                // SQL: SELECT * FROM products
+                // SQL: SELECT id, name, price FROM products
                 //      WHERE is_visible = 1
                 //        AND category_id IN (SELECT id FROM categories WHERE is_visible = 1)
                 Product::query()
+                    ->select(['id', 'name', 'price'])
                     ->whereIsVisible(true)
                     ->whereIn('category_id', Category::whereIsVisible(true)->select('id'))
                     ->get()
@@ -344,13 +345,14 @@ class OrderForm
     /** @return Builder<Product> */
     protected static function buildProductQuery(?Order $record): Builder
     {
-        // SQL: SELECT * FROM products
+        // SQL: SELECT id, name, price FROM products
         //      WHERE (
         //          is_visible = 1
         //          AND category_id IN (SELECT id FROM categories WHERE is_visible = 1)
         //      )
         //      OR id IN (SELECT product_id FROM order_items WHERE order_id = :order_id)
         return Product::query()
+            ->select(['id', 'name', 'price'])
             ->where(function ($query) use ($record) {
                 $query->where(function ($q) {
                     $q->whereIsVisible(true)
