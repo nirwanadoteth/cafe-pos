@@ -4,9 +4,9 @@ namespace App\Filament\Resources\Products\Components;
 
 use App\Models\Product;
 use Closure;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component;
@@ -95,10 +95,11 @@ class ProductForm
         };
     }
 
-    protected static function getDescriptionField(): MarkdownEditor
+    protected static function getDescriptionField(): Textarea
     {
-        return MarkdownEditor::make('description')
+        return Textarea::make('description')
             ->label(__('resources/product.description'))
+            ->rows(3)
             ->columnSpanFull();
     }
 
