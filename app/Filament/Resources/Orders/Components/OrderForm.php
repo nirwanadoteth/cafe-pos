@@ -14,9 +14,9 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\TextEntry;
@@ -236,12 +236,12 @@ class OrderForm
         return Hidden::make('product_id');
     }
 
-    protected static function getProductNameField(): TextEntry
+    protected static function getProductNameField(): TextInput
     {
-        return TextEntry::make('product_name')
+        return TextInput::make('product_name')
             ->label(__('resources/order.item.product'))
-            ->state(fn (Get $get) => $get('product_name'))
-            ->extraAttributes(['class' => 'h-9 flex items-center px-1']);
+            ->disabled()
+            ->dehydrated(false);
     }
 
     protected static function getQuantityField(): TextInput
