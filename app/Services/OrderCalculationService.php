@@ -14,8 +14,10 @@ class OrderCalculationService
      */
     public static function calculateTotalPrice(Order $order): float
     {
+        // SQL SUM returns raw cents from DB. Divide by 100 to get the display
+        // value, since MoneyCast::set() will multiply by 100 when storing.
         return (float) $order->items()
-            ->selectRaw('COALESCE(SUM(qty * unit_price), 0) as total')
+            ->selectRaw('COALESCE(SUM(qty * unit_price), 0) / 100 as total')
             ->value('total');
     }
 
