@@ -17,19 +17,20 @@ class OrderStatsCalculator
      */
     public static function calculateStats(Builder $baseQuery, Builder $baseTrendQuery): array
     {
-        $totalOrders = $baseQuery->count();
+        // Combine count, open orders count, and average price into a single query
+        $stats = $baseQuery->selectRaw(implode(', ', [
+            'COUNT(*) as total_orders',
+            "SUM(CASE WHEN status IN ('new', 'processing') THEN 1 ELSE 0 END) as open_orders",
+            'AVG(total_price) as avg_price',
+        ]))->first();
 
         $orderData = self::calculateTrendData($baseTrendQuery);
 
-        $openOrders = self::calculateOpenOrders($baseQuery);
-
-        $averagePrice = self::calculateAveragePrice($baseQuery);
-
         return [
-            'totalOrders' => $totalOrders,
+            'totalOrders' => (int) $stats->total_orders,
             'orderData' => $orderData,
-            'openOrders' => $openOrders,
-            'averagePrice' => $averagePrice,
+            'openOrders' => (int) $stats->open_orders,
+            'averagePrice' => round((float) ($stats->avg_price ?? 0) / 100, precision: 2),
         ];
     }
 
