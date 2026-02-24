@@ -31,7 +31,7 @@ class ListOrders extends ListRecords
             ->pluck('total', 'status');
 
         $tabs = [
-            null => Tab::make(__('resources/order.tabs.all')),
+            'all' => Tab::make(__('resources/order.tabs.all')),
         ];
 
         foreach ($statuses as $status => $color) {

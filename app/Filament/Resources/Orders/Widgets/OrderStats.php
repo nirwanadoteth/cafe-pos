@@ -25,7 +25,7 @@ class OrderStats extends BaseWidget
         $baseQuery = $this->getPageTableQuery();
         $baseTrendQuery = OrderResource::getEloquentQuery();
         $status = $this->getCurrentTabStatus();
-        if ($status !== null) {
+        if ($status !== 'all') {
             $baseQuery->where('status', $status);
             $baseTrendQuery->where('status', $status);
         }
