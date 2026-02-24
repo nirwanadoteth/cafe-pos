@@ -4,9 +4,9 @@ namespace App\Filament\Resources\Roles;
 
 use App\Filament\Resources\Roles\Pages\CreateRole;
 use App\Filament\Resources\Roles\Pages\EditRole;
-use BezhanSalleh\FilamentShield\Resources\Roles\RoleResource as BaseRoleResource;
 use BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles;
 use BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole;
+use BezhanSalleh\FilamentShield\Resources\Roles\RoleResource as BaseRoleResource;
 
 class RoleResource extends BaseRoleResource
 {
