@@ -64,12 +64,6 @@ class CreateOrder extends CreateRecord
         /** @var Order $order */
         $order = $this->record;
 
-        /** @var int $total_price */
-        $total_price = $order->items->sum(
-            fn ($item) => $item->qty * $item->unit_price
-        );
-
-        $order->update(['total_price' => $total_price]);
         /** @var User $user */
         $user = auth()->guard()->user();
 
