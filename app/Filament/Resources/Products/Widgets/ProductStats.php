@@ -24,10 +24,14 @@ class ProductStats extends BaseWidget
     {
         // SQL: SELECT COUNT(*) FROM products
         $totalProducts = $this->getPageTableQuery()->count();
-        // SQL: SELECT products.*, COUNT(order_item.id) AS items_count
+        // SQL: SELECT products.id, products.name, COUNT(order_item.id) AS items_count
         //      FROM products LEFT JOIN order_item ON order_item.product_id = products.id
         //      GROUP BY products.id ORDER BY items_count DESC LIMIT 1
-        $favoriteProduct = $this->getPageTableQuery()->withCount('items')->orderBy('items_count', 'desc')->first();
+        $favoriteProduct = $this->getPageTableQuery()
+            ->select(['id', 'name'])
+            ->withCount('items')
+            ->orderBy('items_count', 'desc')
+            ->first();
         // SQL: SELECT AVG(price) FROM products
         $averagePrice = round((float) $this->getPageTableQuery()->avg('price') / 100, precision: 2);
 
