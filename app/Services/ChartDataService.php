@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Customer;
+use App\Models\Order;
 use Carbon\Carbon;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
@@ -18,7 +18,7 @@ class ChartDataService
     public static function getOrdersChartData(): array
     {
         return self::buildTrendData(
-            Trend::query(OrderResource::getEloquentQuery()->where('status', '!=', 'cancelled')),
+            Trend::query(Order::query()->withoutGlobalScopes()->where('status', '!=', 'cancelled')),
             now()->startOfYear(),
             now()->endOfYear()
         );
