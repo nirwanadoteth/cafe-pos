@@ -60,8 +60,10 @@ class OrderItem extends Pivot
 
     protected static function booted(): void
     {
-        static::saved(fn (OrderItem $item) => optional($item->order)->update());
-        static::deleted(fn (OrderItem $item) => optional($item->order)->update());
+        // Use touch() instead of update() to ensure the saving event fires
+        // and recalculates total_price via OrderCalculationService
+        static::saved(fn (OrderItem $item) => $item->order?->touch());
+        static::deleted(fn (OrderItem $item) => $item->order?->touch());
     }
 
     /** @return BelongsTo<Order,$this> */
