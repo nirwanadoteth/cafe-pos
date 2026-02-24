@@ -17,8 +17,8 @@ class OrderStatsCalculator
      */
     public static function calculateStats(Builder $baseQuery, Builder $baseTrendQuery): array
     {
-        // Combine count, open orders count, and average price into a single query
-        $stats = $baseQuery->selectRaw(implode(', ', [
+        // Clone to avoid mutating the shared page table query builder
+        $stats = $baseQuery->clone()->selectRaw(implode(', ', [
             'COUNT(*) as total_orders',
             "SUM(CASE WHEN status IN ('new', 'processing') THEN 1 ELSE 0 END) as open_orders",
             'AVG(total_price) as avg_price',
