@@ -33,15 +33,23 @@ class OrderFormValidator
             return true; // Let other validation handle array validation
         }
 
-        foreach ($value as $item) {
-            $qty = (int) ($item['qty'] ?? 0);
-            $productId = $item['product_id'] ?? null;
+        $itemsWithQty = collect($value)
+            ->filter(fn (array $item): bool => (int) ($item['qty'] ?? 0) > 0 && isset($item['product_id']));
 
-            if ($qty > 0 && $productId) {
-                $product = Product::find($productId);
-                if ($product instanceof Product && $product->stock_quantity < $qty) {
-                    return false;
-                }
+        if ($itemsWithQty->isEmpty()) {
+            return true;
+        }
+
+        // Single query to fetch all needed products at once instead of N+1
+        $products = Product::query()
+            ->whereIn('id', $itemsWithQty->pluck('product_id'))
+            ->pluck('stock_quantity', 'id');
+
+        foreach ($itemsWithQty as $item) {
+            $stock = $products->get($item['product_id']);
+
+            if ($stock !== null && $stock < (int) $item['qty']) {
+                return false;
             }
         }
 

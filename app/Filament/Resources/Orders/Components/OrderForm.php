@@ -13,8 +13,8 @@ use App\Services\OrderFormValidator;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -136,9 +136,10 @@ class OrderForm
             ->required();
     }
 
-    protected static function getNotesField(): MarkdownEditor
+    protected static function getNotesField(): Textarea
     {
-        return MarkdownEditor::make('notes')
+        return Textarea::make('notes')
+            ->rows(3)
             ->columnSpanFull();
     }
 
@@ -316,14 +317,13 @@ class OrderForm
                 ->color('info')
                 ->url(function (array $arguments, Repeater $component): ?string {
                     $itemData = $component->getRawItemState($arguments['item']);
+                    $productId = $itemData['product_id'] ?? null;
 
-                    $product = Product::find($itemData['product_id']);
-
-                    if ($product === null) {
+                    if ($productId === null) {
                         return null;
                     }
 
-                    return ProductResource::getUrl('view', ['record' => $product]);
+                    return ProductResource::getUrl('view', ['record' => $productId]);
                 }, shouldOpenInNewTab: true),
         ];
     }
